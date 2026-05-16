@@ -4,16 +4,29 @@
 
 ---
 
-## Current State (Verified May 2026)
+## Current State (Updated May 16, 2026)
 
-- ✅ Homebrew installed
-- ✅ AWS CLI installed (aws-cli/2.33.17, arm64)
+- ✅ Homebrew installed (`/opt/homebrew`)
+- ✅ AWS CLI installed (aws-cli/2.34.48, arm64)
 - ✅ AWS SSO profile `jemba9-dev` configured in `~/.aws/config`
   - SSO start URL: `https://onej9.awsapps.com/start`
   - SSO region: `us-west-2`
   - Account ID: `824999955649`
   - Role: `AdministratorAccess`
   - Default region: `us-west-2`
+- ✅ AWS SSO login verified — account `824999955649`, role `AdministratorAccess`
+- ✅ `~/.zshrc` updated with `brew shellenv` and `AWS_PROFILE=jemba9-dev`
+- ✅ CodeCommit credential helper configured (global git config)
+- ✅ Repo cloned to `/Users/mikeberry/Documents/Jemba9/CasecadeProjects/j9ccgit`
+  - **Note:** Repo is in `us-east-2` (Ohio), not `us-west-2`
+- ✅ Node.js v20.20.2 / npm 10.8.2 installed
+- ✅ `npm install` complete (1026 packages)
+- ✅ `backend/.env.local` populated (all values resolved from AWS)
+- ✅ `apps/employee-console/.env.local` populated
+- ✅ `apps/customer-portal/.env.local` populated
+- ⏳ `DLT_PIPELINE_ID` in `backend/.env.local` — awaiting Databricks setup instructions
+- ⏳ `VECTOR_SEARCH_ENDPOINT` in `backend/.env.local` — optional, awaiting Databricks setup
+- ⏸️ Steps 9–10 (start dev servers, verify health) — paused pending Databricks config
 
 ---
 
@@ -258,5 +271,9 @@ Run from `/Users/michaelberry/Documents/Jemba9/CasecadeProjects/j9ccgit/backend`
 
 - The `aws-sso-setup-guide.md` in this directory has an **outdated SSO start URL** (`https://jemba9.awsapps.com/start`). The correct URL confirmed in `~/.aws/config` is **`https://onej9.awsapps.com/start`**.
 - SSO region is `us-west-2` (not `us-east-1` as the old guide states).
+- **CodeCommit repo `j9ccgit` is in `us-east-2`** (Ohio), not `us-west-2`. Clone URL: `https://git-codecommit.us-east-2.amazonaws.com/v1/repos/j9ccgit`
+- `DATABRICKS_CLIENT_ID` resolved from ECS task definition: `e637cca1-47d2-4ce2-9936-7c7175cda5a3`
+- `S3_DOCUMENTS_BUCKET` resolved from ECS task definition: `sag-documents-dev`
+- `DLT_PIPELINE_ID` and `VECTOR_SEARCH_ENDPOINT` must come from Databricks workspace — not stored in AWS.
 - `--platform linux/amd64` is **required** on Apple Silicon (M-series) when building Docker images for Fargate.
 - Lakebase Postgres scales to zero after 5 min idle — the first connection after idle takes ~30s.
