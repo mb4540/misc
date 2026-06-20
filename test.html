@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clock</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0f0f1a;
+      font-family: 'Courier New', monospace;
+      color: #e2e8f0;
+    }
+
+    .clock {
+      font-size: clamp(3rem, 12vw, 8rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #a78bfa;
+      text-shadow: 0 0 40px #7c3aed88, 0 0 80px #7c3aed44;
+      transition: color 0.5s;
+    }
+
+    .date {
+      margin-top: 1rem;
+      font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+      color: #94a3b8;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .quote {
+      margin-top: 3rem;
+      max-width: 480px;
+      text-align: center;
+      font-size: 1rem;
+      color: #64748b;
+      line-height: 1.7;
+      padding: 0 1.5rem;
+      border-top: 1px solid #1e1e30;
+      padding-top: 2rem;
+      transition: opacity 0.6s;
+    }
+
+    .quote em { color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <div class="clock" id="clock">00:00:00</div>
+  <div class="date" id="date"></div>
+  <div class="quote" id="quote"></div>
+
+  <script>
+    const quotes = [
+      "<em>"The best time to plant a tree was 20 years ago. The second best time is now."</em>",
+      "<em>"Simplicity is the soul of efficiency."</em>",
+      "<em>"First, solve the problem. Then, write the code."</em>",
+      "<em>"Make it work, make it right, make it fast."</em>",
+      "<em>"Any fool can write code that a computer can understand."</em>",
+      "<em>"It's not a bug — it's an undocumented feature."</em>",
+    ];
+
+    const colors = ['#a78bfa', '#67e8f9', '#6ee7b7', '#fbbf24', '#f9a8d4'];
+
+    let quoteIndex = 0;
+    let colorIndex = 0;
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+      const now = new Date();
+      document.getElementById('clock').textContent =
+        `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
+      document.getElementById('date').textContent = now.toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      if (now.getSeconds() === 0) {
+        colorIndex = (colorIndex + 1) % colors.length;
+        document.getElementById('clock').style.color = colors[colorIndex];
+
+        const q = document.getElementById('quote');
+        q.style.opacity = '0';
+        setTimeout(() => {
+          quoteIndex = (quoteIndex + 1) % quotes.length;
+          q.innerHTML = quotes[quoteIndex];
+          q.style.opacity = '1';
+        }, 600);
+      }
+    }
+
+    document.getElementById('quote').innerHTML = quotes[0];
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
