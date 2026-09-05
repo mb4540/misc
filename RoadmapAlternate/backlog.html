@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backlog & Timeline — Jemba9 Commercialization Roadmap (Concise)</title>
+
+<style>
+:root {
+  --bg:#f8fafc; --card-bg:#ffffff; --border:#e2e8f0; --row-border:#eef2f7; --surface:#f1f5f9;
+  --heading:#0f172a; --text:#334155; --text-secondary:#475569; --muted:#64748b; --muted-2:#94a3b8;
+  --link:#2563eb; --accent:#3b82f6;
+}
+:root:has(#theme-toggle:checked) {
+  --bg:#0d1524; --card-bg:#17202f; --border:#2a3648; --row-border:#212c3d; --surface:#1c2536;
+  --heading:#f1f5f9; --text:#cbd5e1; --text-secondary:#94a3b8; --muted:#94a3b8; --muted-2:#64748b;
+  --link:#60a5fa; --accent:#60a5fa;
+}
+#theme-toggle:checked ~ .rm-track { background:#2563eb; border-color:var(--link); }
+#theme-toggle:checked ~ .rm-track .rm-thumb { transform:translateX(16px); }
+</style>
+</head>
+<body style="margin:0;display:flex;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);">
+
+<nav style="width:240px;min-width:240px;background:#0b1220;color:#cbd5e1;min-height:100vh;padding:24px 0;box-sizing:border-box;position:sticky;top:0;align-self:flex-start;">
+  <div style="padding:0 20px 14px 20px;border-bottom:1px solid #1e293b;margin-bottom:0;">
+    <img src="assets/jemba9-logo-orange.png" alt="Jemba9" style="height:20px;width:auto;display:block;margin-bottom:6px;">
+    <div style="color:#64748b;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;">Roadmap · Concise</div>
+  </div>
+  <label for="theme-toggle" style="display:flex;align-items:center;gap:9px;padding:10px 20px 4px;cursor:pointer;user-select:none;">
+    <input type="checkbox" id="theme-toggle" style="display:none;">
+    <span class="rm-track" style="position:relative;width:34px;height:19px;background:#334155;border:1px solid #334155;border-radius:999px;display:inline-block;flex-shrink:0;transition:background .15s;">
+      <span class="rm-thumb" style="position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:#f8fafc;transition:transform .15s;"></span>
+    </span>
+    <span style="font-size:11.5px;color:#94a3b8;">Light / Dark mode</span>
+  </label>
+  <div style="border-bottom:1px solid #1e293b;margin-bottom:16px;"></div>
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:6px 0 8px;">DOCUMENTS</div>
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">00</span> Overview &amp; Verdict
+  </a>
+  <a href="backlog.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px 9px 17px;color:#f1f5f9;text-decoration:none;font-size:13px;background:#1e293b;border-left:3px solid #3b82f6;font-weight:600;">
+    <span style="color:#60a5fa;font-size:11px;font-weight:700;width:20px;display:inline-block;">01</span> Backlog &amp; Timeline
+  </a>
+  <a href="architecture.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">02</span> Architecture &amp; Observability
+  </a>
+  <a href="readiness.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">03</span> Commercial &amp; Ops Readiness
+  </a>
+  <div style="margin:14px 0;border-top:1px solid #1e293b;"></div>
+  <a href="forecast.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:13px;font-weight:700;width:20px;display:inline-block;">→</span> MVP Roadmap Forecast
+  </a>
+
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:18px 0 8px;">RUNBOOKS</div>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R</span> All Runbooks
+  </a>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R1</span> Secrets Management Runbook
+  </a>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R2</span> Tenant Isolation Testing Runbook
+  </a>
+
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:22px 0 8px;">ON THIS PAGE</div>
+  <a href="#timeline" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Timeline</a>
+  <a href="#phase0" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Phase 0 — Wks 1–4</a>
+  <a href="#phase1" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Phase 1 — Mo 1–3</a>
+  <a href="#phase2" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Phase 2 — Mo 3–6</a>
+  <a href="#phase3" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Phase 3 — Mo 6–12</a>
+  <a href="#phase4" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Phase 4 — Mo 12+</a>
+  <a href="#owners" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Owner Workload</a>
+</nav>
+
+<main style="flex:1;padding:40px 56px;box-sizing:border-box;">
+<div style="max-width:1040px;margin:0 auto;">
+
+  <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">01 — BACKLOG &amp; TIMELINE</div>
+  <h1 style="font-size:26px;font-weight:800;color:var(--heading);margin:0 0 6px;">Backlog &amp; Roadmap Timeline</h1>
+  <div style="font-size:13px;color:var(--muted);margin:0 0 24px;">Single source of truth for all 26 items — status, phase, effort, dependencies. Replaces the old Backlog, Phased Roadmap, Gantt, and Top-25 documents.</div>
+
+  <!-- ═══ TIMELINE ═══ -->
+  <h2 id="timeline" style="font-size:17px;font-weight:700;color:var(--heading);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Phase Timeline</h2>
+  <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px;">15-month baseline from 2026-06-20. Bar widths are relative phase duration, not committed sprint dates.</p>
+
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px 16px 8px;margin-bottom:8px;">
+    <div style="position:relative;height:44px;">
+      <div style="display:flex;height:44px;border-radius:6px;overflow:hidden;">
+        <div style="width:6.67%;background:#bbf7d0;border-right:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#166534;overflow:hidden;white-space:nowrap;">P0</div>
+        <div style="width:20%;background:#bfdbfe;border-right:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#1d4ed8;">Phase 1</div>
+        <div style="width:20%;background:#e9d5ff;border-right:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#7e22ce;">Phase 2</div>
+        <div style="width:40%;background:#fed7aa;border-right:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#c2410c;">Phase 3</div>
+        <div style="width:13.33%;background:#d4d4d8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#3f3f46;">Phase 4</div>
+      </div>
+      <!-- Today marker: 2026-07-19, ~6.35% into the 15-month track. This div's own box is the same width as the bar row above, so left:% needs no offset. -->
+      <div style="position:absolute;top:0;bottom:0;left:6.35%;width:2px;background:#ef4444;z-index:5;"></div>
+    </div>
+    <div style="position:relative;height:16px;margin-top:2px;">
+      <div style="position:absolute;left:6.35%;top:0;font-size:9px;font-weight:700;color:#ef4444;white-space:nowrap;transform:translateX(-2px);">▲ Today 07/19</div>
+    </div>
+    <div style="display:flex;font-size:10.5px;color:var(--muted-2);margin-top:2px;">
+      <div style="width:6.67%;">Wks 1–4</div>
+      <div style="width:20%;">Months 1–3</div>
+      <div style="width:20%;">Months 3–6</div>
+      <div style="width:40%;">Months 6–12</div>
+      <div style="width:13.33%;">Month 12+</div>
+    </div>
+  </div>
+  <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:24px;font-size:12.5px;color:#92400e;">
+    <strong>Behind schedule:</strong> Phase 0's original 4-week window has elapsed. P0-02 and P0-03 are still open; P0-05 and P0-06 have not started.
+  </div>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:0 0 8px;">Sequencing Principles</h3>
+  <ul style="font-size:13px;line-height:1.7;color:var(--text);margin:0 0 28px;padding-left:20px;">
+    <li><strong>Security gates are non-negotiable.</strong> P0-01 and P0-04 are complete — P0-02, P0-03 (in progress), P0-05, and P0-06 (not started) must close before any customer data enters the system.</li>
+    <li><strong>Staging before prod.</strong> P0-02 must be live before any Phase 1 work touches infrastructure.</li>
+    <li><strong>Metering before billing.</strong> P1-02 is a hard dependency of P1-10 — do not integrate Stripe until metering is validated for ≥2 billing periods.</li>
+    <li><strong>Compliance is a long game.</strong> Start SOC 2 readiness (P1-12) in Phase 1 so the report (P2-01) arrives in Phase 3 when enterprise contracts need it.</li>
+    <li><strong>QMS is Phase 3+.</strong> It requires the core platform to be stable and has its own dedicated design/build cycle.</li>
+  </ul>
+
+  <!-- ═══ PHASE 0 ═══ -->
+  <h2 id="phase0" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--border);">Phase 0 — Stabilize &amp; Secure <span style="font-weight:400;color:var(--muted);font-size:13px;">(Weeks 1–4)</span></h2>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 12px;">Goal: make the platform safe enough for a single pilot customer. All six items are launch-blocking.</p>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">ID</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Item</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Status</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);width:38%;">Why / Evidence</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Effort</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Depends</th>
+    </tr></thead>
+    <tbody>
+      <tr id="p0-01">
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P0-01</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Rotate all secrets out of CDK into AWS Secrets Manager</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Done</span><br><span style="font-size:10.5px;color:var(--muted-2);">06/20/2026</span></td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Prerequisite before any customer conversation. ECS <code>secrets</code> block injects <code>DATABASE_URL</code>/<code>DATABRICKS_CLIENT_SECRET</code> from Secrets Manager; gitleaks clean across tree + 589-commit history. See secrets-management runbook.</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">S</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td>
+      </tr>
+      <tr id="p0-02">
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P0-02</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Create staging CDK stack + deploy pipeline</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">In Progress</span></td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Only <code>dev</code> exists — no change gate, rollback discipline, or SLA credibility. Typed <code>StageConfig</code> + real-environment factory + parameterized stacks done (Phases 1–2, 4 of 11); governance/pipeline/first deploy remain.</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P0-01</td>
+      </tr>
+      <tr id="p0-03">
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P0-03</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Wire GitHub Actions CI/CD for backend</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">In Progress</span></td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Backend has no pipeline; manual deploys aren't repeatable or auditable. Will also enforce <code>npm run test:isolation</code> (P0-04) on every PR, which isn't enforced yet.</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P0-01, P0-02</td>
+      </tr>
+      <tr id="p0-04">
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P0-04</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Tenant boundary integration test suite</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Done</span><br><span style="font-size:10.5px;color:var(--muted-2);">07/05/2026</span></td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Cross-tenant leak is business-ending; middleware existed but wasn't integration-tested. PR #17 — 155 unit + 63 isolation tests across ~45 routes, run via <code>npm run test:isolation</code>. Not yet enforced in CI (P0-03). See Tenant Isolation Testing runbook.</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">L</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td>
+      </tr>
+      <tr id="p0-05">
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P0-05</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Production DNS, TLS certificate, custom domain on API</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Not Started</span></td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">API reachable only via raw ALB DNS — blocks Cognito callback URLs, CORS allowlist, browser security policy. <code>domainName</code>/<code>certificateArn</code> still commented out in <code>infra/lib/real-environment.ts</code>.</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">S</td>
+        <td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td>
+      </tr>
+      <tr id="p0-06">
+        <td style="padding:8px 10px;font-weight:700;color:var(--muted);">P0-06</td>
+        <td style="padding:8px 10px;">DR runbook: document and test</td>
+        <td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Not Started</span></td>
+        <td style="padding:8px 10px;color:var(--text-secondary);">Lakebase Postgres is the sole datastore; no documented backup/restore procedure. Needs PITR enabled, restore steps, RTO ≤4h, RPO ≤1h, and an actual test restore to staging.</td>
+        <td style="padding:8px 10px;">M</td>
+        <td style="padding:8px 10px;">—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ PHASE 1 ═══ -->
+  <h2 id="phase1" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--border);">Phase 1 — Private Beta <span style="font-weight:400;color:var(--muted);font-size:13px;">(Months 1–3)</span></h2>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 12px;">Goal: onboard 3 design-partner customers, build operational muscle. Not started — gated behind Phase 0.</p>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">ID</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Item</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Status</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);width:38%;">Why</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Effort</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Depends</th>
+    </tr></thead>
+    <tbody>
+      <tr id="p1-01"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-01</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Self-service tenant provisioning API + admin UI</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Adding a customer today requires operator-level DB + Cognito access — doesn't scale past 2–3 pilots.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">L</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-02"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-02</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Usage metering — LLM tokens + agent runs per tenant</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Pricing rate card exists but no metering logic — revenue is impossible without knowing consumption.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-03"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-03</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">OpenTelemetry distributed tracing</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">CloudWatch metrics exist but no request-level traces — debugging multi-step LangGraph pipelines is effectively impossible without them.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-04"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-04</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Customer-facing status page</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">No status page means zero customer visibility during incidents — erodes trust faster than the incident itself.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">S</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-05"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-05</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Harden HITL approval UX — timeout, error, retry</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">HITL is a core differentiator but lacks timeout/error/retry handling — a failed approval leaves runs in limbo.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-06"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-06</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Transactional email — invite, HITL request, run complete</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">HITL, onboarding, and run completion all need email — without it, engagement is entirely polling-dependent.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1-01</td></tr>
+      <tr id="p1-07"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-07</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Internal admin console — tenants, usage, health, run log</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Operating the platform without an admin console means every diagnostic requires a raw DB query — not sustainable.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">L</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-08"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-08</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Support ticket channel</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Customers have no channel to report issues — required before paid onboarding.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">XS</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-09"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-09</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">LLM agent cost-per-run tracking and alerting</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Token costs aren't tracked per run — a runaway agent could generate unexpected Databricks bills. CloudWatch metrics exist but no per-run rollup.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">S</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-11"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-11</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Public-facing product website + positioning copy</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Prospects have nowhere to learn about the platform without a sales call.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-12"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-12</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Security &amp; compliance evidence pack</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Aerospace/AS9100 and enterprise buyers require written security evidence before procurement.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">L</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-13"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-13</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Onboarding guide and user documentation</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Self-service users can't onboard without docs; support load is high without them.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1-11</td></tr>
+      <tr id="p1-14"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-14</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">ECS task memory/CPU right-sizing + auto-scaling</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Agent workloads are bursty; default task sizing may OOM under concurrent runs.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">M</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">—</td></tr>
+      <tr id="p1-15"><td style="padding:8px 10px;font-weight:700;color:var(--muted);">P1-15</td><td style="padding:8px 10px;">LangGraph checkpoint cleanup / TTL job</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;color:var(--text-secondary);">Checkpointer writes state on every node execution; without cleanup the table grows unbounded and degrades performance.</td><td style="padding:8px 10px;">S</td><td style="padding:8px 10px;">—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ PHASE 2 ═══ -->
+  <h2 id="phase2" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--border);">Phase 2 — Paid General Availability <span style="font-weight:400;color:var(--muted);font-size:13px;">(Months 3–6)</span></h2>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 12px;">Goal: collect first revenue, begin formal compliance program.</p>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">ID</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Item</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Status</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);width:38%;">Why</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Effort</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Depends</th>
+    </tr></thead>
+    <tbody>
+      <tr id="p1-10"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P1-10</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Stripe billing integration — trial-to-paid gate</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Can't collect revenue without a payment processor; metering must be validated for ≥2 billing periods first.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">L</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1-02</td></tr>
+      <tr id="p2-01"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P2-01</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">SOC 2 Type II audit program</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Required for enterprise procurement; the audit takes 6+ months, so it needs to start early.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">XL</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1-12</td></tr>
+      <tr id="p2-02"><td style="padding:8px 10px;font-weight:700;color:var(--muted);">P2-02</td><td style="padding:8px 10px;">Enterprise SSO — SAML 2.0 / OIDC via Cognito</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;color:var(--text-secondary);">Enterprise customers require SSO federation (Okta, Azure AD, PingIdentity); Cognito supports it — largely additive.</td><td style="padding:8px 10px;">M</td><td style="padding:8px 10px;">—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ PHASE 3 ═══ -->
+  <h2 id="phase3" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--border);">Phase 3 — Enterprise Hardening <span style="font-weight:400;color:var(--muted);font-size:13px;">(Months 6–12)</span></h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">ID</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Item</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Status</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);width:38%;">Why</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Effort</th>
+    </tr></thead>
+    <tbody>
+      <tr id="p2-03"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);">P2-03</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Multi-region active-passive or active-active DR</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Enterprise/government aerospace customers may require geographic redundancy and RTO &lt; 1h.</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">XL</td></tr>
+      <tr id="p2-04"><td style="padding:8px 10px;font-weight:700;color:var(--muted);">P2-04</td><td style="padding:8px 10px;">QMS adjunct application — AS9100 NCR &amp; CAPA</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;color:var(--text-secondary);">Per the QMS solution design — agent-assisted non-conformance reporting and corrective action aligned to AS9100 Rev D.</td><td style="padding:8px 10px;">XL</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ PHASE 4 ═══ -->
+  <h2 id="phase4" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--border);">Phase 4 — Scale &amp; Market Expansion <span style="font-weight:400;color:var(--muted);font-size:13px;">(Month 12+, open-ended)</span></h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <tbody>
+      <tr id="p3-01"><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;color:var(--muted);width:70px;">P3-01</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">BYOK encryption for enterprise tenants</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--text-secondary);">Enterprise/government customers may require customer-managed KMS keys. Effort: L</td></tr>
+      <tr><td style="padding:8px 10px;font-weight:700;color:var(--muted);">—</td><td style="padding:8px 10px;color:var(--muted);" colspan="3">Additional agent domain modules, partner API/integration ecosystem, non-US region (EU data residency) — scope driven by market feedback after Phase 3.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ OWNER WORKLOAD ═══ -->
+  <h2 id="owners" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Owner Workload — Phase 0 &amp; 1</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Owner</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Items</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Est. Total Effort</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Infra Eng</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P0-01, P0-02, P0-05, P0-06, P1-09-alarm portion</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">~3–4 weeks</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Backend Eng</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P0-03 (shared), P0-04, P1-02, P1-03, P1-06, P1-09, P1-15</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">~8–10 weeks</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Full-stack Eng</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1-07, P1-05</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">~3 weeks</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">CSO / Marketing</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1-04, P1-08, P1-11, P1-12, P2-01</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Ongoing + M</td></tr>
+      <tr><td style="padding:8px 10px;">Product</td><td style="padding:8px 10px;">P1-13</td><td style="padding:8px 10px;">~M</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12px;color:var(--muted-2);margin:0 0 8px;">Owner = role, not individual. Effort key: XS = hours, S = 1–2 days, M = 1 week, L = 2–3 weeks, XL = month+.</p>
+
+</div>
+</main>
+</body>
+</html>

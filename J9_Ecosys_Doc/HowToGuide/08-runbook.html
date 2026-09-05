@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — Runbook</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 8</p>
+    <h1>Runbook</h1>
+    <p>Local setup, the bootstrap in order, verification, what it costs, what breaks, what to clean up in the
+    repository, and what still needs a decision from someone else.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html" class="here">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>8.1 &mdash; Local development first</h1>
+
+<p>Before you touch AWS, get the three projects running locally. It takes an hour and it means that when something
+fails in AWS you know whether it is your infrastructure or the application.</p>
+
+<p>Each project brings its own Postgres on a deliberately different host port, so all three can run at once:</p>
+
+<table>
+<tr><th>Project</th><th>Postgres</th><th>Redis</th><th>App</th><th>URL</th></tr>
+<tr><td><code>Ecosystem/</code></td><td><code>5433</code></td><td><code>6380</code></td><td><code>3000</code></td>
+    <td><code>http://localhost:3000</code></td></tr>
+<tr><td><code>Applications/OKR/</code></td><td><code>5436</code></td><td><code>6382</code></td><td><code>3001</code></td>
+    <td><code>http://localhost:3001/okr</code></td></tr>
+<tr><td><code>Applications/dataroom/</code></td><td><code>5435</code></td><td>&mdash;</td><td><code>8080</code></td>
+    <td><code>http://localhost:8080/dataroom</code></td></tr>
+</table>
+
+<pre><code># ---- the platform
+cd Ecosystem
+cp .env.example .env
+cp .env.example .env.local          # Prisma CLI reads .env; Next reads .env.local
+npm install
+docker compose up -d                # Postgres 16 on 5433, Redis 7 on 6380
+npx prisma migrate deploy
+npm run seed                        # idempotent; reads company.config.yaml
+npm run dev                         # http://localhost:3000  — AUTH_PROVIDER=mock
+
+# In a second shell, the worker:
+npm run worker
+
+# ---- OKR
+cd ../Applications/OKR
+npm install
+npm run db:up                       # docker-compose.dev.yml — 5436 / 6382
+npm run db:migrate
+npm run dev                         # http://localhost:3001/okr
+
+# ---- Data Room
+cd ../dataroom
+cp .env.example .env
+npm install
+docker compose up -d                # dataroom-postgres on 5435
+npm run db:migrate                  # applies db/migrations/*.sql as the owner
+npm run dev                         # http://localhost:8080/dataroom</code></pre>
+
+<div class="callout callout-note"><span class="label">Locally the apps use a mock identity, not Cognito</span>
+
+<p>The platform runs with <code>AUTH_PROVIDER=mock</code> against a local OIDC issuer with real crypto and no cloud.
+The Data Room additionally supports <code>J9_DEV_MOCK=1</code> with <code>J9_DEV_MOCK_ROLE=investor|admin</code> so
+it works before an API key exists.</p>
+<p>Both are correct locally and both must be absent in AWS. The switch to Cognito is environment values only &mdash;
+per <code>infra/terraform/README.md</code>, "no app code changes are needed to switch from mock to Cognito".</p>
+</div>
+
+<p>Confirm the platform works before moving on:</p>
+
+<pre><code>cd Ecosystem
+npm test                     # unit, no database
+npm run typecheck
+npm run test:integration     # append-only triggers, one-active-grant, RLS isolation, seed idempotency</code></pre>
+
+<p>The integration suite is the one worth running, because it exercises the exact database behaviour &mdash; RLS
+under the <code>j9_app</code> role, append-only triggers &mdash; that your AWS role setup has to reproduce.</p>
+
+<h2 id="bootstrap">8.2 &mdash; The bootstrap, in order</h2>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 470" role="img" aria-label="Terraform layer order for a first bootstrap">
+  <defs>
+    <marker id="arrow_bootstrap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_bootstrap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_bootstrap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="60" y="24" width="560" height="46" rx="7" fill="#fff" stroke="#15803d" stroke-width="1.8"/>
+  <text x="78" y="44" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">00-bootstrap</text>
+  <text x="78" y="60" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">S3 state bucket, DynamoDB lock table, GitHub OIDC provider</text>
+  <text x="640" y="52" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#15803d" text-anchor="start">run once, local state, then migrate</text>
+  <line x1="340" y1="70" x2="340" y2="86" stroke="#15803d" stroke-width="1.6" marker-end="url(#arrow_bootstrap)"/>
+  <rect x="60" y="86" width="560" height="46" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/>
+  <text x="78" y="106" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">10-network</text>
+  <text x="78" y="122" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">VPC, subnets, NAT, security groups, VPC endpoints</text>
+  <text x="640" y="114" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="start">per workspace</text>
+  <line x1="340" y1="132" x2="340" y2="148" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow_bootstrap)"/>
+  <rect x="60" y="148" width="560" height="46" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/>
+  <text x="78" y="168" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">20-data</text>
+  <text x="78" y="184" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">RDS PostgreSQL 16, ElastiCache Redis, S3 object bucket</text>
+  <text x="640" y="176" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="start">per workspace</text>
+  <line x1="340" y1="194" x2="340" y2="210" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow_bootstrap)"/>
+  <rect x="60" y="210" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="230" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">30-identity</text>
+  <text x="78" y="246" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">Cognito user pool + PKCE client, SES identity</text>
+  <text x="640" y="238" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <line x1="340" y1="256" x2="340" y2="272" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_bootstrap)"/>
+  <rect x="60" y="272" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="292" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">40-secrets</text>
+  <text x="78" y="308" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">SSM SecureStrings, Secrets Manager, KMS key</text>
+  <text x="640" y="300" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <line x1="340" y1="318" x2="340" y2="334" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_bootstrap)"/>
+  <rect x="60" y="334" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="354" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">50-compute</text>
+  <text x="78" y="370" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">ECR, ECS cluster, task definitions, services, ALB</text>
+  <text x="640" y="362" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <line x1="340" y1="380" x2="340" y2="396" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_bootstrap)"/>
+  <rect x="60" y="396" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="416" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">60-frontdoor</text>
+  <text x="78" y="432" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">ACM in us-east-1, WAFv2, CloudFront, Route 53</text>
+  <text x="640" y="424" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <rect x="60" y="412" width="560" height="0" rx="7" fill="none" stroke="none" stroke-width="1.5"/>
+  <text x="340.0" y="416.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle"></text>
+  <text x="340" y="456" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#1f2430" text-anchor="middle">Each layer reads the one above through remote state outputs. Never a hand-copied ARN.</text>
+</svg>
+<figcaption>Apply strictly top to bottom the first time. After that, layers are mostly independent.</figcaption>
+</figure>
+
+<ol class="checklist">
+<li><strong>Confirm the account.</strong> <code>aws sts get-caller-identity --profile j9</code> must print
+<code>824999955649</code>. Everything after this is wasted if it does not.</li>
+
+<li><strong>Guardrails.</strong> S3 account-wide public access block, EBS default encryption in both regions,
+CloudTrail, GuardDuty, cost allocation tags. Chapter 2.5.</li>
+
+<li><strong>Bootstrap layer.</strong> <code>00-bootstrap</code>: state bucket, lock table, GitHub OIDC provider,
+budgets. Then migrate its own state into the bucket. Chapter 2.6.</li>
+
+<li><strong>Generate the six database passwords</strong> into a gitignored
+<code>shared/dev.secret.tfvars</code>. Chapter 4.2.</li>
+
+<li><strong>Network</strong> (<code>dev</code> workspace). VPC, subnets, NAT, security groups, VPC endpoints.
+Verify: three route tables exist and the isolated one has no <code>0.0.0.0/0</code> route.
+<pre><code>aws ec2 describe-route-tables \
+  --filters "Name=tag:Name,Values=j9-dev-rt-isolated" \
+  --query 'RouteTables[0].Routes[].DestinationCidrBlock' </code></pre></li>
+
+<li><strong>Secrets layer, first pass.</strong> The KMS key only &mdash; the parameters depend on the database
+endpoint, which does not exist yet. Target it:
+<pre><code>terraform apply -target=aws_kms_key.main -target=aws_kms_alias.main \
+  -target=aws_kms_key_policy.main -var-file=../shared/dev.tfvars</code></pre></li>
+
+<li><strong>Data.</strong> RDS, ElastiCache, S3. This is the slow one &mdash; 10 to 15 minutes for the database.</li>
+
+<li><strong>Database bootstrap SQL.</strong> Create the three databases and six roles, then the Data Room's schema
+and grants. Chapter 3.6. <strong>Verify <code>rolbypassrls = f</code> on all three <code>_app</code> roles before
+proceeding.</strong></li>
+
+<li><strong>Identity, first pass.</strong> Cognito with <code>front_door_url = ""</code>, so callbacks point at
+localhost. You will apply this layer again in step 15.</li>
+
+<li><strong>Secrets layer, full apply.</strong> All the SSM parameters now that the database, Redis, and Cognito
+endpoints exist. The three placeholder parameters get <code>PLACEHOLDER-REPLACE-ME</code>.</li>
+
+<li><strong>Build and push the first images.</strong> Locally, before CI exists, so you are not debugging two things
+at once:
+<pre><code>aws ecr get-login-password --region us-west-2 \
+  | docker login --username AWS --password-stdin 824999955649.dkr.ecr.us-west-2.amazonaws.com
+
+for s in platform:Ecosystem okr:Applications/OKR dataroom:Applications/dataroom; do
+  name=${s%%:*}; path=${s#*:}
+  docker buildx build --platform linux/arm64 --push \
+    -t "824999955649.dkr.ecr.us-west-2.amazonaws.com/j9/$name:bootstrap" \
+    "$path"
+done</code></pre></li>
+
+<li><strong>Compute.</strong> ECR (created here on the dev apply), cluster, log groups, task definitions, the two
+ALBs, target groups, listener rules, services. Set the image tag variables to <code>bootstrap</code>.</li>
+
+<li><strong>Verify compute without the CDN.</strong> Chapter 5.8. Do not continue until all three target groups are
+healthy. This is where the base-path health check and the task-to-task security group rule prove themselves.</li>
+
+<li><strong>Front door.</strong> ACM (skipped when <code>domain_name = ""</code>), WAF in count mode, CloudFront.
+Capture the distribution domain name.</li>
+
+<li><strong>Identity, second pass, and compute again.</strong> Re-apply both with
+<code>front_door_url=https://&lt;the CloudFront domain&gt;</code> so the Cognito callbacks and
+<code>PLATFORM_SELF_URL</code> are correct. Chapter 6.5.</li>
+
+<li><strong>Migrate and seed the platform.</strong> Run the migration task, then the seed. The seed creates the
+internal org, the reserved <code>platform</code> app, and the Admin app with its permissions and system roles.</li>
+
+<li><strong>Bootstrap the first Org Admin</strong> and sign in through the CloudFront URL. This is the moment the
+whole thing becomes real.</li>
+
+<li><strong>Register the two app manifests</strong> in Admin &rarr; Apps (Preview, then Apply), issue an API key for
+each, write both into SSM, and force a new deployment of the two app services. Chapter 4.4.</li>
+
+<li><strong>Acceptance test.</strong> The one the App Contract actually specifies: <em>log in &rarr; open the app
+&rarr; perform a gated action &rarr; revoke the grant in Admin &rarr; the same action is denied on the next
+request.</em> If that passes, the enforcement-point design is working end to end.</li>
+
+<li><strong>Wire CI/CD</strong> and confirm a push to <code>main</code> deploys dev. Chapter 7.</li>
+
+<li><strong>Repeat 5 through 16 in the <code>prod</code> workspace</strong> with <code>prod.tfvars</code>. It is the
+same commands. Do not migrate or seed prod until someone has decided what data goes in it.</li>
+</ol>
+
+<h2>8.3 &mdash; One script that tells you whether an environment is well</h2>
+
+<p class="filename">Ecosystem/scripts/verify-env.sh</p>
+<pre><code>#!/usr/bin/env bash
+# Usage: ./verify-env.sh dev https://dxxxxxxxxxxxxx.cloudfront.net
+set -uo pipefail
+
+ENV="${1:?environment}"
+BASE="${2:?front door url}"
+CLUSTER="j9-${ENV}-cluster"
+fail=0
+
+ok()   { printf '  \033[32mok\033[0m   %s\n' "$1"; }
+bad()  { printf '  \033[31mFAIL\033[0m %s\n' "$1"; fail=1; }
+
+echo "== account"
+acct=$(aws sts get-caller-identity --query Account --output text)
+[ "$acct" = "824999955649" ] &amp;&amp; ok "account $acct" || bad "wrong account: $acct"
+
+echo "== services"
+for svc in platform worker okr dataroom; do
+  read -r running desired &lt; &lt;(aws ecs describe-services \
+    --cluster "$CLUSTER" --services "j9-${ENV}-${svc}" \
+    --query 'services[0].[runningCount,desiredCount]' --output text)
+  [ "$running" = "$desired" ] &amp;&amp; [ "$running" != "0" ] \
+    &amp;&amp; ok "$svc $running/$desired" || bad "$svc $running/$desired"
+done
+
+echo "== target groups"
+for tg in platform okr dataroom; do
+  arn=$(aws elbv2 describe-target-groups --names "j9-${ENV}-${tg}-tg" \
+        --query 'TargetGroups[0].TargetGroupArn' --output text 2&gt;/dev/null)
+  states=$(aws elbv2 describe-target-health --target-group-arn "$arn" \
+           --query 'TargetHealthDescriptions[].TargetHealth.State' --output text)
+  case "$states" in
+    *unhealthy*|"") bad "$tg: $states" ;;
+    *)              ok  "$tg: $states" ;;
+  esac
+done
+
+echo "== health endpoints"
+for p in /healthz /okr/healthz /dataroom/healthz; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$BASE$p")
+  [ "$code" = "200" ] &amp;&amp; ok "$p $code" || bad "$p $code"
+done
+
+echo "== security headers"
+hdrs=$(curl -sI --max-time 15 "$BASE/healthz")
+for h in strict-transport-security content-security-policy x-frame-options x-content-type-options; do
+  grep -qi "^$h" &lt;&lt;&lt;"$hdrs" &amp;&amp; ok "$h" || bad "$h missing"
+done
+
+echo "== direct ALB access is refused"
+alb=$(aws elbv2 describe-load-balancers --names "j9-${ENV}-alb" \
+      --query 'LoadBalancers[0].DNSName' --output text)
+code=$(curl -sk -o /dev/null -w '%{http_code}' --max-time 10 "https://$alb/healthz" || echo 000)
+[ "$code" = "403" ] || [ "$code" = "000" ] &amp;&amp; ok "direct ALB -&gt; $code" || bad "direct ALB -&gt; $code"
+
+echo "== no mock identity in any task definition"
+for svc in platform worker okr dataroom; do
+  if aws ecs describe-task-definition --task-definition "j9-${ENV}-${svc}" \
+     --query 'taskDefinition.containerDefinitions[].environment[].name' --output text \
+     | grep -qE 'J9_DEV_MOCK|AUTH_PROVIDER_MOCK'; then
+    bad "$svc has a mock identity variable"
+  else
+    ok "$svc clean"
+  fi
+done
+
+echo "== database roles cannot bypass RLS"
+echo "  (run manually — the database is not reachable from here by design)"
+echo "  SELECT rolname, rolsuper, rolbypassrls FROM pg_roles"
+echo "   WHERE rolname LIKE '%_app';   -- all must be f, f"
+
+exit $fail</code></pre>
+
+<h2>8.4 &mdash; What it costs</h2>
+
+<p>Order-of-magnitude monthly figures for <code>us-west-2</code>, at low traffic. Verify against the AWS pricing
+calculator before quoting them to anyone &mdash; prices change and this table will age.</p>
+
+<table>
+<tr><th>Item</th><th>dev</th><th>prod</th><th>Note</th></tr>
+<tr><td>NAT gateway</td><td>~33</td><td>~66</td><td>one, then one per AZ. Plus data processing.</td></tr>
+<tr><td>ALB (public + internal)</td><td>~35</td><td>~40</td><td>two load balancers, plus LCU charges</td></tr>
+<tr><td>Fargate &mdash; 4 services</td><td>~35</td><td>~180</td>
+    <td>dev on Spot at 0.5 vCPU; prod on-demand, 2 tasks each at 1 vCPU</td></tr>
+<tr><td>RDS PostgreSQL</td><td>~15</td><td>~130</td><td><code>t4g.micro</code> single-AZ vs
+    <code>t4g.medium</code> Multi-AZ, plus storage and backups</td></tr>
+<tr><td>ElastiCache Redis</td><td>~12</td><td>~50</td><td>one <code>t4g.micro</code> vs two
+    <code>t4g.small</code></td></tr>
+<tr><td>VPC interface endpoints</td><td>~35</td><td>~70</td><td>five endpoints, per AZ. Trades against NAT data
+    charges.</td></tr>
+<tr><td>CloudFront</td><td>~2</td><td>~15</td><td>traffic-dependent; low at this scale</td></tr>
+<tr><td>WAF</td><td>~8</td><td>~12</td><td>web ACL plus rules plus requests</td></tr>
+<tr><td>KMS, SSM, Secrets Manager</td><td>~3</td><td>~5</td><td>one key, standard-tier parameters</td></tr>
+<tr><td>CloudWatch logs and metrics</td><td>~8</td><td>~35</td>
+    <td>prod has enhanced Container Insights and 365-day retention</td></tr>
+<tr><td>S3, ECR, CloudTrail, GuardDuty</td><td>~10</td><td>~20</td><td>&mdash;</td></tr>
+<tr><th>Total</th><th>~195</th><th>~625</th><th>the budgets in chapter 2.5 are set to 250 and 900</th></tr>
+</table>
+
+<p>If that dev number is uncomfortable, the three levers in order of payoff are: drop the interface endpoints and
+accept NAT data charges (saves ~35), collapse the internal ALB by using service discovery instead (saves ~18), and
+scale dev services to zero outside working hours with a scheduled autoscaling action (saves ~20). Do not economise
+on the RDS backups or the audit log retention &mdash; those are policy, not infrastructure preference.</p>
+
+<h2>8.5 &mdash; Troubleshooting</h2>
+
+<table>
+<tr><th>Symptom</th><th>Almost always</th><th>Fix</th></tr>
+<tr><td>Targets cycle healthy then unhealthy forever; logs show "ready in 400ms"</td>
+    <td>Health check path missing the base path, <em>or</em> <code>HOSTNAME</code> not set to
+    <code>0.0.0.0</code></td>
+    <td>Target group path must be <code>/okr/healthz</code> and <code>/dataroom/healthz</code>. Confirm
+    <code>HOSTNAME</code> is in the task definition and the Dockerfile.</td></tr>
+<tr><td>UI loads, every action denied, no errors anywhere</td>
+    <td>App tasks cannot reach the platform</td>
+    <td>The <code>self = true</code> rule on the task security group (3.2), and
+    <code>J9_PLATFORM_URL</code> pointing at the internal ALB.</td></tr>
+<tr><td>Every user sees every org's data</td>
+    <td>The app is connecting as the owner role, or an <code>_app</code> role has
+    <code>BYPASSRLS</code></td>
+    <td>Check which parameter the task reads &mdash; it must be <code>APP_DATABASE_URL</code>. Then check
+    <code>pg_roles</code>. This is a data-exposure bug; treat it as an incident.</td></tr>
+<tr><td>Task stops immediately, <code>ResourceInitializationError</code> mentioning SSM</td>
+    <td>The execution role cannot read a parameter, or cannot decrypt with the KMS key</td>
+    <td>Both statements in 4.6 are needed &mdash; <code>ssm:GetParameters</code> <em>and</em>
+    <code>kms:Decrypt</code>. Also check the parameter path spelling exactly.</td></tr>
+<tr><td>Task stops immediately, <code>CannotPullContainerError</code></td>
+    <td>No route to ECR</td>
+    <td>Either the ECR interface endpoints are missing, or the private subnet's NAT route is broken. Both
+    <code>ecr.api</code> and <code>ecr.dkr</code> are required, plus the S3 gateway endpoint for layers.</td></tr>
+<tr><td>Redis connection hangs with no error</td>
+    <td><code>redis://</code> where the cluster requires <code>rediss://</code></td>
+    <td>Transit encryption is on; use two esses and include the auth token. Chapter 3.5.</td></tr>
+<tr><td>Cognito login redirects to <code>localhost:3000</code></td>
+    <td>The identity layer was never re-applied with the front-door URL</td>
+    <td>Step 15 of the bootstrap. Re-apply <code>30-identity</code> with
+    <code>front_door_url</code> set.</td></tr>
+<tr><td>Random 403s on form submissions after enabling the WAF</td>
+    <td><code>AWSManagedRulesCommonRuleSet</code> in block mode</td>
+    <td>Put it back to <code>count</code>, read the sampled requests, add rule exclusions, then block.
+    Chapter 6.2.</td></tr>
+<tr><td>Server actions fail with an origin error</td>
+    <td>CloudFront is not forwarding the <code>Origin</code> or <code>Host</code> header</td>
+    <td>The origin request policy must be <code>allViewerAndWhitelistCloudFront</code>. Next enforces a
+    same-origin check on server actions.</td></tr>
+<tr><td>Terraform plan is full of <code>(known after apply)</code> nulls</td>
+    <td>A remote state block missing <code>workspace = terraform.workspace</code></td>
+    <td>Chapter 3.8.</td></tr>
+<tr><td>Prod resources appear with dev names, or the reverse</td>
+    <td>Workspace and tfvars mismatch</td>
+    <td>Add the workspace guard precondition from chapter 2.7.</td></tr>
+<tr><td>Worker jobs run twice</td>
+    <td><code>worker_desired_count &gt; 1</code></td>
+    <td>Set it to 1. The sweeps are not concurrency-safe. Chapter 2.7.</td></tr>
+</table>
+
+<h2 id="cleanup">8.6 &mdash; Repository cleanup list</h2>
+
+<p>Every one of these is a real reference in the repository that is either wrong or dead. Work through them as a
+single pull request titled something like "correct AWS account references and remove dead deploy config".</p>
+
+<table>
+<tr><th>&nbsp;</th><th>File</th><th>What is wrong</th><th>Action</th></tr>
+<tr><td><span class="badge badge-red">critical</span></td>
+    <td><code>Applications/dataroom/.github/workflows/deploy.yml</code></td>
+    <td>Assumes <code>arn:aws:iam::573631993254:role/CloudCowboyWebDeploy</code>; deploys a Vite <code>dist/</code>
+    to <code>cloudcowboy-us-prod-site</code>; injects <code>VITE_SUPABASE_*</code></td>
+    <td>Delete the file</td></tr>
+<tr><td><span class="badge badge-red">critical</span></td>
+    <td><code>Applications/dataroom/.github/workflows/deploy-staging.yml</code></td>
+    <td>Same, staging variant</td><td>Delete the file, and the empty <code>.github/</code> with it</td></tr>
+<tr><td><span class="badge badge-amber">wrong</span></td>
+    <td><code>Ecosystem/company.config.yaml</code></td>
+    <td><code>identity.aws_account: "573631993254"</code></td>
+    <td>Change to <code>824999955649</code></td></tr>
+<tr><td><span class="badge badge-amber">wrong</span></td>
+    <td><code>Ecosystem/docs/deployment/aws.md</code></td>
+    <td>Header names account <code>573631993254</code></td>
+    <td>Change to <code>824999955649</code>; the rest of the document is sound and this guide follows it</td></tr>
+<tr><td><span class="badge badge-amber">wrong</span></td>
+    <td><code>Ecosystem/infra/terraform/README.md</code></td>
+    <td>"Credentials for AWS account <code>573631993254</code> are available"</td>
+    <td>Change the account; re-check whether the statement is still true</td></tr>
+<tr><td><span class="badge badge-amber">wrong</span></td>
+    <td><code>Ecosystem/docs/deployment/dns.md</code></td>
+    <td>Frames the DNS blocker relative to the wrong account</td>
+    <td>Rewrite against <code>824999955649</code>; re-confirm where the zone lives (chapter 6.5)</td></tr>
+<tr><td><span class="badge badge-amber">wrong</span></td>
+    <td><code>Applications/dataroom/HANDOFF.md</code></td>
+    <td>Names the wrong account, and says the repo is CodeCommit <code>Jemba9_Ecosystem</code> in
+    <code>us-east-2</code> with <code>aws sso login --profile j9dev</code></td>
+    <td>Update the account; replace the CodeCommit instructions with the GitHub remote &mdash; CodeCommit is closed
+    to new customers, per the repo's own deviation note</td></tr>
+<tr><td><span class="badge badge-gray">dead</span></td>
+    <td><code>amplify.yml</code> (repo root)</td>
+    <td>Amplify Hosting build spec; contradicts ADR 0002, and runs
+    <code>prisma migrate deploy</code> inside a build phase</td>
+    <td>Delete</td></tr>
+<tr><td><span class="badge badge-gray">dead</span></td>
+    <td><code>Applications/dataroom/package.json</code></td>
+    <td>Named <code>vite_react_shadcn_ts</code>; still carries <code>vite</code>,
+    <code>@vitejs/plugin-react-swc</code>, <code>lovable-tagger</code></td>
+    <td>Rename to <code>j9-dataroom</code>; drop the unused devDependencies</td></tr>
+<tr><td><span class="badge badge-gray">dead</span></td>
+    <td><code>Applications/dataroom/eslint.config.js</code>, <code>CRM_SETUP.md</code></td>
+    <td>Vite-era leftovers; <code>HANDOFF.md</code> &sect;7 already flags them as stale</td>
+    <td>Remove at cutover</td></tr>
+<tr><td><span class="badge badge-blue">add</span></td>
+    <td><code>Ecosystem/</code>, <code>Applications/OKR/</code>, <code>Applications/dataroom/</code></td>
+    <td>No Dockerfile, no <code>.dockerignore</code></td>
+    <td>Add the three from chapter 5.2</td></tr>
+<tr><td><span class="badge badge-blue">add</span></td>
+    <td><code>Applications/OKR/next.config.ts</code>, <code>Applications/dataroom/next.config.ts</code></td>
+    <td>No <code>output</code> mode set</td>
+    <td>Add <code>output: "standalone"</code> &mdash; chapter 5.1</td></tr>
+<tr><td><span class="badge badge-blue">add</span></td>
+    <td><code>Applications/dataroom/src</code></td>
+    <td>Nothing prevents <code>J9_DEV_MOCK</code> from taking effect in production</td>
+    <td>Refuse to boot when <code>J9_DEV_MOCK</code> is set and <code>NODE_ENV=production</code></td></tr>
+</table>
+
+<pre><code># Find them all yourself, so nothing on this list is taken on faith:
+cd Jemba9_Ecosystem
+grep -rn "573631993254" --exclude-dir=node_modules --exclude-dir=.git .
+grep -rni "cloudcowboy"  --exclude-dir=node_modules --exclude-dir=.git .
+grep -rni "supabase"     --exclude-dir=node_modules --exclude-dir=.git .
+grep -rni "codecommit"   --exclude-dir=node_modules --exclude-dir=.git .
+grep -rn  "J9_DEV_MOCK"  --exclude-dir=node_modules --exclude-dir=.git .</code></pre>
+
+<h2>8.7 &mdash; Decisions this guide could not make for you</h2>
+
+<p>Each of these needs the platform owner, not the person building infrastructure. Get answers before prod carries
+real data.</p>
+
+<ol>
+<li><strong>Where does the <code>jemba9.com</code> zone live, and which unblock path?</strong> ALIAS record in
+another account, or re-delegate the registrar to a new zone in <code>824999955649</code>. Chapter 6.5.</li>
+<li><strong>Is <code>us-west-2</code> right?</strong> This guide follows
+<code>company.config.yaml</code>. The Data Room handoff mentions <code>us-east-2</code> and the stale workflows use
+<code>us-east-1</code>. Pick one deliberately and make the config the single source of truth.</li>
+<li><strong>Lakebase or RDS?</strong> <code>company.config.yaml</code> says
+<code>database: "lakebase-postgres"</code> with RDS as the migration target. This guide provisions RDS because it is
+what the deployment plan and the migration runbook describe. If Lakebase stays, most of chapter 3 still applies
+&mdash; you skip the RDS resource and put the Lakebase connection strings into the same SSM parameters. Note that
+<code>HANDOFF.md</code> raises a real wrinkle: if Lakebase authenticates with Databricks OAuth tokens rather than a
+Postgres role, the <code>pg</code> pool needs a token-refresh wrapper.</li>
+<li><strong>One investor org or one org per investor?</strong> <code>HANDOFF.md</code> &sect;5.3. It changes how
+grants and expiries are issued, not infrastructure &mdash; but it determines what "tenant" means in the RLS
+policies you are relying on.</li>
+<li><strong>Does the CRM stay in the Data Room?</strong> <code>HANDOFF.md</code> &sect;5.4. Migrations
+<code>0003_crm.sql</code> and <code>0004_crm_rls.sql</code> already exist, so the default is yes.</li>
+<li><strong>Who gets the budget alerts, and who approves prod deploys?</strong> Two named people. An unowned budget
+alarm and an unowned approval gate are both decorative.</li>
+<li><strong>What is the recovery objective for prod?</strong> This guide sets 30-day backups with PITR. Whether that
+is right depends on an RPO nobody has written down, and the 730-day audit retention is a separate concern that
+backups do not satisfy on their own.</li>
+</ol>
+
+<h2>8.8 &mdash; Where the authority actually lives</h2>
+
+<p>This guide is a synthesis. When it and the repository disagree, the repository wins &mdash; with the one
+exception of the AWS account number, which the repository has wrong.</p>
+
+<table>
+<tr><th>Question</th><th>Read</th></tr>
+<tr><td>Why the whole system is shaped this way</td>
+    <td><code>Ecosystem/docs/architecture/j9-ecosystem-architecture.md</code></td></tr>
+<tr><td>What the AWS deployment is supposed to be</td>
+    <td><code>Ecosystem/docs/deployment/aws.md</code></td></tr>
+<tr><td>Why Fargate and not App Runner or Amplify</td>
+    <td><code>Ecosystem/docs/adr/0002-compute.md</code></td></tr>
+<tr><td>Database roles, migrations, and the Lakebase-to-RDS runbook</td>
+    <td><code>Ecosystem/docs/architecture/database.md</code></td></tr>
+<tr><td>How row-level security actually works here</td>
+    <td><code>Ecosystem/docs/architecture/rls.md</code></td></tr>
+<tr><td>The application security posture you must not undermine</td>
+    <td><code>Ecosystem/docs/notes/security-baseline.md</code></td></tr>
+<tr><td>Identity, sessions, and the permission model in depth</td>
+    <td><code>Ecosystem/docs/architecture/platform_identity_access.md</code></td></tr>
+<tr><td>What an app must satisfy to join the platform</td>
+    <td><code>Ecosystem/docs/requirements/app-onboarding-requirements.md</code> (AR-1&ndash;AR-8)</td></tr>
+<tr><td>Manifest format and the registry endpoints</td>
+    <td><code>Ecosystem/docs/architecture/app-manifest.md</code></td></tr>
+<tr><td>Standing up a whole new deployment</td>
+    <td><code>Ecosystem/docs/deployment/replication.md</code></td></tr>
+<tr><td>The DNS blocker</td><td><code>Ecosystem/docs/deployment/dns.md</code></td></tr>
+<tr><td>Why apps live in one repo</td>
+    <td><code>Ecosystem/docs/notes/deviation_monorepo_apps.md</code></td></tr>
+<tr><td>Why not CodeCommit</td><td><code>Ecosystem/docs/notes/deviation_codecommit.md</code></td></tr>
+<tr><td>The Data Room's remaining work and the five owner inputs</td>
+    <td><code>Applications/dataroom/HANDOFF.md</code>, <code>MIGRATION.md</code></td></tr>
+<tr><td>The OKR app's tenets, contract, and feature matrix</td>
+    <td><code>Applications/OKR/CLAUDE.md</code>,
+    <code>docs/requirements/okr_feature_matrix.json</code></td></tr>
+</table>
+
+<div class="callout callout-ok"><span class="label">The one test that matters</span>
+
+<p>Everything in these eight chapters exists to make this sentence true, from
+<code>Applications/dataroom/docs/CHECKLIST.md</code>:</p>
+<p><strong>Log in &rarr; open the app &rarr; perform a gated action &rarr; revoke the grant &rarr; the same action
+is denied on the next request.</strong></p>
+<p>If that works in an environment you built, the infrastructure is correct. If it does not, no amount of green
+health checks means anything.</p>
+</div>
+
+</section>
+
+<div class="pager"><a href="07-cicd.html">&larr; 7. CI/CD</a><span class="spacer"></span></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

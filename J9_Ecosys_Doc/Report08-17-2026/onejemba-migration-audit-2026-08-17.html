@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OneJemba Migration Audit — August 17, 2026</title>
+</head>
+<body style="margin:0;padding:0;background:#0e1116;color:#d7dee8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;">
+
+<div style="max-width:1080px;margin:0 auto;padding:44px 28px 90px 28px;">
+
+  <!-- ================= HEADER ================= -->
+  <div style="border-left:4px solid #4da3ff;padding-left:20px;margin-bottom:30px;">
+    <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#7f8ea3;">Infrastructure &amp; Code-Migration Audit</div>
+    <h1 style="margin:6px 0 8px 0;font-size:36px;line-height:1.15;color:#f2f6fb;font-weight:700;">OneJemba Migration Audit</h1>
+    <div style="font-size:16px;color:#9fb0c4;">What moved, what was recreated, and what is actually deployed in AWS account <code style="color:#8fd4a8;">824999955649</code> as of today.</div>
+    <div style="font-size:13px;color:#6b7a8d;margin-top:10px;">Prepared 17 August 2026 · Audit window: 2026-08-03 → 2026-08-17 · All AWS findings independently verified via CLI against the live account, not taken on faith from repo docs</div>
+  </div>
+
+  <!-- ================= HEADLINE BOX ================= -->
+  <div style="background:#151a22;border:1px solid #4da3ff;border-radius:10px;padding:22px 26px;margin-bottom:28px;">
+    <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#4da3ff;margin-bottom:10px;">Headline</div>
+    <p style="margin:0 0 10px 0;">Your developer partner ran a same-day (2026-08-17) "clean slate" migration: the old <code style="color:#8fd4a8;">Jemba9_Ecosystem</code> CodeCommit repository and its Databricks Lakebase project were <strong style="color:#f2f6fb;">deleted</strong>, and a new single-app repo, <strong style="color:#f2f6fb;">OneJemba</strong>, was created in <code style="color:#8fd4a8;">us-west-2</code> to replace it. Real AWS infrastructure exists for it today — this is not just planning documents.</p>
+    <p style="margin:0;">You are right about Cognito: the user pool was <strong style="color:#f2f6fb;">kept, not recreated</strong> — verified below. Two things are <em>not</em> in the new plan at all: <strong style="color:#f2f6fb;">BoardLab and Dataroom</strong>. Only the OKR app was carried forward. The old repo's full history survives only as your own local clone on this machine and (unverified) a separate archive bundle your partner was supposed to create — see Finding&nbsp;5.</p>
+  </div>
+
+  <!-- ================= TIMELINE ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:38px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">Timeline — 14 Days, Verified Against Live AWS</h2>
+  <svg viewBox="0 0 1000 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;">
+    <line x1="50" y1="150" x2="960" y2="150" stroke="#3a4553" stroke-width="2"/>
+
+    <circle cx="90" cy="150" r="7" fill="#5fbf8f"/>
+    <text x="90" y="128" text-anchor="middle" fill="#d7dee8" font-family="sans-serif" font-size="12">Aug 3</text>
+    <text x="90" y="172" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">Cognito pool</text>
+    <text x="90" y="185" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">jemba9-dev-users</text>
+    <text x="90" y="198" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">created (Terraform, 824999955649)</text>
+
+    <circle cx="230" cy="150" r="7" fill="#5fbf8f"/>
+    <text x="230" y="128" text-anchor="middle" fill="#d7dee8" font-family="sans-serif" font-size="12">Aug 7</text>
+    <text x="230" y="172" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">onejemba.com</text>
+    <text x="230" y="185" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">SES domain DKIM verified</text>
+
+    <circle cx="390" cy="150" r="7" fill="#4da3ff"/>
+    <text x="390" y="128" text-anchor="middle" fill="#d7dee8" font-family="sans-serif" font-size="12">Aug 14</text>
+    <text x="390" y="172" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">Prior audit</text>
+    <text x="390" y="185" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">"no infra exists except Cognito"</text>
+
+    <circle cx="530" cy="150" r="7" fill="#f0a868"/>
+    <text x="530" y="128" text-anchor="middle" fill="#d7dee8" font-family="sans-serif" font-size="12">Aug 16</text>
+    <text x="530" y="172" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">Old Databricks project</text>
+    <text x="530" y="185" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">confirmed empty, then deleted</text>
+
+    <circle cx="680" cy="150" r="9" fill="none" stroke="#e94f37" stroke-width="2.5"/>
+    <text x="680" y="128" text-anchor="middle" fill="#e94f37" font-family="sans-serif" font-size="12" font-weight="bold">Aug 17 AM</text>
+    <text x="680" y="172" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">Jemba9_Ecosystem repo</text>
+    <text x="680" y="185" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">deleted; OneJemba seeded, moved</text>
+    <text x="680" y="198" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">to us-west-2; Amplify + Cognito wired</text>
+
+    <circle cx="880" cy="150" r="9" fill="none" stroke="#e94f37" stroke-width="2.5"/>
+    <text x="880" y="128" text-anchor="middle" fill="#e94f37" font-family="sans-serif" font-size="12" font-weight="bold">Aug 17 PM</text>
+    <text x="880" y="172" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="10.5">Platform build (dev)</text>
+    <text x="880" y="185" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">auth, Admin, App Factory, SSR</text>
+    <text x="880" y="198" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">compute role — 16 commits, this audit</text>
+
+    <text x="505" y="230" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">● pre-existing, reused &nbsp;&nbsp; ◐ prior audit finding &nbsp;&nbsp; ○ today's migration, verified live</text>
+  </svg>
+
+  <!-- ================= WHAT MOVED / RECREATED / DELETED ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:38px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">What Moved, What Was Recreated, What Was Deleted</h2>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:20%;">Item</th>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:14%;">Action</th>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Evidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">CodeCommit repo <code>Jemba9_Ecosystem</code> (us-east-2)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#e08a8a;font-weight:600;">Deleted</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>aws codecommit list-repositories --region us-east-2</code> no longer lists it; <code>git ls-remote origin</code> from your local clone returns <code>repository ... not found</code>.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">CodeCommit repo <code>OneJemba</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#8fd4a8;font-weight:600;">Created</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>us-west-2</code>, created 2026-08-17 07:12 CDT. Briefly created in <code>us-east-2</code> first, then moved — <code>CLAUDE.md</code> R2 and its own commit history document the move.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Databricks project <code>j9-ecosystem-dev</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#e08a8a;font-weight:600;">Deleted</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Per OneJemba's own README: confirmed to hold <strong>no</strong> BoardLab data before deletion (2026-08-16). Not independently re-verified here — Databricks is outside AWS CLI reach from this session.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Databricks project <code>onejemba-dev</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#8fd4a8;font-weight:600;">Created — screenshot verified</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">User-supplied Lakebase console screenshot (17 Aug) confirms project <code>onejemba-dev</code>, active <code>production</code> branch, active primary compute (8 vCPU / 16 GiB), ~0.03 GB, created 07:59 CDT by <code>c.long@jemba9.com</code>. Still unverified: DB roles, schemas, grants, migration state, and Backup &amp; Restore configuration.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Cognito user pool <code>jemba9-dev-users</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#4da3ff;font-weight:600;">Kept</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Live-verified: <code>CreationDate 2026-08-03</code> — <strong>14 days older</strong> than OneJemba itself. Confirms your belief exactly. Full detail below.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">SES domain identity <code>onejemba.com</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#4da3ff;font-weight:600;">Kept</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">DKIM key generated 2026-08-07, tagged <code>Project=Jemba9</code> (not <code>OneJemba</code>) — a shared identity-platform resource, not something new.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">IAM role <code>Jemba9EcosystemComputeRole</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#e08a8a;font-weight:600;">Orphaned</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Still exists (created 2026-08-03, last used 2026-08-13). The Amplify app it belonged to is gone. See Finding&nbsp;1.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">IAM role <code>OneJemba-Amplify-SSR-Compute</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#8fd4a8;font-weight:600;">Created</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Live-verified. Created 10:28 CDT today, last used 12:25 CDT today (actively invoked).</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Amplify app <code>OneJemba</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#8fd4a8;font-weight:600;">Created</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Live-verified, app id <code>dg6n5f9gmokbf</code>. Two branches (<code>main</code>, <code>dev</code>), both auto-building.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Secrets Manager namespace <code>onejemba/*</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#8fd4a8;font-weight:600;">Created</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">10 secrets live-verified (5 <code>dev</code> + 5 <code>prod</code>). Names and tags only — no values inspected. Most slots still hold placeholder values per the repo's own checklist.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">App <code>Applications/OKR</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#f0a868;font-weight:600;">Extracted (not yet integrated)</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Named as the one app carried forward, via the App Factory in Build Order phase P5. Not present in the OneJemba repo yet — still a plan item.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">App <code>Applications/boardlab</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><span style="color:#e08a8a;font-weight:600;">Not in the new plan</span></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Zero mentions anywhere in OneJemba's docs, CLAUDE.md, or workplan. See Finding&nbsp;4.</td></tr>
+      <tr><td style="padding:9px 12px;color:#f2f6fb;">App <code>Applications/dataroom</code></td><td style="padding:9px 12px;"><span style="color:#e08a8a;font-weight:600;">Not in the new plan</span></td><td style="padding:9px 12px;color:#9fb0c4;">Same as BoardLab — no mention anywhere in OneJemba.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ================= COGNITO CONFIRMATION ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:38px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">Your Belief About Cognito — Confirmed</h2>
+  <div style="background:#191f14;border-left:3px solid #8fd4a8;padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0;">
+    <p style="margin:0 0 10px 0;color:#c8d4e2;">Live-checked directly against the pool, not the repo docs:</p>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;">
+      <tbody>
+        <tr><td style="padding:6px 12px 6px 0;color:#7f8ea3;width:38%;">Pool name / ID</td><td style="padding:6px 0;color:#f2f6fb;"><code>jemba9-dev-users</code> / <code>us-west-2_abPt854Z8</code></td></tr>
+        <tr><td style="padding:6px 12px 6px 0;color:#7f8ea3;">Created</td><td style="padding:6px 0;color:#f2f6fb;">2026-08-03 — <strong>14 days before OneJemba existed</strong></td></tr>
+        <tr><td style="padding:6px 12px 6px 0;color:#7f8ea3;">Last modified</td><td style="padding:6px 0;color:#f2f6fb;">2026-08-17 06:18 CDT — today, matching CLAUDE.md's claim of a callback-URL fix (<code>localhost</code> → <code>onejemba.com</code>)</td></tr>
+        <tr><td style="padding:6px 12px 6px 0;color:#7f8ea3;">Tags</td><td style="padding:6px 0;color:#f2f6fb;"><code>Module=platform-identity</code>, <code>Project=Jemba9</code> — <em>not</em> tagged OneJemba specifically</td></tr>
+        <tr><td style="padding:6px 12px 6px 0;color:#7f8ea3;">App clients</td><td style="padding:6px 0;color:#f2f6fb;">One: <code>jemba9-dev-web</code> (<code>1uam89i681cs8fflmef0frj918</code>)</td></tr>
+        <tr><td style="padding:6px 12px 6px 0;color:#7f8ea3;">Groups</td><td style="padding:6px 0;color:#f2f6fb;">One: <code>app:admin</code>, created today 12:25 CDT — the only "door stamp" issued so far</td></tr>
+      </tbody>
+    </table>
+    <p style="margin:10px 0 0 0;color:#c8d4e2;"><strong style="color:#f2f6fb;">Conclusion: correct.</strong> The pool predates the migration by two weeks and was imported/reused, not torn down and rebuilt. This matches both CLAUDE.md's explicit claim ("Kept, not recreated") and the prior 2026-08-14 audit, which found this exact pool as the <em>only</em> piece of real Jemba9 infrastructure that existed at the time.</p>
+  </div>
+
+  <!-- ================= ARCHITECTURE ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:38px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">OneJemba — As Actually Deployed Today</h2>
+  <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;">
+    <text x="500" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">VERIFIED LIVE — AWS ACCOUNT 824999955649, REGION US-WEST-2</text>
+
+    <rect x="60" y="55" width="230" height="56" rx="7" fill="#141d2b" stroke="#4da3ff" stroke-width="1.4"/>
+    <text x="175" y="80" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Browser</text>
+    <text x="175" y="97" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10.5">onejemba.com / dev.onejemba.com</text>
+
+    <line x1="175" y1="111" x2="175" y2="140" stroke="#3a4a63" stroke-width="1.6"/>
+    <polygon points="175,148 169,138 181,138" fill="#3a4a63"/>
+
+    <rect x="60" y="150" width="230" height="62" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+    <text x="175" y="172" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Cognito — jemba9-dev-users</text>
+    <text x="175" y="188" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">passwordless email OTP · KEPT, not recreated</text>
+    <text x="175" y="201" text-anchor="middle" fill="#8fd4a8" font-family="sans-serif" font-size="10">created 2026-08-03</text>
+
+    <line x1="290" y1="181" x2="420" y2="181" stroke="#3a4a63" stroke-width="1.6"/>
+    <polygon points="428,181 418,175 418,187" fill="#3a4a63"/>
+
+    <rect x="430" y="130" width="510" height="130" rx="8" fill="#141d2b" stroke="#4da3ff" stroke-width="1.8"/>
+    <text x="450" y="154" fill="#4da3ff" font-family="sans-serif" font-size="13.5" font-weight="bold">Amplify app "OneJemba" (dg6n5f9gmokbf)</text>
+    <text x="450" y="174" fill="#9fb0c4" font-family="sans-serif" font-size="11">Next.js SSR (WEB_COMPUTE) · source: CodeCommit OneJemba</text>
+
+    <rect x="450" y="188" width="215" height="56" rx="5" fill="#26201a" stroke="#f0a868" stroke-width="1.3"/>
+    <text x="557" y="207" text-anchor="middle" fill="#f0a868" font-family="sans-serif" font-size="11" font-weight="600">main → onejemba.com</text>
+    <text x="557" y="221" text-anchor="middle" fill="#8a8f99" font-family="sans-serif" font-size="9.5">placeholder page only</text>
+    <text x="557" y="234" text-anchor="middle" fill="#8a8f99" font-family="sans-serif" font-size="9.5">no env vars set — no auth wired</text>
+
+    <rect x="690" y="188" width="235" height="56" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.3"/>
+    <text x="807" y="207" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="11" font-weight="600">dev → dev.onejemba.com</text>
+    <text x="807" y="221" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9.5">full platform: auth, Admin, App Factory</text>
+    <text x="807" y="234" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9.5">17 successful builds today</text>
+
+    <line x1="695" y1="260" x2="695" y2="290" stroke="#3a4a63" stroke-width="1.6"/>
+    <polygon points="695,298 689,288 701,288" fill="#3a4a63"/>
+
+    <rect x="530" y="300" width="330" height="56" rx="7" fill="#221a26" stroke="#a78bfa" stroke-width="1.4"/>
+    <text x="695" y="322" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12">IAM role: OneJemba-Amplify-SSR-Compute</text>
+    <text x="695" y="338" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">attached at app level (covers main + dev) · created + verified today</text>
+    <text x="695" y="350" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10">the only AWS identity the running platform has</text>
+
+    <line x1="620" y1="356" x2="380" y2="400" stroke="#3a4a63" stroke-width="1.4"/>
+    <polygon points="372,404 380,394 388,404" fill="#3a4a63" transform="rotate(0)"/>
+    <line x1="695" y1="356" x2="695" y2="400" stroke="#3a4a63" stroke-width="1.4"/>
+    <polygon points="695,408 689,398 701,398" fill="#3a4a63"/>
+    <line x1="770" y1="356" x2="900" y2="400" stroke="#3a4a63" stroke-width="1.4"/>
+    <polygon points="908,404 898,394 900,406" fill="#3a4a63"/>
+
+    <rect x="260" y="410" width="240" height="66" rx="7" fill="#151a22" stroke="#2b3a2c" stroke-width="1.3"/>
+    <text x="380" y="432" text-anchor="middle" fill="#8fd4a8" font-family="sans-serif" font-size="11.5" font-weight="600">Secrets Manager</text>
+    <text x="380" y="448" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9.5">onejemba/dev/* · onejemba/prod/*</text>
+    <text x="380" y="461" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9.5">10 slots · mostly REPLACE_ME still</text>
+
+    <rect x="570" y="410" width="250" height="66" rx="7" fill="#151a22" stroke="#2b3a2c" stroke-width="1.3"/>
+    <text x="695" y="432" text-anchor="middle" fill="#8fd4a8" font-family="sans-serif" font-size="11.5" font-weight="600">Cognito Admin API (read/write)</text>
+    <text x="695" y="448" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9.5">AdminCreateUser · Groups · scoped to</text>
+    <text x="695" y="461" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9.5">us-west-2_abPt854Z8 only</text>
+
+    <rect x="840" y="410" width="130" height="66" rx="7" fill="#151a22" stroke="#5fbf8f" stroke-width="1.3"/>
+    <text x="905" y="432" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="11" font-weight="600">Lakebase</text>
+    <text x="905" y="448" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9">onejemba-dev</text>
+    <text x="905" y="461" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9">screenshot verified:</text>
+    <text x="905" y="472" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="9">production branch active</text>
+
+    <text x="500" y="500" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">SES identity onejemba.com (kept, verified 2026-08-07) sends Cognito's OTP codes — not shown, out of the SSR role's request path.</text>
+  </svg>
+
+  <!-- ================= FINDINGS ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">Findings</h2>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#e08a8a;font-weight:600;font-size:16px;margin-bottom:6px;">1 · Orphaned IAM role still authorized to send email as onejemba.com</div>
+    <p style="margin:0;color:#c8d4e2;"><code style="color:#8fd4a8;">Jemba9EcosystemComputeRole</code> (created 2026-08-03, last used 2026-08-13) belonged to the old, now-deleted Amplify app. No Amplify app references it today — <code>aws amplify list-apps</code> in <code>us-west-2</code> and <code>us-east-2</code> shows only <code>OneJemba</code>. But the SES identity's resource policy for <code>onejemba.com</code> still explicitly grants this stale role <code>ses:SendEmail</code> / <code>ses:SendRawEmail</code>. It is a live, standing grant with no active application behind it. <strong style="color:#f2f6fb;">Recommend:</strong> delete the role (nothing depends on it) and update the SES identity policy to reference only <code>OneJemba-Amplify-SSR-Compute</code>, which currently has no SES permission of its own — a second, smaller gap, since the app itself cannot send mail directly today; only Cognito's own service-to-service call to SES works.</p>
+  </div>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#f0a868;font-weight:600;font-size:16px;margin-bottom:6px;">2 · Production (main / onejemba.com) is 16 commits behind dev and has no auth wired</div>
+    <p style="margin:0;color:#c8d4e2;">Confirmed by direct branch comparison: local <code>main</code> and <code>origin/main</code> both sit at commit <code>46f5ca2</code> ("repo moves to us-west-2; P0 snapshot flag resolved") — essentially the seed commit. <code>origin/dev</code> is at <code>0b11a19</code>, 16 commits ahead, containing the entire auth/Admin/App-Factory build. Live-verified on the Amplify branch config: the <code>main</code> branch has <strong>zero</strong> environment variables set, while <code>dev</code> has <code>COGNITO_USER_POOL_ID</code>, <code>COGNITO_CLIENT_ID</code>, and <code>AMPLIFY_APP_ID</code>. <strong style="color:#f2f6fb;">In its current state, onejemba.com serves only the placeholder page and cannot authenticate anyone.</strong> This is expected mid-build per <code>CLAUDE.md</code>'s branch model ("promote to prod is one action: merge dev into main") — flagging only so nobody is surprised visiting the live URL today.</p>
+  </div>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#f0a868;font-weight:600;font-size:16px;margin-bottom:6px;">3 · Apex domain (onejemba.com) not yet verified in Amplify's own records</div>
+    <p style="margin:0;color:#c8d4e2;">Amplify's domain association for <code>onejemba.com</code> shows the <code>main</code>-branch apex subdomain setting as <code>"verified": false</code>, while <code>www</code> and <code>dev</code> are both <code>"verified": true</code>. In practice, a direct request to <code>https://onejemba.com</code> during this audit returned <strong>HTTP 200</strong> — so it may simply be that Amplify's status hasn't caught up with DNS propagation. Worth a manual recheck in the Amplify console before treating the bare domain as production-ready.</p>
+  </div>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#e08a8a;font-weight:600;font-size:16px;margin-bottom:6px;">4 · BoardLab and Dataroom have no place in the new plan</div>
+    <p style="margin:0;color:#c8d4e2;">Every phase of the Build Order (P0–P5) is documented in OneJemba's own <code>docs/workplan/</code> and <code>CLAUDE.md</code>. Only <strong>OKR</strong> is named for extraction and eventual integration (P5, via the App Factory). Neither <strong>BoardLab</strong> nor <strong>Dataroom</strong> appears anywhere in the new repo, its house rules, or its workplan. Their source code and full commit history currently exist only in your local clone of the deleted <code>Jemba9_Ecosystem</code> repo (see Finding&nbsp;5) — there is no stated plan to bring either forward into OneJemba. If both are still wanted, this needs a decision and a P-phase of their own; if BoardLab in particular (which had a working, tested Next.js app with Lakebase and Databricks AI Gateway integration per the 2026-08-14 audit) is meant to be revived, it should happen before this local clone is the only surviving copy of its history.</p>
+  </div>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#e08a8a;font-weight:600;font-size:16px;margin-bottom:6px;">5 · The P0 archive bundle was not found on this machine</div>
+    <p style="margin:0;color:#c8d4e2;">OneJemba's own migration plan (<code>docs/workplan/prompts/CC1_extract_and_archive.md</code>) calls the pre-deletion archive "the only history that survives — treat it as the deliverable it is," to be written to <code>~/Documents/Claude/Projects/OneJemba/migration/</code> with a recorded SHA256. That directory <strong>does not exist on this machine</strong> — <code>~/Documents/Claude/Projects/</code> is absent entirely. This strongly suggests your partner ran P0 on their own machine and only pushed the resulting <code>OneJemba</code> git repo (which is gitignore-excluded from carrying the archive) to CodeCommit. <strong style="color:#f2f6fb;">You are not currently able to verify the archive bundle exists, its SHA256, or that it is backed up anywhere durable.</strong> The good news: your own local clone of the old repo (<code>/Users/michaelberry/Documents/Jemba9/CasecadeProjects/Jemba9_Ecosystem</code>, 109 commits, all 5 known branches present including <code>okr-app</code> and <code>feat/board-lab</code>) is itself a substantially complete independent copy — but it is a single laptop's disk, which is exactly the failure mode the archive step exists to avoid. <strong>Recommend:</strong> ask your partner directly whether the bundle exists and where, and separately back up this local clone (e.g. <code>git bundle create</code> to cloud storage) as a second point of safety regardless.</p>
+  </div>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#f0a868;font-weight:600;font-size:16px;margin-bottom:6px;">6 · Carried over, unresolved since the 2026-08-14 audit: plaintext BoardLab credentials on disk</div>
+    <p style="margin:0;color:#c8d4e2;">The prior audit flagged <code>Applications/boardlab/.env</code> as containing four live plaintext credentials (three Lakebase role passwords plus a Databricks client secret) and recommended rotation. That file is <strong>still present, unrotated, gitignored</strong> in your local <code>Jemba9_Ecosystem</code> clone today. It was never committed to git (confirmed — no <code>.env</code> appears anywhere in the repo's full commit history across all branches), so this is a local-disk exposure, not a repo leak. Since BoardLab is not part of the OneJemba plan (Finding&nbsp;4), these credentials are now for infrastructure that may no longer be reachable — worth confirming whether they still grant real access, and rotating or deleting them either way.</p>
+  </div>
+
+  <div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+    <div style="color:#8fd4a8;font-weight:600;font-size:16px;margin-bottom:6px;">7 · The account-confusion question from the prior audit is now resolved</div>
+    <p style="margin:0;color:#c8d4e2;">2026-08-14's audit asked, as its top open question: "which account is the real deploy target — <code>573631993254</code> or <code>824999955649</code>?" OneJemba's <code>CLAUDE.md</code> (House Rule R1) answers this decisively and for a reason not previously documented: <strong style="color:#f2f6fb;">573631993254 is "Cloud Cowboy" — a different company entirely</strong>, not a legacy or alternate Jemba9 environment. Every prior reference to it in the old repo's docs and Dataroom's inherited GitHub Actions workflows was, per this new framing, simply wrong. <code>824999955649</code> is confirmed as the one true account going forward. One residual risk this creates: <strong>this machine's default (unqualified) AWS profile still points at Cloud Cowboy</strong> per CLAUDE.md's own warning — any stray <code>aws</code> command run without an explicit <code>--profile</code> risks operating against a different company's AWS account. This audit used the explicit <code>jemba9-dev</code> profile throughout for exactly this reason.</p>
+  </div>
+
+  <!-- ================= LIVE INVENTORY APPENDIX ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">Appendix A — Live Resource Inventory (Verified, Not Values)</h2>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Resource</th>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Identifier</th>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Created / Last Touched</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">CodeCommit repo</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>OneJemba</code> (us-west-2)</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created 07:12, last push 12:27 (CDT)</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Amplify app</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>OneJemba</code> / <code>dg6n5f9gmokbf</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created 07:31, updated 10:28</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Amplify branch</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>main</code> → onejemba.com — build SUCCEED</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">07:33 (1 build total)</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Amplify branch</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>dev</code> → dev.onejemba.com — build SUCCEED</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">12:27 (job 17 of 17)</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Domain association</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>onejemba.com</code> — AMPLIFY_MANAGED cert, status AVAILABLE</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">apex unverified in API, <code>www</code>/<code>dev</code> verified</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Cognito user pool</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>jemba9-dev-users</code> / <code>us-west-2_abPt854Z8</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created 2026-08-03, modified today 06:18</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Cognito app client</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>jemba9-dev-web</code> / <code>1uam89i681cs8fflmef0frj918</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">only client on the pool</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Cognito group</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>app:admin</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created today 12:25 — only group present</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">SES identity</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>onejemba.com</code> — DKIM SUCCESS, verified for sending</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">DKIM key generated 2026-08-07</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">IAM role (active)</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>OneJemba-Amplify-SSR-Compute</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created 10:28, last used 12:25</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">IAM role (orphaned)</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>Jemba9EcosystemComputeRole</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created 2026-08-03, last used 2026-08-13</td></tr>
+      <tr><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Secrets Manager</td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">10 secrets under <code>onejemba/{dev,prod}/{cognito,lakebase,app,databricks,ses}</code></td><td style="padding:8px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">created/changed 08:42 – 10:09 today</td></tr>
+      <tr><td style="padding:8px 12px;color:#f2f6fb;">KMS key</td><td style="padding:8px 12px;color:#9fb0c4;"><code>ca503ca2-e255-4f6e-8037-a4f6ed48ee65</code> — encrypts the OneJemba CodeCommit repo</td><td style="padding:8px 12px;color:#9fb0c4;">—</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:#6b7a8d;font-size:13px;margin-top:10px;">No secret <em>values</em> were read, printed, or would ever be included in this report — only names, tags, and timestamps, all obtained via read-only AWS CLI calls (<code>get-role</code>, <code>get-app</code>, <code>list-branches</code>, <code>describe-user-pool</code>, <code>list-secrets</code>, <code>get-email-identity</code>) under the <code>jemba9-dev</code> SSO profile, account <code>824999955649</code>.</p>
+
+  <!-- ================= MINIMUM VIABLE ENVIRONMENT ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">Path to a Full Working Environment — With One Supported Application</h2>
+  <div style="background:#141b24;border-left:3px solid #4da3ff;padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0;">
+    <p style="margin:0;color:#c8d4e2;"><strong style="color:#f2f6fb;">Recommended first supported application: OKR.</strong> It is the only application explicitly carried forward in OneJemba's P0/P5 workplan. The platform is currently a working <em>shell</em> on <code>dev</code> — auth, Admin shelves, compute role and secret slots exist — but it is not yet a full operating environment because the Lakebase and service-secret slots are documented as incomplete, the application registry is empty, and no business application is installed. BoardLab is not a substitute without an explicit product decision: its source was not migrated, its old data model is not aligned to the new one-schema-per-app rule, and its credentials remain a separate security concern.</p>
+  </div>
+
+  <svg viewBox="0 0 1000 245" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:18px 0;">
+    <text x="500" y="28" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">MINIMUM VIABLE ONEJEMBA ENVIRONMENT — ORDER OF OPERATIONS</text>
+
+    <rect x="35" y="62" width="175" height="112" rx="8" fill="#26201a" stroke="#f0a868" stroke-width="1.5"/>
+    <text x="122" y="86" text-anchor="middle" fill="#f0a868" font-family="sans-serif" font-size="12" font-weight="bold">1 · Finish dev config</text>
+    <text x="50" y="107" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Fill verified Cognito</text>
+    <text x="50" y="123" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">+ Lakebase secret slots.</text>
+    <text x="50" y="139" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Confirm Databricks / SES</text>
+    <text x="50" y="155" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">values are real, not placeholders.</text>
+
+    <line x1="220" y1="118" x2="250" y2="118" stroke="#3a4553" stroke-width="2"/><polygon points="258,118 248,112 248,124" fill="#3a4553"/>
+
+    <rect x="265" y="62" width="175" height="112" rx="8" fill="#26201a" stroke="#f0a868" stroke-width="1.5"/>
+    <text x="352" y="86" text-anchor="middle" fill="#f0a868" font-family="sans-serif" font-size="12" font-weight="bold">2 · Prove platform core</text>
+    <text x="280" y="107" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Run platform migrations.</text>
+    <text x="280" y="123" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Bootstrap owner; sign in</text>
+    <text x="280" y="139" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">with email OTP; validate</text>
+    <text x="280" y="155" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Admin + Dev shelf end-to-end.</text>
+
+    <line x1="450" y1="118" x2="480" y2="118" stroke="#3a4553" stroke-width="2"/><polygon points="488,118 478,112 478,124" fill="#3a4553"/>
+
+    <rect x="495" y="62" width="175" height="112" rx="8" fill="#141d2b" stroke="#4da3ff" stroke-width="1.5"/>
+    <text x="582" y="86" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="12" font-weight="bold">3 · Install OKR</text>
+    <text x="510" y="107" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Extract + adapt app kit.</text>
+    <text x="510" y="123" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Create <tspan font-family="monospace">okr</tspan> schema, grants,</text>
+    <text x="510" y="139" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">manifest + <tspan font-family="monospace">app:okr</tspan> group.</text>
+    <text x="510" y="155" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Register launcher tile + routes.</text>
+
+    <line x1="680" y1="118" x2="710" y2="118" stroke="#3a4553" stroke-width="2"/><polygon points="718,118 708,112 708,124" fill="#3a4553"/>
+
+    <rect x="725" y="62" width="240" height="112" rx="8" fill="#16221b" stroke="#5fbf8f" stroke-width="1.5"/>
+    <text x="845" y="86" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="12" font-weight="bold">4 · Operate dev; then promote</text>
+    <text x="740" y="107" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">Test one invited user + one owner,</text>
+    <text x="740" y="123" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">OKR CRUD, group gate, DB grants,</text>
+    <text x="740" y="139" fill="#c8d4e2" font-family="sans-serif" font-size="10.5">build/redeploy and recovery. Merge</text>
+    <text x="740" y="155" fill="#c8d4e2" font-family="sans-serif" font-size="10.5"><tspan font-family="monospace">dev</tspan> → <tspan font-family="monospace">main</tspan> only after dev sign-off.</text>
+
+    <text x="500" y="215" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">Do not start with production DNS or a second application. A successful deploy is not a usable environment until one real user can authenticate, reach one authorized app, write data to its own schema, and recover from a failed build or access change.</text>
+  </svg>
+
+  <h3 style="font-size:18px;color:#f2f6fb;margin:28px 0 12px 0;">Readiness Matrix — What Still Has to Happen</h3>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:22%;">Workstream</th>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:18%;">Current evidence</th>
+        <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Required next action / definition of done</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>Configuration &amp; secret slots</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f0a868;">Partial — 10 safe slots exist; repo's own variable map says several dev values remain <code>REPLACE_ME</code>.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">A human with the correct SSO rights must populate the required <code>onejemba/dev/{cognito,lakebase,app,databricks,ses}</code> values from their authoritative systems. Never place values in git, chat, or this report. Definition of done: the Dev shelf shows all necessary slots set and the app's runtime read path succeeds without logging values.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>Lakebase / platform database</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f0a868;">Partial — screenshot now verifies the <code>onejemba-dev</code> project and an active <code>production</code> branch/compute; platform migration SQL exists (<code>0001_platform.sql</code>, <code>0002_seed_roles.sql</code>). Roles, schemas, grants, migration state, and backups remain unverified.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Before migration, resolve the naming mismatch: OneJemba's application environment calls this <code>dev</code>, while the shown Lakebase branch is named <code>production</code>. Document whether that branch is the shared OneJemba production data branch or only a Lakebase default label. Do not apply dev migrations or test data until that mapping is explicit. Then run the declared migration mechanism, verify <code>platform</code> schema/seeded roles/least-privilege grants, and capture a repeatable migration + restore runbook before app data is added.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>Identity &amp; first operator</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#8fd4a8;">Mostly present — existing Cognito pool/client; <code>app:admin</code> group and owner-bootstrap code created today; SES domain verified.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Use the intended bootstrap process once (not a public route) to establish the first owner. Test unknown-email handling, email OTP delivery, logout/refresh, Admin People/Roles access, and no-access behavior with a second test user. Record who holds owner and rollback authority.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>Amplify dev delivery</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#8fd4a8;">Present — <code>dev</code> has 17 successful builds; SSR compute role is live and last used today.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Confirm the source-of-truth build spec actually runs the ledger generation, typecheck, tests, and app discovery promised by the workplan — live Amplify build spec still labels itself a P2 "PLACEHOLDER" and only shows <code>npm ci</code> / <code>npm run build</code>. Add the missing quality gates before relying on auto-build for business changes.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>OKR app extraction &amp; adaptation</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f0a868;">Planned only — P0 says it was extracted; P5 says it becomes the App Factory's first test. No <code>app/applications/okr/</code> directory exists on dev today.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Locate/verify the extracted OKR archive and its manifest; adapt it to the app-kit contract; remove its old deployment/auth assumptions; create <code>okr</code> Lakebase schema and grants; publish its <code>manifest.json</code>; add the <code>app:okr</code> Cognito group; register it in the launcher. Do not copy old local-Docker Prisma assumptions straight into the new platform.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>App isolation &amp; acceptance</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f0a868;">Design exists — CLAUDE.md requires each app write only its own schema and read <code>platform</code>; no app is installed to prove it.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Prove with tests: an <code>app:okr</code> user can see/use OKR but not Admin; an admin can administer people and app access; OKR writes only <code>okr.*</code>; cross-schema writes fail; a revoked group membership removes launcher and route access after token refresh. Test a failed deploy/redeploy recovery path too.</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;"><strong>Production promotion</strong></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#e08a8a;">Not ready — <code>main</code> is still the placeholder seed and has no branch config.</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">After dev acceptance only: fill the independent <code>onejemba/prod/*</code> slots, create/prove the prod Lakebase schema, validate apex DNS/certificate, review the <code>dev → main</code> diff, merge through the documented review process, then repeat smoke + authorization tests. Do not point production at the dev database/schema.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:18px;color:#f2f6fb;margin:28px 0 12px 0;">Minimum Acceptance Test — The First Day It Counts as "Running"</h3>
+  <div style="background:#191f14;border-left:3px solid #8fd4a8;padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0;">
+    <p style="margin:0 0 10px 0;color:#c8d4e2;">The environment should not be declared fully operational merely because Amplify says <code>SUCCEED</code>. Before calling dev ready, execute and record this golden path:</p>
+    <ol style="padding-left:24px;color:#c8d4e2;">
+      <li style="margin-bottom:7px;">A bootstrap owner requests and verifies an email OTP through <code>dev.onejemba.com</code>, reaches the launcher, and sees Admin.</li>
+      <li style="margin-bottom:7px;">The owner creates/invites a normal test user, assigns <code>app:okr</code>, and verifies the user sees OKR but does not see or reach Admin.</li>
+      <li style="margin-bottom:7px;">That user creates, updates, and reads one non-sensitive test OKR; the record lands in the <code>okr</code> schema, with the app unable to write <code>platform</code> or another app's schema.</li>
+      <li style="margin-bottom:7px;">The owner revokes <code>app:okr</code>; after a token refresh, the user loses both the launcher tile and direct-route access.</li>
+      <li style="margin-bottom:7px;">A deploy from <code>dev</code> is observed end-to-end in Amplify, then a known-safe redeploy is demonstrated so the team has a practical recovery path.</li>
+      <li style="margin-bottom:0;">The result, schema migration version, build id, test users/groups, and rollback/redeploy method are captured in a short dev runbook. Only then is a reviewed promotion to <code>main</code> meaningful.</li>
+    </ol>
+  </div>
+
+  <!-- ================= RECOMMENDATIONS ================= -->
+  <h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 14px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">Recommended Next Steps</h2>
+  <ol style="padding-left:24px;">
+    <li style="margin-bottom:10px;">Confirm with your partner whether the P0 archive bundle (<code>Jemba9_Ecosystem_FULL_*.bundle</code>) exists, get its SHA256, and get it into durable, shared storage — not just a laptop (Finding&nbsp;5).</li>
+    <li style="margin-bottom:10px;">Decide BoardLab and Dataroom's fate explicitly — revive into OneJemba as future App Factory apps, or consciously retire — before your local clone becomes the only copy of record (Finding&nbsp;4).</li>
+    <li style="margin-bottom:10px;">Delete the orphaned <code>Jemba9EcosystemComputeRole</code> and remove it from the <code>onejemba.com</code> SES identity policy (Finding&nbsp;1).</li>
+    <li style="margin-bottom:10px;">Rotate or delete the plaintext BoardLab credentials sitting in <code>Applications/boardlab/.env</code> on this machine (Finding&nbsp;6).</li>
+    <li style="margin-bottom:10px;">Re-verify the <code>onejemba.com</code> apex domain in the Amplify console once DNS has had time to settle (Finding&nbsp;3).</li>
+    <li style="margin-bottom:0;">Document the Lakebase environment mapping before writing data: the screenshot confirms an active <code>production</code> branch inside project <code>onejemba-dev</code>. Confirm whether that is intentionally the branch backed by OneJemba's <code>dev</code> application environment, or whether a separate Lakebase dev branch/schema must be created. Then verify database roles, schemas, grants, migration state, and Backup &amp; Restore settings directly in Databricks.</li>
+  </ol>
+
+  <div style="margin-top:44px;padding-top:20px;border-top:1px solid #242c38;font-size:13px;color:#6b7a8d;">
+    <div style="color:#7f8ea3;letter-spacing:.14em;text-transform:uppercase;font-size:11.5px;margin-bottom:8px;">Sources</div>
+    <div style="margin-bottom:6px;">Repos reviewed: <code>OneJemba</code> (cloned fresh from <code>codecommit::us-west-2://OneJemba</code>, both <code>main</code> and <code>dev</code>) and the local <code>Jemba9_Ecosystem</code> clone at <code>/Users/michaelberry/Documents/Jemba9/CasecadeProjects/Jemba9_Ecosystem</code>.</div>
+    <div style="margin-bottom:6px;">Key files read: <code>CLAUDE.md</code>, <code>README.md</code>, <code>infra/README.md</code>, <code>infra/create-compute-role.sh</code>, <code>infra/amplify-ssr-compute-{trust,policy}.json</code>, <code>docs/environment/PLATFORM_VARIABLE_MAP.md</code>, <code>docs/environment/VARIABLE_LEDGER.md</code>, <code>docs/workplan/prompts/CC1_extract_and_archive.md</code>, and the prior <code>documents/review-notes/aws-infrastructure-audit-2026-08-14.md</code>.</div>
+    <div>AWS CLI calls: <code>codecommit list-repositories</code> / <code>get-repository</code>, <code>amplify get-app</code> / <code>list-branches</code> / <code>list-jobs</code> / <code>list-domain-associations</code> / <code>list-apps</code>, <code>iam get-role</code> / <code>list-role-policies</code>, <code>cognito-idp describe-user-pool</code> / <code>list-user-pool-clients</code> / <code>list-groups</code>, <code>secretsmanager list-secrets</code>, <code>sesv2 get-email-identity</code> — all under profile <code>jemba9-dev</code>, account <code>824999955649</code>, confirmed via <code>sts get-caller-identity</code> before any query.</div>
+  </div>
+
+</div>
+</body>
+</html>

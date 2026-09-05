@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Phase 10 Preflight — Space Assurance Gateway Staging</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #0f172a; margin: 0; padding: 32px 24px 64px;">
+
+  <div style="max-width: 900px; margin: 0 auto;">
+
+    <h1 style="font-size: 24px; font-weight: 700; color: #1e3a5f; margin-bottom: 4px;">Phase 10 Preflight — Operator Guide</h1>
+    <p style="font-size: 14px; color: #64748b; margin-top: 0; margin-bottom: 32px;">
+      Space Assurance Gateway &mdash; Staging CDK Stack + Deploy Pipeline &mdash;
+      documents/plans/active/25-staging-cdk-stack-and-deploy-pipeline-execution.md
+    </p>
+
+    <div style="background: #fff7ed; border: 1px solid #fdba74; border-radius: 8px; padding: 14px 18px; margin-bottom: 28px; font-size: 14px;">
+      <strong style="color: #c2410c;">Decision confirmed:</strong> staging uses a <strong>separate, dedicated Lakebase instance</strong>
+      (not a schema on the shared dev instance) &mdash; chosen for blast-radius isolation and a cleaner path toward
+      commercialization. This requires no changes to already-approved CDK/backend code; it only affects the real
+      credential values created below.
+    </div>
+
+    <!-- Item 1 -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.07); margin-bottom: 24px; overflow: hidden;">
+      <div style="background: #1e3a5f; color: #ffffff; padding: 12px 20px; font-size: 15px; font-weight: 700;">
+        1. Provision a new Lakebase instance for staging
+      </div>
+      <div style="padding: 18px 20px;">
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>Go to the <strong>sag-backend</strong> Databricks workspace: <code style="background:#f1f5f9; padding:2px 5px; border-radius:4px;">https://dbc-10400a1c-b271.cloud.databricks.com</code></li>
+          <li>Left nav &rarr; <strong>Compute</strong> &rarr; <strong>Lakebase</strong> tab</li>
+          <li>Click <strong>Create database / project</strong> &mdash; do <em>not</em> open the existing <code>sag-dev</code> project (that's dev's instance)</li>
+          <li>Name it <code>sag-staging</code> so it's unambiguous in the console</li>
+          <li>Wait for provisioning to finish, then open it &rarr; <strong>Overview</strong> &rarr; <strong>Roles &amp; Databases</strong> tab (on the <code>production</code> branch overview page)</li>
+          <li>Create (or note the auto-created) role &mdash; name it <code>sag_backend_staging</code> to avoid confusion with dev's <code>sag_backend</code> role</li>
+          <li><strong>Reset password</strong> on that role (&#8942; menu &rarr; Reset password) &mdash; copy the generated password immediately, you won't see it again</li>
+          <li>Note the <strong>host</strong> (e.g. <code>ep-&lt;something&gt;.database.us-west-2.cloud.databricks.com</code>) and <strong>database name</strong> (likely <code>databricks_postgres</code>)</li>
+          <li>Assemble the connection string:
+            <pre style="background:#0f172a; color:#e2e8f0; padding:12px 14px; border-radius:6px; font-size:13px; overflow-x:auto; margin: 8px 0 0;">postgresql://sag_backend_staging:&lt;password&gt;@&lt;host&gt;/databricks_postgres?sslmode=require</pre>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.07); margin-bottom: 24px; overflow: hidden;">
+      <div style="background: #1e3a5f; color: #ffffff; padding: 12px 20px; font-size: 15px; font-weight: 700;">
+        2. Create the two staging secrets in AWS Secrets Manager
+      </div>
+      <div style="padding: 18px 20px; font-size: 14px; line-height: 1.7;">
+        <p style="margin-top:0;">Requires <code>AWS_PROFILE=jemba9-dev</code> with Secrets Manager write access, region <code>us-west-2</code>:</p>
+        <pre style="background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:6px; font-size:13px; overflow-x:auto;">aws sso login --profile jemba9-dev
+export AWS_PROFILE=jemba9-dev
+export AWS_REGION=us-west-2
+
+aws secretsmanager create-secret \
+  --name sag/staging/database-url \
+  --secret-string "postgresql://sag_backend_staging:&lt;password&gt;@&lt;host&gt;/databricks_postgres?sslmode=require" \
+  --region us-west-2
+
+aws secretsmanager create-secret \
+  --name sag/staging/client-secret \
+  --secret-string "&lt;staging Databricks SP OAuth client secret&gt;" \
+  --region us-west-2</pre>
+        <p><strong>Step 2a &mdash; client-secret value:</strong> decide whether staging reuses the <em>same</em> <code>sag-backend</code>
+        service principal as dev (simpler) or gets its own dedicated SP (more isolated, matches the "separate instance" spirit).
+        If reusing dev's SP, copy the existing secret value from <code>sag/dev/client-secret-BkOQto</code>. If creating a new SP,
+        that's a Databricks Account Console step (Chad Fisher typically does this per the existing setup docs).</p>
+        <div style="background:#fef2f2; border:1px solid #fca5a5; border-radius:6px; padding:10px 14px; font-size:13px;">
+          <strong style="color:#dc2626;">Capture the exact ARNs</strong> from the <code>create-secret</code> output
+          (they include a random 6-character suffix, e.g. <code>sag/staging/database-url-Ab12Cd</code>). These exact
+          suffixed ARNs are required for the final handoff step below.
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.07); margin-bottom: 24px; overflow: hidden;">
+      <div style="background: #1e3a5f; color: #ffffff; padding: 12px 20px; font-size: 15px; font-weight: 700;">
+        3. Create IAM Identity Center groups
+      </div>
+      <div style="padding: 18px 20px;">
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>AWS Console &rarr; <strong>IAM Identity Center</strong> &rarr; <strong>Groups</strong> &rarr; <strong>Create group</strong>, three groups:
+            <ul style="margin-top:6px;">
+              <li><code>sag-developers-staging</code> &mdash; developers who can push feature branches and open PRs, but are <strong>denied</strong> direct push to <code>main</code> and denied overriding approval rules</li>
+              <li><code>sag-staging-deployers</code> &mdash; can trigger/approve break-glass staging actions (routine deploys are automated on merge)</li>
+              <li><code>sag-production-approvers</code> &mdash; Mike Berry + Chad Fisher, who approve the prod-promotion pipeline's manual gate</li>
+            </ul>
+          </li>
+          <li>Add users to each group</li>
+          <li>Attach the existing deny policy to the developers group: <strong>Groups &rarr; sag-developers-staging &rarr; Permission sets &rarr; attach</strong>
+            <code>sag-developer-main-protection-staging</code> (this managed policy already exists in AWS from Phase 5 &mdash;
+            <code>infra/lib/codecommit-governance-stack.ts</code> created it, just never attached it)</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.07); margin-bottom: 24px; overflow: hidden;">
+      <div style="background: #1e3a5f; color: #ffffff; padding: 12px 20px; font-size: 15px; font-weight: 700;">
+        4. Associate the CodeCommit approval-rule template
+      </div>
+      <div style="padding: 18px 20px; font-size: 14px; line-height: 1.7;">
+        <p style="margin-top:0;">No CDK/CloudFormation resource exists for this (confirmed in Phase 5) &mdash; it's CLI-only:</p>
+        <pre style="background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:6px; font-size:13px; overflow-x:auto;">aws codecommit create-approval-rule-template \
+  --approval-rule-template-name "sag-main-2-approvals" \
+  --approval-rule-template-content '{
+    "Version": "2018-11-08",
+    "DestinationReferences": ["refs/heads/main"],
+    "Statements": [{
+      "Type": "Approvers",
+      "NumberOfApprovalsNeeded": 2,
+      "ApprovalPoolMembers": [
+        "arn:aws:sts::824999955649:assumed-role/&lt;infra-pool-role&gt;/*"
+      ]
+    }]
+  }' \
+  --region us-east-2
+
+aws codecommit associate-approval-rule-template-with-repository \
+  --approval-rule-template-name "sag-main-2-approvals" \
+  --repository-name j9ccgit \
+  --region us-east-2</pre>
+        <p>Replace <code>&lt;infra-pool-role&gt;</code> with the actual IAM role ARN pattern for your infra/admin pool
+        (this defines who can count as one of the 2 approvers).</p>
+      </div>
+    </div>
+
+    <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; font-size: 14px; line-height: 1.6;">
+      <strong style="color: #15803d;">Handoff:</strong> once you have the 2 exact secret ARNs (step 2) and confirmation
+      the groups/approval-rule are in place (steps 3&ndash;4), hand them to Cascade to update
+      <code>infra/lib/stage-config.ts</code> with the real ARNs and proceed with Phase 10's actual
+      <code>cdk deploy</code> sequence.
+    </div>
+
+  </div>
+
+</body>
+</html>

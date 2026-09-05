@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QMS Overview &amp; Company Context | Jemba9 QMS Training</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c2b39;
+    background: #f4f6f9;
+  }
+  a { color: #0e6e73; }
+  a:visited { color: #0e6e73; }
+  .layout { display: flex; align-items: flex-start; min-height: 100vh; }
+  .sidebar {
+    width: 270px;
+    flex: 0 0 270px;
+    background: #0f2942;
+    color: #dce6ef;
+    padding: 22px 18px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .brand {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .sidebar .brand small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #8fa9c2;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .sidebar .home-link {
+    display: inline-block;
+    margin: 14px 0 18px;
+    font-size: 0.82rem;
+    color: #f5c064;
+    text-decoration: none;
+    border: 1px solid #2c4a68;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .sidebar .home-link:hover { background: #16324f; }
+  .nav-group { margin-top: 18px; }
+  .nav-group h2 {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7fa0bd;
+    margin: 0 0 6px;
+    font-weight: 700;
+    border-bottom: 1px solid #23405e;
+    padding-bottom: 5px;
+  }
+  .nav-group a {
+    display: block;
+    color: #cddbe8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 8px 6px 10px;
+    border-left: 3px solid transparent;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .nav-group a:hover { background: #16324f; }
+  .nav-group a.active {
+    background: #16324f;
+    border-left: 3px solid #f5a623;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .nav-group a .num {
+    display: inline-block;
+    min-width: 20px;
+    color: #7fa0bd;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-group a.active .num { color: #f5a623; }
+
+  .main { flex: 1 1 auto; min-width: 0; padding: 32px 44px 70px; max-width: 980px; }
+  .breadcrumb {
+    font-size: 0.8rem;
+    color: #5b7085;
+    margin-bottom: 18px;
+  }
+  .breadcrumb a { color: #0e6e73; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    color: #0f2942;
+  }
+  .page-header .subtitle {
+    color: #4a5b6c;
+    font-size: 1rem;
+    margin: 0 0 26px;
+  }
+  .process-badge {
+    display: inline-block;
+    background: #eaf3f2;
+    color: #0e6e73;
+    border: 1px solid #bfdbd9;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #dde5ec;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 26px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #0f2942;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+  }
+  .card h3 { font-size: 1.02rem; color: #163a54; }
+
+  table.doc-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  table.doc-table th, table.doc-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e6ebf0;
+    vertical-align: top;
+  }
+  table.doc-table th {
+    background: #f5f8fa;
+    color: #33495e;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  table.doc-table td code { font-size: 0.8rem; background: #f0f4f7; padding: 1px 5px; border-radius: 3px; }
+  .clause-tag {
+    display: inline-block;
+    background: #fbeedd;
+    color: #8a5a12;
+    border: 1px solid #f0d4a6;
+    font-size: 0.72rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    margin: 1px 2px 1px 0;
+    white-space: nowrap;
+  }
+
+  .jemba9-fact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 10px 24px;
+    font-size: 0.9rem;
+  }
+  .jemba9-fact-grid dt { font-weight: 700; color: #163a54; }
+  .jemba9-fact-grid dd { margin: 0 0 10px; color: #33495e; }
+
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .syllabus-grid { grid-template-columns: 1fr; } }
+  .syllabus-grid ol, .syllabus-grid ul { padding-left: 20px; margin: 0; }
+  .syllabus-grid li { margin-bottom: 9px; font-size: 0.92rem; }
+  .audience-tags span {
+    display: inline-block;
+    background: #eef3f8;
+    color: #234a68;
+    border: 1px solid #d4e0ec;
+    font-size: 0.78rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+
+  fieldset.notes-section {
+    background: #fffaf1;
+    border: 1px solid #f0dbb0;
+    border-radius: 8px;
+    padding: 20px 24px 24px;
+    margin: 0 0 20px;
+  }
+  fieldset.notes-section legend {
+    font-weight: 700;
+    color: #8a5a12;
+    padding: 0 8px;
+    font-size: 1.02rem;
+  }
+  .ref-strip {
+    background: #ffffff;
+    border: 1px solid #eadab8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #4a5b6c;
+    margin-bottom: 16px;
+  }
+  .ref-strip strong { color: #163a54; }
+  .field-row { margin-bottom: 14px; }
+  .field-row label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #33495e;
+    margin-bottom: 4px;
+  }
+  .field-row input[type="text"], .field-row input[type="date"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 7px 9px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .field-row.inline { display: flex; gap: 24px; flex-wrap: wrap; }
+  .field-row.inline > div { flex: 1 1 200px; }
+  .radio-set label { font-weight: 400; display: inline-flex; align-items: center; gap: 5px; margin-right: 18px; font-size: 0.88rem; }
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 10px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .save-instructions {
+    background: #eef6f6;
+    border: 1px solid #bfdbd9;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #204a4d;
+    margin-top: 16px;
+  }
+  .save-instructions strong { color: #0e6e73; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e6eb;
+    font-size: 0.76rem;
+    color: #8593a0;
+  }
+
+  @media print {
+    .sidebar, .breadcrumb, .save-instructions { display: none !important; }
+    .main { max-width: 100%; padding: 0; }
+    .layout { display: block; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+    textarea { min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand">Jemba9 QMS Training Program<small>AS9100D Rev D &middot; Document Review Portal</small></div>
+  <a class="home-link" href="index.html">&#8962; Program Home</a>
+
+  <div class="nav-group">
+    <h2>Leadership</h2>
+    <a class="active" href="01-qms-overview.html"><span class="num">01</span> QMS Overview &amp; Company Context</a>
+    <a href="02-quality-policy-objectives.html"><span class="num">02</span> Quality Policy &amp; Objectives</a>
+    <a href="13-management-review.html"><span class="num">13</span> Management Review</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Quality System</h2>
+    <a href="03-risk-management.html"><span class="num">03</span> Risk Management</a>
+    <a href="11-nonconformance-and-corrective-action.html"><span class="num">11</span> Nonconformance &amp; CAPA</a>
+    <a href="12-internal-audit.html"><span class="num">12</span> Internal Audit</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Core Value Stream</h2>
+    <a href="04-design-and-development.html"><span class="num">04</span> Design &amp; Development</a>
+    <a href="05-supplier-management.html"><span class="num">05</span> Supplier Management</a>
+    <a href="06-counterfeit-parts-prevention.html"><span class="num">06</span> Counterfeit Parts Prevention</a>
+    <a href="07-production-and-inspection.html"><span class="num">07</span> Production &amp; Inspection</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Supporting Processes</h2>
+    <a href="08-document-control.html"><span class="num">08</span> Document Control</a>
+    <a href="09-configuration-management.html"><span class="num">09</span> Configuration Management</a>
+    <a href="10-training-and-competency.html"><span class="num">10</span> Training &amp; Competency</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Leadership Processes &rsaquo; QMS Overview &amp; Company Context</div>
+
+  <div class="page-header">
+    <span class="process-badge">Leadership Process</span>
+    <h1>1. QMS Overview &amp; Company Context</h1>
+    <p class="subtitle">Understanding Jemba9's business, its Quality Management System scope, and who the QMS serves</p>
+  </div>
+
+  <div class="card">
+    <h2>Source Documents for This Topic</h2>
+    <table class="doc-table">
+      <thead>
+        <tr><th>Doc #</th><th>Title</th><th>Type</th><th>AS9100D Clause(s)</th><th>Owner / Status</th><th>Repository Path</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>QM-001</code></td>
+          <td>Jemba9 Quality Manual</td>
+          <td>Manual (Level 1)</td>
+          <td><span class="clause-tag">4.3</span><span class="clause-tag">4.4</span><span class="clause-tag">5</span><span class="clause-tag">6</span><span class="clause-tag">7</span><span class="clause-tag">8</span><span class="clause-tag">9</span><span class="clause-tag">10</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/manual/QM-001-quality-manual.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QM-ARCH-001</code></td>
+          <td>Jemba9 QMS Process Architecture</td>
+          <td>Manual (Level 1)</td>
+          <td><span class="clause-tag">4.4</span><span class="clause-tag">4.4.1</span><span class="clause-tag">4.4.2</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/manual/process-architecture.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QP-POL-002</code></td>
+          <td>Organizational Context Analysis</td>
+          <td>Policy (Level 1)</td>
+          <td><span class="clause-tag">4.1</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/manual/context-analysis.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QP-POL-003</code></td>
+          <td>Interested Parties Register</td>
+          <td>Policy (Level 1)</td>
+          <td><span class="clause-tag">4.2</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/manual/interested-parties.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.82rem;color:#5b7085;margin-top:14px;">Jemba9-specific customization applied in this topic (Headquarters, CAGE Code, Export Controls, clause 8.5.3 applicability) comes from reviewer notes submitted by <strong>Paul Rutt (prutt@jemba9.com)</strong>, Co-founder &amp; CTO, on the <code>qms-review-notes</code> branch, folder <code>review-notes/QM-001/</code>, June 2, 2026.</p>
+  </div>
+
+  <div class="card">
+    <h2>Student Introduction</h2>
+    <p>Every Jemba9 employee works inside a Quality Management System, whether they realize it or not. This topic is the front door to that system: it explains <em>what Jemba9 does</em>, <em>what the QMS covers</em>, and <em>whose needs it exists to satisfy</em>.</p>
+    <p>Jemba9 is an aerospace and defense company whose mission is "accelerating what's next in space." Rather than building every space product from scratch, Jemba9 uses a proprietary process &mdash; <strong>Spacify&trade;</strong> &mdash; to adapt proven commercial computers, controllers, data routers, power supplies, robotics, and sensors into space-qualified hardware, at roughly half the time and cost of a traditional ground-up space program. The company also runs <strong>J9CM</strong>, an in-house PCB assembly operation.</p>
+    <p>That business model is exactly why AS9100D matters here: Jemba9 is promising customers &mdash; often government and prime-contractor customers under ITAR/EAR &mdash; that a commercially-sourced product can be trusted on an orbital mission. The QMS is the evidence that Jemba9 controls that adaptation process with the same rigor as a traditional space hardware manufacturer, from design and supplier qualification through production, inspection, and delivery.</p>
+    <p>Key facts every employee should know cold:</p>
+    <dl class="jemba9-fact-grid">
+      <dt>Headquarters</dt>
+      <dd>Longmont, Colorado</dd>
+      <dt>CAGE Code</dt>
+      <dd>9TVN7</dd>
+      <dt>Primary standard</dt>
+      <dd>AS9100D (9100:2016)</dd>
+      <dt>Export controls</dt>
+      <dd>ITAR/EAR apply to all applicable documents; only authorized persons may access them</dd>
+      <dt>QMS scope</dt>
+      <dd>Design, development, manufacture, assembly, test, and delivery of aerospace/defense products and services, plus program management, supply chain, and customer support</dd>
+      <dt>Clause 8.5.3 (customer property)</dt>
+      <dd>Applies only when a customer supplies customer-furnished equipment (CFE) or government-furnished equipment (GFE); when it does, QP-008 governs handling</dd>
+    </dl>
+    <p><strong>Who needs this training:</strong> Everyone. This is the foundational session that every new hire completes before any role-specific QMS training, and the one section of the Quality Manual every employee is expected to be able to summarize in their own words.</p>
+  </div>
+
+  <div class="card">
+    <h2>Syllabus &amp; Training Goals</h2>
+    <div class="syllabus-grid">
+      <div>
+        <h3>Class Syllabus</h3>
+        <ol>
+          <li>Jemba9's business: the Spacify&trade; model, product lines, and why "space-qualifying" commercial technology requires a rigorous QMS</li>
+          <li>What AS9100D is and how it relates to ISO 9001:2015 (it incorporates it, plus aerospace-specific requirements)</li>
+          <li>The QMS scope statement &mdash; what activities and locations are in scope, including remote/home-office personnel</li>
+          <li>Permissible exclusions and why Jemba9 currently excludes none permanently (clause 8.5.3 example: CFE/GFE)</li>
+          <li>Interested parties: government/DoD/NASA customers, commercial aerospace customers, employees, investors, suppliers, regulators, the AS9100 registrar, and IAQG/OASIS &mdash; and what each one needs from Jemba9</li>
+          <li>Internal and external context: rapid growth, government contracting discipline, space hardware's high-consequence quality bar, LEAN culture, Cetec ERP, and SharePoint as the document backbone</li>
+          <li>The four QMS process groups &mdash; Leadership, Core Value Stream, Supporting, Quality &mdash; and how they interact</li>
+          <li>Where to find the controlled documents and how this training program maps to them</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Learning Objectives</h3>
+        <p>By the end of this session, participants will be able to:</p>
+        <ul>
+          <li>Describe Jemba9's business model and explain in one sentence why AS9100D certification matters to it</li>
+          <li>State the QMS scope statement and name at least one permissible exclusion and its condition (CFE/GFE)</li>
+          <li>Name at least four interested parties and one expectation each</li>
+          <li>Identify which of the four process groups their own job function belongs to</li>
+          <li>Locate the Quality Manual (QM-001) and Process Architecture (QM-ARCH-001) in the QMS repository/SharePoint library</li>
+          <li>Explain Jemba9's ITAR/EAR posture and what "authorized person" means for document access</li>
+        </ul>
+        <p style="margin-top:16px;"><strong>Recommended audience:</strong></p>
+        <div class="audience-tags">
+          <span>All employees (mandatory)</span>
+          <span>New hire onboarding</span>
+        </div>
+        <p style="margin-top:10px;"><strong>Suggested periodicity:</strong> Once at onboarding; refresher at annual QMS awareness training.</p>
+      </div>
+    </div>
+  </div>
+
+  <fieldset class="notes-section">
+    <legend>Reviewer Notes</legend>
+    <div class="ref-strip">
+      <strong>Correlation reference:</strong> Page <code>01-qms-overview.html</code> &middot; Topic: QMS Overview &amp; Company Context &middot; Source docs: <code>QM-001</code>, <code>QM-ARCH-001</code>, <code>QP-POL-002</code>, <code>QP-POL-003</code> &middot; Clauses: 4.1, 4.2, 4.3, 4.4, 5&ndash;10 &middot; Files under <code>docs/AS9100/manual/</code>
+    </div>
+    <div class="field-row inline">
+      <div>
+        <label for="reviewer-name">Reviewer name</label>
+        <input type="text" id="reviewer-name" name="reviewer-name">
+      </div>
+      <div>
+        <label for="reviewer-date">Date</label>
+        <input type="date" id="reviewer-date" name="reviewer-date">
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="section-ref">Section or clause this note refers to</label>
+      <input type="text" id="section-ref" name="section-ref" placeholder="e.g. QM-001 &sect;2 QMS Scope, or clause 4.2">
+    </div>
+    <div class="field-row radio-set">
+      <label style="display:block;margin-bottom:6px;">Review status</label>
+      <label><input type="radio" name="status" value="approved"> Content approved as written</label>
+      <label><input type="radio" name="status" value="revise"> Needs revision</label>
+      <label><input type="radio" name="status" value="question"> Question for author</label>
+    </div>
+    <div class="field-row">
+      <label for="notes">Comments</label>
+      <textarea id="notes" name="notes" placeholder="Type your notes here before saving/printing this page..."></textarea>
+    </div>
+    <div class="save-instructions">
+      <strong>How to save these notes:</strong> Use your browser's <strong>Print &rarr; Save as PDF</strong> (recommended &mdash; captures exactly what you typed) or <strong>File &rarr; Save Page As &rarr; Webpage, Complete</strong>. The correlation reference above is included in the saved file so your notes can be matched back to this page and its source documents later. No data is transmitted anywhere &mdash; this page has no server and no script; your notes exist only in your browser until you save or print.
+    </div>
+  </fieldset>
+
+  <footer>
+    Jemba9 QMS Training Program &middot; Topic 1 of 13 &middot; Generated from Jemba9_QMS repository (branches <code>main</code> and <code>qms-review-notes</code>) &middot; Static reference material &mdash; not a controlled QMS document.
+  </footer>
+</main>
+</div>
+</body>
+</html>

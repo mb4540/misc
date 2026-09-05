@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TALARIA — SysML 2.0 Demo</title>
+<link rel="stylesheet" href="assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <span>TALARIA with SysML 2.0 &mdash; interactive concept mock</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Not connected to a backend. All data is illustrative.</span>
+</div>
+
+<div style="max-width:1080px;margin:0 auto;padding:48px 28px 80px;">
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+    <div style="width:56px;height:56px;background:var(--brand-accent);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px;">T9</div>
+    <div>
+      <h1 style="font-size:30px;font-weight:800;letter-spacing:-.5px;">TALARIA &mdash; SysML 2.0 Concept Demo</h1>
+      <div style="color:var(--text-secondary);font-size:15px;">What the Space Assurance Gateway looks like when the model is a SysML v2 model.</div>
+    </div>
+  </div>
+
+  <div class="card mb-24">
+    <div class="card-body">
+      <p style="margin-bottom:12px;">These screens mirror the production TALARIA UI &mdash; same design tokens, same shell, same page structures &mdash; with SysML&nbsp;2.0 woven into the places it would actually show up. Everywhere the standard does real work, there is a
+        <span class="sysml-pin" style="cursor:default;">1</span> marker. Click one and it jumps to the explanation panel at the bottom of that page.</p>
+      <p style="color:var(--text-secondary);">Each explanation says what the construct is, and what TALARIA does today without it, so the delta is visible rather than asserted.</p>
+    </div>
+  </div>
+
+  <h2 style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:14px;">Employee Console</h2>
+  <div class="card-grid mb-24">
+
+    <a href="employee/bom.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">part def &middot; part usage</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Product BOM &amp; Model Tree</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">The BOM viewed three ways: the familiar table, the same data as a SysML part-usage tree, and the generated textual notation. Designator expansion becomes real addressable instances.</p>
+      </div>
+    </a>
+
+    <a href="employee/run.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">analysis case &middot; constraint</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Derating Analysis Run</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">The LangGraph pipeline with the Standards Librarian resolving formal constraints instead of bare factors. Press start to watch a run progress.</p>
+      </div>
+    </a>
+
+    <a href="employee/findings.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">verification case &middot; metadata</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Findings &amp; Waivers</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Each finding shows the constraint it evaluated and the clause it came from. Waivers attach as model metadata rather than a side table.</p>
+      </div>
+    </a>
+
+    <a href="employee/requirements.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">requirement def &middot; satisfy</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Requirements &amp; Traceability</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Verification status computed from the model, not curated by hand. The traceability matrix is a query result.</p>
+      </div>
+    </a>
+
+    <a href="employee/phase-gate.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">state &middot; variation &middot; commit</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Phase Gate &amp; Revision Diff</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Gate criteria as guarded transitions, and a Rev&nbsp;C&nbsp;&rarr;&nbsp;Rev&nbsp;D model diff that names the requirements the revision puts at risk.</p>
+      </div>
+    </a>
+
+  </div>
+
+  <h2 style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:14px;">Customer Portal</h2>
+  <div class="card-grid mb-24">
+
+    <a href="customer/overview.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">tag &middot; baseline</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Project Overview</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">What the customer sees, pinned to a named baseline rather than "as of whenever the page loaded".</p>
+      </div>
+    </a>
+
+    <a href="customer/findings.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">constraint &middot; evidence</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Findings &amp; Margins</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Margin bars with the underlying rule shown in plain terms, and the standards clause cited from the model.</p>
+      </div>
+    </a>
+
+    <a href="customer/deliverables.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">view &middot; viewpoint</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Deliverables</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Documents as generated views of a tagged baseline, gated by maturity level.</p>
+      </div>
+    </a>
+
+    <a href="customer/model-exchange.html" class="card" style="text-decoration:none;color:inherit;">
+      <div class="card-body">
+        <div class="badge badge-sysml mb-16">API &amp; Services</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:6px;">Model Exchange</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Import from and publish back to the customer's own model repository over the standard REST API. The screen that does not exist today.</p>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Reading this demo</h3></div>
+    <div class="card-body">
+      <div class="two-col">
+        <div>
+          <p class="mb-16"><strong>Sign-in is skipped.</strong> The Employee Console screens are shown as Sarah Chen (lead engineer); the Customer Portal screens as James Wilson at ProtoPD Customer Corp. The dark bar at the top of every screen is demo chrome, not part of the product.</p>
+          <p class="mb-16"><strong>The project is J9Avionics</strong> &mdash; TIA Power Board Rev&nbsp;C, 69 part types across 142 instances, in Phase&nbsp;5 (Detailed Design), against NASA-EEE-INST-002 Class&nbsp;B for a 5-year 550&nbsp;km LEO mission.</p>
+          <p><strong>Nothing here requires a server.</strong> Open <code style="font-family:var(--font-mono);background:var(--gray-100);padding:1px 5px;border-radius:3px;">index.html</code> in any browser.</p>
+        </div>
+        <div class="sysml-note" style="margin:0;">
+          <strong>Where this is honest about scope.</strong> SysML v2 supplies the language and the protocol. It supplies no derating tables, no radiation models and no screening rules &mdash; that content stays Jemba9's. What changes is that the content becomes expressible in a form other tools can read and check.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

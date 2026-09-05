@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture & Observability — Jemba9 Commercialization Roadmap (Concise)</title>
+
+<style>
+:root {
+  --bg:#f8fafc; --card-bg:#ffffff; --border:#e2e8f0; --row-border:#eef2f7; --surface:#f1f5f9;
+  --heading:#0f172a; --text:#334155; --text-secondary:#475569; --muted:#64748b; --muted-2:#94a3b8;
+  --link:#2563eb; --accent:#3b82f6;
+}
+:root:has(#theme-toggle:checked) {
+  --bg:#0d1524; --card-bg:#17202f; --border:#2a3648; --row-border:#212c3d; --surface:#1c2536;
+  --heading:#f1f5f9; --text:#cbd5e1; --text-secondary:#94a3b8; --muted:#94a3b8; --muted-2:#64748b;
+  --link:#60a5fa; --accent:#60a5fa;
+}
+#theme-toggle:checked ~ .rm-track { background:#2563eb; border-color:var(--link); }
+#theme-toggle:checked ~ .rm-track .rm-thumb { transform:translateX(16px); }
+</style>
+</head>
+<body style="margin:0;display:flex;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);">
+
+<nav style="width:240px;min-width:240px;background:#0b1220;color:#cbd5e1;min-height:100vh;padding:24px 0;box-sizing:border-box;position:sticky;top:0;align-self:flex-start;">
+  <div style="padding:0 20px 14px 20px;border-bottom:1px solid #1e293b;margin-bottom:0;">
+    <img src="assets/jemba9-logo-orange.png" alt="Jemba9" style="height:20px;width:auto;display:block;margin-bottom:6px;">
+    <div style="color:#64748b;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;">Roadmap · Concise</div>
+  </div>
+  <label for="theme-toggle" style="display:flex;align-items:center;gap:9px;padding:10px 20px 4px;cursor:pointer;user-select:none;">
+    <input type="checkbox" id="theme-toggle" style="display:none;">
+    <span class="rm-track" style="position:relative;width:34px;height:19px;background:#334155;border:1px solid #334155;border-radius:999px;display:inline-block;flex-shrink:0;transition:background .15s;">
+      <span class="rm-thumb" style="position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:#f8fafc;transition:transform .15s;"></span>
+    </span>
+    <span style="font-size:11.5px;color:#94a3b8;">Light / Dark mode</span>
+  </label>
+  <div style="border-bottom:1px solid #1e293b;margin-bottom:16px;"></div>
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:6px 0 8px;">DOCUMENTS</div>
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">00</span> Overview &amp; Verdict
+  </a>
+  <a href="backlog.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">01</span> Backlog &amp; Timeline
+  </a>
+  <a href="architecture.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px 9px 17px;color:#f1f5f9;text-decoration:none;font-size:13px;background:#1e293b;border-left:3px solid #3b82f6;font-weight:600;">
+    <span style="color:#60a5fa;font-size:11px;font-weight:700;width:20px;display:inline-block;">02</span> Architecture &amp; Observability
+  </a>
+  <a href="readiness.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">03</span> Commercial &amp; Ops Readiness
+  </a>
+  <div style="margin:14px 0;border-top:1px solid #1e293b;"></div>
+  <a href="forecast.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:13px;font-weight:700;width:20px;display:inline-block;">→</span> MVP Roadmap Forecast
+  </a>
+
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:18px 0 8px;">RUNBOOKS</div>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R</span> All Runbooks
+  </a>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R1</span> Secrets Management Runbook
+  </a>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R2</span> Tenant Isolation Testing Runbook
+  </a>
+
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:22px 0 8px;">ON THIS PAGE</div>
+  <a href="#diagram" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">System Diagram</a>
+  <a href="#gaps" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Readiness at a Glance</a>
+  <a href="#auth" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Auth &amp; Identity</a>
+  <a href="#security" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Security Posture</a>
+  <a href="#observability" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Observability</a>
+  <a href="#cost" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Cost Management</a>
+</nav>
+
+<main style="flex:1;padding:40px 56px;box-sizing:border-box;">
+<div style="max-width:1000px;margin:0 auto;">
+
+  <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">02 — ARCHITECTURE &amp; OBSERVABILITY</div>
+  <h1 style="font-size:26px;font-weight:800;color:var(--heading);margin:0 0 6px;">Architecture, Security &amp; Observability</h1>
+  <div style="font-size:13px;color:var(--muted);margin:0 0 24px;">AWS us-west-2 · ECS Fargate · Databricks · LangGraph.js · Cognito · CDK. Status badges here summarize; full evidence lives in the <a href="backlog.html" style="color:var(--link);">Backlog</a>.</div>
+
+  <!-- ═══ DIAGRAM ═══ -->
+  <h2 id="diagram" style="font-size:17px;font-weight:700;color:var(--heading);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">System Diagram</h2>
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:24px;">
+<svg viewBox="0 0 1000 872" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+      <defs>
+        <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#94a3b8"/></marker>
+        <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#3b82f6"/></marker>
+        <marker id="arr-orange" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#f97316"/></marker>
+      </defs>
+
+      <!-- side layer labels -->
+      <text x="10" y="40"  font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90,10,40)">CLIENTS</text>
+      <text x="10" y="110" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90,10,110)">EDGE / GLOBAL</text>
+      <text x="10" y="430" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90,10,430)">AWS CLOUD</text>
+      <text x="10" y="765" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90,10,765)">EXTERNAL SAAS</text>
+
+      <!-- ── Clients row ── -->
+      <rect x="75"  y="15" width="190" height="42" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="170" y="35" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#334155">Browser</text>
+      <text x="170" y="48" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#94a3b8">Employee Console</text>
+
+      <rect x="295" y="15" width="190" height="42" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="390" y="35" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#334155">Browser</text>
+      <text x="390" y="48" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#94a3b8">Customer Portal</text>
+
+      <rect x="515" y="15" width="190" height="42" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="610" y="35" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#334155">Browser</text>
+      <text x="610" y="48" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#94a3b8">Control Center</text>
+
+      <rect x="735" y="15" width="190" height="42" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="830" y="35" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#334155">Browser</text>
+      <text x="830" y="48" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#94a3b8">Stakeholder Portal</text>
+
+      <!-- ── Edge / global row ── -->
+      <rect x="310" y="80" width="260" height="44" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="440" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1d4ed8">AWS CloudFront</text>
+      <text x="440" y="113" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#3b82f6">CDN · 4 SPA origins (S3) · edge routing</text>
+
+      <rect x="620" y="80" width="190" height="44" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="715" y="100" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#1d4ed8">AWS Cognito</text>
+      <text x="715" y="113" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#3b82f6">JWT auth · User pool · Groups</text>
+
+      <!-- ── AWS Cloud / Region boundary (dashed) ── -->
+      <rect x="30" y="140" width="940" height="510" rx="6" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <text x="46" y="160" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#64748b" letter-spacing="0.03em">AWS CLOUD — ACCOUNT 824999955649 · REGION US-WEST-2</text>
+
+      <!-- Regional services (in Region, outside VPC) -->
+      <rect x="800" y="178" width="155" height="46" rx="6" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+      <text x="877" y="197" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#c2410c">Secrets Manager</text>
+      <text x="877" y="209" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#9a3412">Wired</text>
+
+      <rect x="800" y="236" width="155" height="46" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+      <text x="877" y="255" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#166534">CloudWatch</text>
+      <text x="877" y="267" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#15803d">Metrics · Alarms · Dashboard</text>
+
+      <rect x="800" y="294" width="155" height="46" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="877" y="313" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#334155">AWS S3</text>
+      <text x="877" y="325" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#64748b">BOM docs · attachments</text>
+
+      <!-- ── VPC boundary (solid) ── -->
+      <rect x="55" y="175" width="725" height="465" rx="6" fill="#fafaff" stroke="#a5b4fc" stroke-width="2"/>
+      <text x="70" y="193" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#4338ca">VPC — sag-vpc-&#123;stage&#125; · 10.0.0.0/16</text>
+
+      <!-- Internet Gateway -->
+      <rect x="360" y="204" width="130" height="30" rx="5" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="425" y="223" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#475569">Internet Gateway</text>
+
+      <!-- ALB -->
+      <rect x="200" y="248" width="420" height="42" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+      <text x="410" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#166534">Application Load Balancer (multi-AZ)</text>
+      <text x="410" y="279" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#15803d">:443 HTTPS · /health checks · sag-alb-sg (80/443 from 0.0.0.0/0)</text>
+
+      <!-- ── Availability Zone A (dashed) ── -->
+      <rect x="75" y="305" width="345" height="315" rx="6" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
+      <text x="90" y="322" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#64748b" letter-spacing="0.03em">AVAILABILITY ZONE A · us-west-2a</text>
+
+      <!-- Public subnet A -->
+      <rect x="93" y="333" width="309" height="54" rx="5" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+      <text x="103" y="347" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#166534">Public Subnet · 10.0.0.0/24</text>
+      <rect x="113" y="355" width="145" height="26" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1.2"/>
+      <text x="185" y="372" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="600" fill="#166534">NAT Gateway</text>
+
+      <!-- Private subnet A -->
+      <rect x="93" y="398" width="309" height="207" rx="5" fill="#fdf4ff" stroke="#c4b5fd" stroke-width="1.5"/>
+      <text x="103" y="412" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#6d28d9">Private Subnet · 10.0.1.0/24</text>
+      <rect x="108" y="420" width="279" height="175" rx="6" fill="#fdf4ff" stroke="#d8b4fe" stroke-width="1.5"/>
+      <text x="247" y="435" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#7e22ce">ECS Fargate Task — Node 20 / Express 5</text>
+      <text x="247" y="446" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="#8b5cf6">sag-api-sg (from ALB SG only)</text>
+      <rect x="120" y="452" width="255" height="34" rx="4" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+      <text x="247" y="465" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="600" fill="#5b21b6">~45 Routes — auth · tenant middleware</text>
+      <text x="247" y="478" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="#7c3aed">backend/src/routes/*</text>
+      <rect x="120" y="490" width="255" height="34" rx="4" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+      <text x="247" y="503" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="600" fill="#5b21b6">7 LangGraph Agent Graphs</text>
+      <text x="247" y="516" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="#7c3aed">backend/src/agents/*</text>
+      <rect x="120" y="528" width="255" height="34" rx="4" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+      <text x="247" y="541" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="600" fill="#5b21b6">Drizzle ORM — schema ~900 lines</text>
+      <text x="247" y="554" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="#7c3aed">backend/src/db/schema.ts</text>
+
+      <!-- ── Availability Zone B (dashed) ── -->
+      <rect x="440" y="305" width="345" height="315" rx="6" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,4"/>
+      <text x="455" y="322" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#64748b" letter-spacing="0.03em">AVAILABILITY ZONE B · us-west-2b</text>
+
+      <!-- Public subnet B -->
+      <rect x="458" y="333" width="309" height="54" rx="5" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+      <text x="468" y="347" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#166534">Public Subnet · 10.0.2.0/24</text>
+      <text x="468" y="363" font-family="Inter,sans-serif" font-size="7.5" fill="#15803d">No NAT — egress routed via AZ-A</text>
+      <text x="468" y="374" font-family="Inter,sans-serif" font-size="7.5" fill="#15803d">(natGateways: 1, dev cost posture)</text>
+
+      <!-- Private subnet B -->
+      <rect x="458" y="398" width="309" height="207" rx="5" fill="#fdf4ff" stroke="#c4b5fd" stroke-width="1.5"/>
+      <text x="468" y="412" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#6d28d9">Private Subnet · 10.0.3.0/24</text>
+      <rect x="473" y="420" width="279" height="175" rx="6" fill="#fdf4ff" stroke="#d8b4fe" stroke-width="1.5"/>
+      <text x="612" y="440" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#7e22ce">ECS Fargate Task (replica)</text>
+      <text x="612" y="453" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#7c3aed">Same service &amp; task def as AZ-A —</text>
+      <text x="612" y="465" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#7c3aed">desiredCount 1, circuit breaker rollback</text>
+      <text x="612" y="480" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="#8b5cf6">sag-api-sg (from ALB SG only)</text>
+
+      <!-- ── External SaaS (outside AWS Cloud) ── -->
+      <rect x="230" y="720" width="540" height="70" rx="8" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+      <line x1="500" y1="720" x2="500" y2="790" stroke="#fcd34d" stroke-width="1.2"/>
+      <text x="365" y="740" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="700" fill="#92400e">Databricks — Data Platform</text>
+      <text x="365" y="754" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#78350f">Lakebase Postgres · Unity Catalog</text>
+      <text x="365" y="766" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#78350f">MLflow · Vector Search</text>
+      <text x="635" y="740" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="700" fill="#92400e">Databricks — Model Serving</text>
+      <text x="635" y="754" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#78350f">Claude Sonnet endpoints</text>
+      <text x="635" y="766" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#78350f">Per-agent model config override</text>
+
+      <!-- ── Arrows ── -->
+      <!-- clients -> CloudFront -->
+      <line x1="170" y1="57" x2="345" y2="80" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="390" y1="57" x2="405" y2="80" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="610" y1="57" x2="475" y2="80" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="830" y1="57" x2="535" y2="80" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- CloudFront -> ALB (via IGW) -->
+      <line x1="440" y1="124" x2="425" y2="204" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="425" y1="234" x2="410" y2="248" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- Numbered off-page connectors: avoid drawing lines across unrelated boxes (AZ-B, etc.) -->
+      <!-- ⑤ ALB -> ECS Task A -->
+      <line x1="330" y1="290" x2="330" y2="294" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <circle cx="330" cy="303" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="330" y="306.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">5</text>
+
+      <circle cx="330" cy="406" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="330" y="409.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">5</text>
+      <line x1="330" y1="415" x2="330" y2="420" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- ⑥ ALB -> ECS Task B -->
+      <line x1="490" y1="290" x2="490" y2="294" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <circle cx="490" cy="303" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="490" y="306.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">6</text>
+
+      <circle cx="580" cy="406" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="580" y="409.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">6</text>
+      <line x1="580" y1="415" x2="580" y2="420" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <!-- ① Cognito -> ECS Task A (auth verification) -->
+      <line x1="715" y1="124" x2="715" y2="137" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+      <circle cx="715" cy="146" r="9" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="715" y="149.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#3b82f6">1</text>
+
+      <circle cx="290" cy="405" r="9" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="290" y="408.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#3b82f6">1</text>
+      <line x1="290" y1="414" x2="290" y2="420" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#arr-blue)"/>
+
+      <!-- ② ECS Task A -> Secrets Manager -->
+      <line x1="387" y1="445" x2="392" y2="445" stroke="#f97316" stroke-width="1.2" marker-end="url(#arr-orange)"/>
+      <circle cx="401" cy="445" r="9" fill="#ffffff" stroke="#f97316" stroke-width="1.5"/>
+      <text x="401" y="448.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#f97316">2</text>
+
+      <circle cx="785" cy="201" r="9" fill="#ffffff" stroke="#f97316" stroke-width="1.5"/>
+      <text x="785" y="204.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#f97316">2</text>
+      <line x1="794" y1="201" x2="800" y2="201" stroke="#f97316" stroke-width="1.2" marker-end="url(#arr-orange)"/>
+
+      <!-- ③ ECS Task A -> CloudWatch -->
+      <line x1="387" y1="470" x2="392" y2="470" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <circle cx="401" cy="470" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="401" y="473.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">3</text>
+
+      <circle cx="785" cy="259" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="785" y="262.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">3</text>
+      <line x1="794" y1="259" x2="800" y2="259" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- ④ ECS Task A -> S3 -->
+      <line x1="387" y1="495" x2="392" y2="495" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <circle cx="401" cy="495" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="401" y="498.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">4</text>
+
+      <circle cx="785" cy="317" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="785" y="320.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" font-weight="700" fill="#64748b">4</text>
+      <line x1="794" y1="317" x2="800" y2="317" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- ECS Task A -> Databricks (external, via NAT egress) -->
+      <line x1="230" y1="595" x2="200" y2="640" stroke="#94a3b8" stroke-width="1.2"/>
+      <line x1="200" y1="640" x2="330" y2="720" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+      <line x1="280" y1="595" x2="260" y2="640" stroke="#94a3b8" stroke-width="1.2"/>
+      <line x1="260" y1="640" x2="600" y2="720" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+      <!-- Legend -->
+      <line x1="55" y1="800" x2="85" y2="800" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="91" y="804" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Traffic flow (incl. NAT egress)</text>
+      <line x1="270" y1="800" x2="300" y2="800" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="306" y="804" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Auth verification</text>
+      <line x1="440" y1="800" x2="470" y2="800" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="476" y="804" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Secrets (wired)</text>
+      <rect x="620" y="793" width="14" height="14" rx="2" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="639" y="804" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Region / AZ boundary</text>
+      <rect x="800" y="793" width="14" height="14" rx="2" fill="none" stroke="#a5b4fc" stroke-width="2"/>
+      <text x="819" y="804" font-family="Inter,sans-serif" font-size="9" fill="#64748b">VPC boundary</text>
+
+      <!-- Connector key: numbered circles replace lines that would otherwise cross unrelated boxes (e.g. through AZ-B) -->
+      <text x="55" y="826" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#475569">Numbered connectors (same number = same connection, routed around instead of across other boxes):</text>
+      <circle cx="61" cy="840" r="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="61" y="843" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#3b82f6">1</text>
+      <text x="75" y="843" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Cognito → ECS (auth)</text>
+      <circle cx="256" cy="840" r="8" fill="#ffffff" stroke="#f97316" stroke-width="1.5"/>
+      <text x="256" y="843" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#f97316">2</text>
+      <text x="270" y="843" font-family="Inter,sans-serif" font-size="9" fill="#64748b">ECS → Secrets Manager</text>
+      <circle cx="463" cy="840" r="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="463" y="843" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#64748b">3</text>
+      <text x="477" y="843" font-family="Inter,sans-serif" font-size="9" fill="#64748b">ECS → CloudWatch</text>
+      <circle cx="650" cy="840" r="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="650" y="843" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#64748b">4</text>
+      <text x="664" y="843" font-family="Inter,sans-serif" font-size="9" fill="#64748b">ECS → S3</text>
+      <circle cx="61" cy="860" r="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="61" y="863" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#64748b">5</text>
+      <text x="75" y="863" font-family="Inter,sans-serif" font-size="9" fill="#64748b">ALB → ECS Task A</text>
+      <circle cx="256" cy="860" r="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="256" y="863" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="700" fill="#64748b">6</text>
+      <text x="270" y="863" font-family="Inter,sans-serif" font-size="9" fill="#64748b">ALB → ECS Task B</text>
+    </svg>
+  </div>
+
+  <!-- ═══ GAPS AT A GLANCE ═══ -->
+  <h2 id="gaps" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Production Readiness at a Glance</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Area</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">State</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Backlog</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">Environments</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">In Progress</span> only dev deployed so far</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-02" style="color:var(--link);">P0-02</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">Secrets</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Done</span> Secrets Manager + Databricks scope, gitleaks clean</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-01" style="color:var(--link);">P0-01</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">CI/CD (backend)</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">In Progress</span> mock UI CI exists; backend deploys still manual</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-03" style="color:var(--link);">P0-03</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">DNS / TLS</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span> raw ALB DNS only</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-05" style="color:var(--link);">P0-05</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">Tenant Isolation</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Done</span> integration-tested, CI enforcement pending</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-04" style="color:var(--link);">P0-04</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">Backup / DR</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span> no PITR docs, no restore runbook</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-06" style="color:var(--link);">P0-06</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">Auto-scaling</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span> ECS exists, no agent-burst policy</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-14" style="color:var(--link);">P1-14</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);font-weight:700;">Checkpoint TTL</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span> no cleanup job, unbounded growth</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-15" style="color:var(--link);">P1-15</a></td></tr>
+      <tr><td style="padding:8px 10px;font-weight:700;">Distributed Tracing</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span> CloudWatch metrics only, no OTel traces</td><td style="padding:8px 10px;"><a href="backlog.html#p1-03" style="color:var(--link);">P1-03</a></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ AUTH ═══ -->
+  <h2 id="auth" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Auth &amp; Identity Model</h2>
+  <p style="font-size:14px;line-height:1.65;margin:0 0 10px;">Authentication is handled by <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">backend/src/middleware/auth.ts</code>:</p>
+  <ul style="font-size:13.5px;line-height:1.7;margin:0 0 12px;padding-left:20px;">
+    <li>Extracts JWT from <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">Authorization: Bearer</code> header or <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">accessToken</code> cookie</li>
+    <li>Verifies against Cognito JWKS endpoint (cached)</li>
+    <li>Resolves user role from database using Cognito <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">sub</code></li>
+    <li>Attaches <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">req.user</code> and <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">req.tenantId</code> for downstream handlers</li>
+  </ul>
+  <p style="font-size:14px;line-height:1.65;margin:0 0 12px;">Tenant isolation is enforced by <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">backend/src/middleware/tenant.ts</code> — every query must pass <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">tenantId</code> from <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">req.tenantId</code>. Any route that skips this in its WHERE clause is a data leak; that claim is now provable via the integration test matrix — see <a href="backlog.html#p0-04" style="color:var(--link);">P0-04</a>.</p>
+
+  <!-- ═══ SECURITY POSTURE ═══ -->
+  <h2 id="security" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Security Posture Summary</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Control</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">State</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Notes</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Encryption in transit</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">HTTPS via ALB; CloudFront TLS; needs custom domain cert</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Encryption at rest</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:var(--surface);color:var(--text-secondary);">Unknown</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Databricks default encryption — confirm BYOK is not required</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">JWT authentication</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Cognito JWT, real verification</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Role-based access control</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Roles in DB, checked per route</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Secrets management</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Secrets Manager + Databricks sag-serving scope; rotation runbook documented; gitleaks clean</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Input validation</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:var(--surface);color:var(--text-secondary);">Unknown</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Zod/Joi coverage level unknown across ~45 routes</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Rate limiting</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Chat usage rate limiting implemented; global rate limiting not confirmed</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Audit logging</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">Partial</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Agent traces persisted; HTTP request audit log not confirmed</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Penetration testing</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Not performed</td></tr>
+      <tr><td style="padding:8px 10px;">Vulnerability scanning</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;color:var(--muted);">No SAST/DAST in CI</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ OBSERVABILITY ═══ -->
+  <h2 id="observability" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Observability &amp; Agent Monitoring</h2>
+
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Signal</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">State</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Gap</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Custom CloudWatch metrics</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">None — good baseline</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">CloudWatch dashboard + alarms</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Agent-level panels missing; no on-call routing yet</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Agent trace persistence</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;">Implemented</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Not correlated to HTTP traces</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">HTTP distributed traces (OTel)</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">No OpenTelemetry SDK configured — <a href="backlog.html#p1-03" style="color:var(--link);">P1-03</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Structured JSON logging</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:var(--surface);color:var(--text-secondary);">Unknown</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Pino/Winston usage level not confirmed</td></tr>
+      <tr><td style="padding:8px 10px;">LLM token cost per run</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">Missing</span></td><td style="padding:8px 10px;color:var(--muted);">No usage event table or cost rollup — <a href="backlog.html#p1-09" style="color:var(--link);">P1-09</a></td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;">
+    <svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+      <text x="350" y="18" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#334155">Target Observability Signal Stack</text>
+      <text x="90"  y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#475569">TRACES</text>
+      <text x="270" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#475569">METRICS</text>
+      <text x="460" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#475569">LOGS</text>
+      <text x="620" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#475569">ALERTS</text>
+      <rect x="20"  y="52" width="140" height="36" rx="5" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.2"/>
+      <text x="90"  y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#5b21b6">@opentelemetry/sdk-node</text>
+      <text x="90"  y="81" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#7c3aed">HTTP request spans</text>
+      <rect x="20"  y="98" width="140" height="36" rx="5" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.2"/>
+      <text x="90"  y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#5b21b6">LangGraph node spans</text>
+      <text x="90"  y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#7c3aed">tool calls · LLM latency</text>
+      <rect x="20"  y="144" width="140" height="36" rx="5" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.2"/>
+      <text x="90"  y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#1d4ed8">AWS X-Ray / Jaeger</text>
+      <text x="90"  y="173" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#2563eb">Trace backend</text>
+      <rect x="200" y="52" width="140" height="36" rx="5" fill="#d1fae5" stroke="#6ee7b7" stroke-width="1.2"/>
+      <text x="270" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#065f46">CloudWatch (existing)</text>
+      <text x="270" y="81" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#047857">pipeline · node · LLM counts</text>
+      <rect x="200" y="98" width="140" height="36" rx="5" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.2"/>
+      <text x="270" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#92400e">Usage events table</text>
+      <text x="270" y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#b45309">token count · cost · tenant</text>
+      <rect x="200" y="144" width="140" height="36" rx="5" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.2"/>
+      <text x="270" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#92400e">Cost anomaly alarm</text>
+      <text x="270" y="173" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#b45309">&gt;2× 7-day avg → alert</text>
+      <rect x="390" y="52" width="140" height="36" rx="5" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+      <text x="460" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#166534">Pino / structured JSON</text>
+      <text x="460" y="81" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#15803d">level · traceId · tenantId</text>
+      <rect x="390" y="98" width="140" height="36" rx="5" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+      <text x="460" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#166534">CloudWatch Logs Insights</text>
+      <text x="460" y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#15803d">Query + correlation</text>
+      <rect x="390" y="144" width="140" height="36" rx="5" fill="#fdf4ff" stroke="#d8b4fe" stroke-width="1.2"/>
+      <text x="460" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#7e22ce">Agent trace DB</text>
+      <text x="460" y="173" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#7c3aed">trace-emitter → DB → API</text>
+      <rect x="550" y="52" width="140" height="36" rx="5" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.2"/>
+      <text x="620" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#991b1b">PipelineFailureRate</text>
+      <text x="620" y="81" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#b91c1c">&gt;5% in 5 min → page</text>
+      <rect x="550" y="98" width="140" height="36" rx="5" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.2"/>
+      <text x="620" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#991b1b">LLM P95 latency</text>
+      <text x="620" y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#b91c1c">&gt;30s → warn</text>
+      <rect x="550" y="144" width="140" height="36" rx="5" fill="#ffedd5" stroke="#fed7aa" stroke-width="1.2"/>
+      <text x="620" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#c2410c">ECS memory / CPU</text>
+      <text x="620" y="173" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#ea580c">&gt;85% → scale / alert</text>
+      <rect x="20"  y="200" width="10" height="10" rx="2" fill="#d1fae5"/><text x="36"  y="209" font-family="Inter,sans-serif" font-size="9" fill="#064e3b">Already implemented</text>
+      <rect x="180" y="200" width="10" height="10" rx="2" fill="#fef3c7"/><text x="196" y="209" font-family="Inter,sans-serif" font-size="9" fill="#78350f">New — Phase 1</text>
+      <rect x="320" y="200" width="10" height="10" rx="2" fill="#ede9fe"/><text x="336" y="209" font-family="Inter,sans-serif" font-size="9" fill="#5b21b6">New — P1-03 (OTel)</text>
+      <rect x="480" y="200" width="10" height="10" rx="2" fill="#fee2e2"/><text x="496" y="209" font-family="Inter,sans-serif" font-size="9" fill="#991b1b">Alarms (partially wired)</text>
+    </svg>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:20px 0 8px;">OpenTelemetry Implementation Plan</h3>
+  <ol style="font-size:13.5px;line-height:1.8;margin:0 0 16px;padding-left:20px;">
+    <li><strong>Install SDK</strong> — <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">@opentelemetry/sdk-node</code>, auto-instrumentations, OTLP trace exporter.</li>
+    <li><strong>Instrument entry point</strong> — <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">backend/src/tracing.ts</code> loaded before <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">server.ts</code>; export to AWS X-Ray via OTLP.</li>
+    <li><strong>LangGraph node instrumentation</strong> — wrap each node in a manual span with <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">agent_type</code>, <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">tenant_id</code>, <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">run_id</code>, token counts.</li>
+    <li><strong>Trace–log correlation</strong> — inject <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">traceId</code>/<code style="background:var(--surface);padding:1px 5px;border-radius:3px;">spanId</code> into every structured log record.</li>
+  </ol>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:20px 0 8px;">Recommended Alerts</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Alert</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Threshold</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Severity</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Action</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">ALB 5xx rate</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">&gt;1% / 5 min</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">PagerDuty / SNS</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">ECS memory utilization</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">&gt;85%</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P2</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Auto-scale + Slack</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Pipeline failure rate</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">&gt;5% / 5 min</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">PagerDuty</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">LLM P95 latency</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">&gt;30s</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P2</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Slack warn</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Daily cost anomaly</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">&gt;2× 7-day avg</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P2</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Email + Slack</td></tr>
+      <tr><td style="padding:8px 10px;">Checkpoint table row count</td><td style="padding:8px 10px;">&gt;10M rows</td><td style="padding:8px 10px;">P3</td><td style="padding:8px 10px;">Slack warn</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:20px 0 8px;">Agent Workflow Monitoring — Design</h3>
+  <ul style="font-size:13.5px;line-height:1.7;margin:0 0 16px;padding-left:20px;">
+    <li><strong>Run-level span:</strong> one parent span per pipeline run, labeled <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">run_id</code>/<code style="background:var(--surface);padding:1px 5px;border-radius:3px;">tenant_id</code>/<code style="background:var(--surface);padding:1px 5px;border-radius:3px;">agent_type</code>.</li>
+    <li><strong>HITL wait time:</strong> alert if &gt; 24h between request and human action.</li>
+    <li><strong>Tool call success rate:</strong> tracked separately from LLM errors.</li>
+    <li><strong>Token budget alarm:</strong> warn if a single run exceeds a configurable token ceiling.</li>
+    <li><strong>Stale run detection:</strong> runs stuck in <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">running</code> past a timeout are flagged and paged.</li>
+  </ul>
+
+  <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 16px;margin-bottom:24px;font-size:13px;color:#78350f;">
+    <strong>Audit trail gap:</strong> agent trace persistence covers agent outputs but not who approved a HITL step, who uploaded a BOM version, who changed a project status, or admin actions. Needs an <code style="background:#fff7ed;padding:1px 5px;border-radius:3px;">audit_events</code> table — also a SOC 2 Availability control evidence artifact.
+  </div>
+
+  <!-- ═══ COST ═══ -->
+  <h2 id="cost" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Cost Management</h2>
+  <ul style="font-size:13.5px;line-height:1.7;margin:0;padding-left:20px;">
+    <li>AWS Budget alarm configured in <code style="background:var(--surface);padding:1px 5px;border-radius:3px;">infra/lib/monitoring-stack.ts</code> — good baseline.</li>
+    <li>Databricks model serving costs are not tracked per-tenant — <a href="backlog.html#p1-09" style="color:var(--link);">P1-09</a>.</li>
+    <li>No cost anomaly detection beyond the static budget alarm.</li>
+    <li>S3 lifecycle policies not confirmed — large BOM uploads could accumulate.</li>
+  </ul>
+
+</div>
+</main>
+</body>
+</html>

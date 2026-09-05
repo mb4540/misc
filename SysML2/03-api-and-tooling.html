@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 3 — The API, the Digital Thread, and the Tool Landscape</title>
+</head>
+<body style="margin:0;padding:0;background:#0e1116;color:#d7dee8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.65;">
+<div style="max-width:1000px;margin:0 auto;padding:40px 28px 80px 28px;">
+
+<div style="font-size:13px;margin-bottom:26px;"><a href="02-language-tour.html" style="color:#4da3ff;text-decoration:none;">&#8592; Part 2</a> <span style="color:#3a4553;">|</span> <a href="index.html" style="color:#4da3ff;text-decoration:none;">Contents</a> <span style="color:#3a4553;">|</span> <a href="04-talaria-context.html" style="color:#4da3ff;text-decoration:none;">Part 4: TALARIA &#8594;</a></div>
+
+<div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#7f8ea3;">Part 3</div>
+<h1 style="margin:6px 0 26px 0;font-size:34px;line-height:1.2;color:#f2f6fb;">The API, the Digital Thread, and the Tool Landscape</h1>
+
+<p style="font-size:17px;color:#9fb0c4;">The language gets the attention. The API is the part that changes what a platform like TALARIA can build.</p>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">3.1 What "Systems Modeling API &amp; Services" actually specifies</h2>
+
+<p>It is a REST/HTTP platform-specific model over a model repository. Standard CRUD plus query, with git-like versioning baked into the resource model rather than bolted on. The key resources:</p>
+
+<table style="width:100%;border-collapse:collapse;font-size:14.5px;margin:16px 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:22%;">Resource</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;">What it is</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">Project</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">A versioned model repository. The unit of access control.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">Commit</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">An immutable change set against a project. Carries created-by and timestamp — an audit trail by construction.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">Branch / Tag</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Named refs to a commit. A configuration baseline is a tag.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">Element</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Any model element at a given commit, serialised as JSON with its typed properties and relationships.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">Query</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">A stored, executable selection over elements — the mechanism behind traceability matrices, coverage reports, and impact analysis.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">Relationship</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Elements too — satisfy, verify, derive, allocate are all navigable and queryable.</td></tr>
+  </tbody>
+</table>
+
+<div style="background:#141b24;border-left:3px solid #4da3ff;padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;font-size:14.5px;">
+  <strong style="color:#f2f6fb;">The consequence worth internalising:</strong> "which requirements are affected by this BOM revision?" stops being a report somebody assembles and becomes a GET with a query parameter. Same for evidence trails, coverage gaps, and change impact.
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">3.2 Federated, not monolithic</h2>
+
+<p>The older digital-thread pitch was a single authoritative repository that every tool wrote into. That never survived contact with a real supply chain. The v2 API architecture points somewhere different: federated services that speak a common protocol, more like the web than like a mainframe.</p>
+
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">FEDERATED DIGITAL THREAD OVER THE SysML v2 API</text>
+
+  <!-- central bus -->
+  <rect x="160" y="205" width="580" height="60" rx="10" fill="#16202c" stroke="#4da3ff" stroke-width="2"/>
+  <text x="450" y="232" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="15" font-weight="bold">SysML v2 API &amp; Services (REST / HTTP + JSON)</text>
+  <text x="450" y="252" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">Projects &#183; Commits &#183; Branches &#183; Elements &#183; Relationships &#183; Queries</text>
+
+  <!-- producers above -->
+  <text x="450" y="66" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">AUTHORING &amp; SOURCES OF TRUTH</text>
+
+  <rect x="60" y="80" width="150" height="56" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="135" y="103" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">MBSE tool</text>
+  <text x="135" y="121" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">SysON / Cameo / Rhapsody</text>
+
+  <rect x="230" y="80" width="150" height="56" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="305" y="103" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">ECAD / MCAD</text>
+  <text x="305" y="121" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">schematic, netlist, layout</text>
+
+  <rect x="400" y="80" width="150" height="56" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="475" y="103" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">PLM / ERP</text>
+  <text x="475" y="121" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">BOM of record, procurement</text>
+
+  <rect x="570" y="80" width="150" height="56" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="645" y="103" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Simulation</text>
+  <text x="645" y="121" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">thermal, radiation, FMEA</text>
+
+  <rect x="740" y="80" width="110" height="56" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="795" y="103" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Part DBs</text>
+  <text x="795" y="121" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">Octopart, NASA parts</text>
+
+  <line x1="135" y1="136" x2="220" y2="203" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="305" y1="136" x2="330" y2="203" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="475" y1="136" x2="465" y2="203" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="645" y1="136" x2="600" y2="203" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="795" y1="136" x2="700" y2="203" stroke="#3a4553" stroke-width="1.4"/>
+
+  <!-- consumers below -->
+  <text x="450" y="320" text-anchor="middle" fill="#f0a868" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">CONSUMERS &amp; ANALYSERS</text>
+
+  <line x1="250" y1="267" x2="180" y2="332" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="380" y1="267" x2="360" y2="332" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="540" y1="267" x2="545" y2="332" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="670" y1="267" x2="730" y2="332" stroke="#3a4553" stroke-width="1.4"/>
+
+  <rect x="90" y="334" width="180" height="70" rx="7" fill="#152030" stroke="#4da3ff" stroke-width="2"/>
+  <text x="180" y="358" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="13" font-weight="bold">TALARIA</text>
+  <text x="180" y="376" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="11">assurance agents, derating,</text>
+  <text x="180" y="392" text-anchor="middle" fill="#9fb0c4" font-family="sans-serif" font-size="11">evidence, phase gates</text>
+
+  <rect x="290" y="334" width="150" height="70" rx="7" fill="#26201a" stroke="#f0a868" stroke-width="1.4"/>
+  <text x="365" y="358" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">CI / CD pipeline</text>
+  <text x="365" y="378" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">constraint checks on</text>
+  <text x="365" y="394" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">every commit</text>
+
+  <rect x="460" y="334" width="150" height="70" rx="7" fill="#26201a" stroke="#f0a868" stroke-width="1.4"/>
+  <text x="535" y="358" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Dashboards</text>
+  <text x="535" y="378" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">coverage, risk,</text>
+  <text x="535" y="394" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">readiness</text>
+
+  <rect x="630" y="334" width="180" height="70" rx="7" fill="#221a26" stroke="#a78bfa" stroke-width="1.4"/>
+  <text x="720" y="358" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Insurer / regulator</text>
+  <text x="720" y="378" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">scoped read-only access</text>
+  <text x="720" y="394" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">to a tagged baseline</text>
+
+  <text x="450" y="440" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">No tool owns the thread. Each participates through the same protocol, at a named commit, with provenance preserved.</text>
+  <text x="450" y="460" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">This is the architecture that makes a third-party assurance gateway commercially plausible.</text>
+</svg>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">3.3 Tool landscape, August 2026</h2>
+
+<table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:24%;">Tool</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:16%;">Type</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Status &amp; relevance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">SysML v2 Pilot Implementation</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Reference, open</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Eclipse/Xtext parser, Jupyter kernel, plus the reference API Services implementation. The place to prototype. Tracks KerML 1.1 / SysML 2.1 Beta.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">SysON</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Open source</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Eclipse-hosted graphical v2 editor from Obeo + CEA. Web-based, methodology support, Capella interchange. Early-adopter programme running through 2026. Strongest open option for a hosted editing surface.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Cameo / CATIA Magic</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Commercial</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">v2 available in the 2026 line, but gated by edition — the classic Cameo Systems Modeler Architect Edition and MagicDraw + SysML plugin do not gain v2 on the 2026x upgrade. Check the customer's exact SKU before assuming.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Siemens Systems Modeler</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Commercial</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Web-based collaborative v2 platform integrated with Teamcenter. Relevant where the customer's PLM is already Siemens.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">IBM Rhapsody</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Commercial</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">v2 support announced; heavy in defence primes.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">PTC Modeler, Ansys SAM</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Commercial</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">v2 capability present; PTC publishes v2 requirement documentation.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Syndeia (Intercax)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Commercial</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Digital-thread middleware; explicitly building on the v2 API for cross-repository federation.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Capella</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Open source</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Not SysML, but SysON offers native architecture-model exchange with it. Matters in ESA-adjacent European programmes.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">3.4 The space-sector angle</h2>
+
+<p>Two things are converging that matter to a space assurance product specifically:</p>
+
+<ul style="padding-left:22px;">
+  <li style="margin-bottom:10px;"><strong style="color:#f2f6fb;">Digital engineering mandates are real.</strong> NASA has been formalising Digital Engineering and MBSE from headquarters through to field centres, and the DoD CTO published SysML v2 transition guidance in February 2026. The direction of travel for programme deliverables is model-based, not document-based.</li>
+  <li style="margin-bottom:10px;"><strong style="color:#f2f6fb;">Model-based mission assurance already exists as a discipline.</strong> NASA's NEPP work on Systems Engineering and Assurance Modeling (SEAM) is precisely the "assurance as a model, not a PDF" thesis. SysML v2's evaluable requirements and standard API make that thesis substantially easier to implement.</li>
+</ul>
+
+<p>The gap — and this is the commercially interesting part — is that neither the standard nor the tools supply the <em>domain content</em>: derating tables, radiation design margins, screening levels, prohibited-materials rules, part grade heuristics. That remains proprietary. A vendor who holds curated space-assurance domain content <em>and</em> speaks the standard protocol occupies a defensible position.</p>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">3.5 Where TALARIA currently stands against this</h2>
+
+<p>Worth stating plainly before Part 4 goes into detail, because the mock UI and the real application are in different positions here.</p>
+
+<table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:24%;">API capability</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:26%;">Mock UI</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Real application (j9ccgit)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Queryable model store</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">JSON files read by Express routes</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Postgres via Drizzle, 48 tables, 44 REST route modules. Present — just not in the standard shape.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Commits / immutable history</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">none</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Partial — <code style="color:#8fd4a8;">agent_trace</code>, <code style="color:#8fd4a8;">evidence</code>, <code style="color:#8fd4a8;">approval</code> give an audit chain, but entity rows mutate in place.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Branches / baselines</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">none</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Absent. <code style="color:#8fd4a8;">board.revision</code> is a varchar; configuration baselines (FE-06) are unbuilt.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Relationships as elements</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">foreign-key style IDs in JSON</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Present — <code style="color:#8fd4a8;">requirement_trace</code> carries a typed <code>relationshipType</code>.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Scoped external read</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">simulated stakeholder portal</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Real — Cognito-gated insurer portal plus <code style="color:#8fd4a8;">stakeholder-access</code> logic. Bespoke rather than standard.</td></tr>
+  </tbody>
+</table>
+
+<p style="color:#9fb0c4;">Read as a whole: the real application has most of the <em>substance</em> the API describes and none of the <em>protocol</em>. That is a favourable position — implementing option D in Part 4 is largely a shaping exercise over an existing store, not new capability.</p>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">3.6 Sharp edges</h2>
+
+<div style="background:#241a1a;border-left:3px solid #e08a8a;padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0;">
+  <ul style="margin:0;padding-left:20px;color:#c8d4e2;">
+    <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">Edition and licensing traps.</strong> "Our tool supports SysML v2" often means a specific newer product line. Verify at the SKU level in any customer conversation.</li>
+    <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">v1 estates are not portable.</strong> Existing customer models will not convert cleanly. Plan for coexistence, not cutover.</li>
+    <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">API maturity varies.</strong> The reference implementation is a proof of concept. Commercial API conformance is uneven — test against the specific endpoint you intend to integrate with.</li>
+    <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">Skills gap.</strong> The definition/usage discipline and the textual notation are a genuine relearn for engineers fluent in v1 diagrams. Budget training time.</li>
+    <li style="margin-bottom:0;"><strong style="color:#f2f6fb;">The spec is still moving at the point release.</strong> 2.1 Beta is in pilot. Pin your parser version.</li>
+  </ul>
+</div>
+
+<div style="margin-top:44px;padding-top:20px;border-top:1px solid #242c38;font-size:13px;color:#6b7a8d;">
+  <div style="color:#7f8ea3;letter-spacing:.14em;text-transform:uppercase;font-size:11.5px;margin-bottom:8px;">Sources</div>
+  <a href="https://github.com/Systems-Modeling/SysML-v2-API-Services" style="color:#4da3ff;">Systems-Modeling / SysML-v2-API-Services (reference implementation)</a><br>
+  <a href="https://mbse-syson.org/" style="color:#4da3ff;">SysON — open-source SysML v2 modelling tool</a><br>
+  <a href="https://blog.obeosoft.com/introducing-methodology-support-for-sysmlv2-with-syson" style="color:#4da3ff;">Obeo — Methodology support for SysML v2 with SysON</a><br>
+  <a href="https://www.goengineer.com/blog/advantages-of-sysml-v2-now-available-in-no-magic-cameo-and-catia-magic-2026" style="color:#4da3ff;">GoEngineer — SysML v2 in No Magic Cameo &amp; CATIA Magic 2026</a><br>
+  <a href="https://intercax.com/blog/sysml-v2-and-digital-threads-with-syndeia" style="color:#4da3ff;">Intercax — SysML v2 and Digital Threads with Syndeia</a><br>
+  <a href="https://xdinnovation.com/sysml-v2-implementation-trends-complete-guide-for-2026/" style="color:#4da3ff;">XDinnovation — SysML v2 Implementation Trends 2026</a><br>
+  <a href="https://www.sodiuswillert.com/en/blog/a-practical-guide-for-sysml-v2-adoption" style="color:#4da3ff;">SodiusWillert — A Practical Guide for SysML v2 Adoption</a><br>
+  <a href="https://nepp.nasa.gov/docs/tasks/004a-Model-Based-Mission-Assurance/NEPP-CP-2021-Ryder-Austin-FUEE-Paper-SEAM-20210010222.pdf" style="color:#4da3ff;">NASA NEPP — Systems Engineering and Assurance Modeling (SEAM)</a><br>
+  <a href="https://ntrs.nasa.gov/api/citations/20240005284/downloads/NASAs_Use_of_MBSE_and_SysML_Modeling.pdf" style="color:#4da3ff;">NASA NTRS — NASA's Use of MBSE and SysML Modeling</a><br>
+  <a href="https://www.cto.mil/wp-content/uploads/2026/02/SysML-Info-Sheet-Feb2026.pdf" style="color:#4da3ff;">US DoD CTO — SysML v2 Transition Guidance (Feb 2026)</a><br>
+  <a href="https://en.wikipedia.org/wiki/List_of_SysML_tools" style="color:#4da3ff;">Wikipedia — List of SysML tools</a>
+</div>
+
+<div style="margin-top:30px;font-size:14px;"><a href="02-language-tour.html" style="color:#4da3ff;text-decoration:none;">&#8592; Part 2</a> <span style="color:#3a4553;">&#160;|&#160;</span> <a href="index.html" style="color:#4da3ff;text-decoration:none;">Contents</a> <span style="color:#3a4553;">&#160;|&#160;</span> <a href="04-talaria-context.html" style="color:#4da3ff;text-decoration:none;">Part 4: TALARIA &#8594;</a></div>
+
+</div>
+</body>
+</html>

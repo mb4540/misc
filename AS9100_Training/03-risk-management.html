@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Management | Jemba9 QMS Training</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c2b39;
+    background: #f4f6f9;
+  }
+  a { color: #0e6e73; }
+  a:visited { color: #0e6e73; }
+  .layout { display: flex; align-items: flex-start; min-height: 100vh; }
+  .sidebar {
+    width: 270px;
+    flex: 0 0 270px;
+    background: #0f2942;
+    color: #dce6ef;
+    padding: 22px 18px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .brand {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .sidebar .brand small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #8fa9c2;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .sidebar .home-link {
+    display: inline-block;
+    margin: 14px 0 18px;
+    font-size: 0.82rem;
+    color: #f5c064;
+    text-decoration: none;
+    border: 1px solid #2c4a68;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .sidebar .home-link:hover { background: #16324f; }
+  .nav-group { margin-top: 18px; }
+  .nav-group h2 {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7fa0bd;
+    margin: 0 0 6px;
+    font-weight: 700;
+    border-bottom: 1px solid #23405e;
+    padding-bottom: 5px;
+  }
+  .nav-group a {
+    display: block;
+    color: #cddbe8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 8px 6px 10px;
+    border-left: 3px solid transparent;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .nav-group a:hover { background: #16324f; }
+  .nav-group a.active {
+    background: #16324f;
+    border-left: 3px solid #f5a623;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .nav-group a .num {
+    display: inline-block;
+    min-width: 20px;
+    color: #7fa0bd;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-group a.active .num { color: #f5a623; }
+
+  .main { flex: 1 1 auto; min-width: 0; padding: 32px 44px 70px; max-width: 980px; }
+  .breadcrumb {
+    font-size: 0.8rem;
+    color: #5b7085;
+    margin-bottom: 18px;
+  }
+  .breadcrumb a { color: #0e6e73; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    color: #0f2942;
+  }
+  .page-header .subtitle {
+    color: #4a5b6c;
+    font-size: 1rem;
+    margin: 0 0 26px;
+  }
+  .process-badge {
+    display: inline-block;
+    background: #eaf3f2;
+    color: #0e6e73;
+    border: 1px solid #bfdbd9;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #dde5ec;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 26px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #0f2942;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+  }
+  .card h3 { font-size: 1.02rem; color: #163a54; }
+
+  table.doc-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  table.doc-table th, table.doc-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e6ebf0;
+    vertical-align: top;
+  }
+  table.doc-table th {
+    background: #f5f8fa;
+    color: #33495e;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  table.doc-table td code { font-size: 0.8rem; background: #f0f4f7; padding: 1px 5px; border-radius: 3px; }
+  .clause-tag {
+    display: inline-block;
+    background: #fbeedd;
+    color: #8a5a12;
+    border: 1px solid #f0d4a6;
+    font-size: 0.72rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    margin: 1px 2px 1px 0;
+    white-space: nowrap;
+  }
+
+  .jemba9-fact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 10px 24px;
+    font-size: 0.9rem;
+  }
+  .jemba9-fact-grid dt { font-weight: 700; color: #163a54; }
+  .jemba9-fact-grid dd { margin: 0 0 10px; color: #33495e; }
+
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .syllabus-grid { grid-template-columns: 1fr; } }
+  .syllabus-grid ol, .syllabus-grid ul { padding-left: 20px; margin: 0; }
+  .syllabus-grid li { margin-bottom: 9px; font-size: 0.92rem; }
+  .audience-tags span {
+    display: inline-block;
+    background: #eef3f8;
+    color: #234a68;
+    border: 1px solid #d4e0ec;
+    font-size: 0.78rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+
+  fieldset.notes-section {
+    background: #fffaf1;
+    border: 1px solid #f0dbb0;
+    border-radius: 8px;
+    padding: 20px 24px 24px;
+    margin: 0 0 20px;
+  }
+  fieldset.notes-section legend {
+    font-weight: 700;
+    color: #8a5a12;
+    padding: 0 8px;
+    font-size: 1.02rem;
+  }
+  .ref-strip {
+    background: #ffffff;
+    border: 1px solid #eadab8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #4a5b6c;
+    margin-bottom: 16px;
+  }
+  .ref-strip strong { color: #163a54; }
+  .field-row { margin-bottom: 14px; }
+  .field-row label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #33495e;
+    margin-bottom: 4px;
+  }
+  .field-row input[type="text"], .field-row input[type="date"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 7px 9px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .field-row.inline { display: flex; gap: 24px; flex-wrap: wrap; }
+  .field-row.inline > div { flex: 1 1 200px; }
+  .radio-set label { font-weight: 400; display: inline-flex; align-items: center; gap: 5px; margin-right: 18px; font-size: 0.88rem; }
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 10px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .save-instructions {
+    background: #eef6f6;
+    border: 1px solid #bfdbd9;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #204a4d;
+    margin-top: 16px;
+  }
+  .save-instructions strong { color: #0e6e73; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e6eb;
+    font-size: 0.76rem;
+    color: #8593a0;
+  }
+
+  @media print {
+    .sidebar, .breadcrumb, .save-instructions { display: none !important; }
+    .main { max-width: 100%; padding: 0; }
+    .layout { display: block; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+    textarea { min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand">Jemba9 QMS Training Program<small>AS9100D Rev D &middot; Document Review Portal</small></div>
+  <a class="home-link" href="index.html">&#8962; Program Home</a>
+
+  <div class="nav-group">
+    <h2>Leadership</h2>
+    <a href="01-qms-overview.html"><span class="num">01</span> QMS Overview &amp; Company Context</a>
+    <a href="02-quality-policy-objectives.html"><span class="num">02</span> Quality Policy &amp; Objectives</a>
+    <a href="13-management-review.html"><span class="num">13</span> Management Review</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Quality System</h2>
+    <a class="active" href="03-risk-management.html"><span class="num">03</span> Risk Management</a>
+    <a href="11-nonconformance-and-corrective-action.html"><span class="num">11</span> Nonconformance &amp; CAPA</a>
+    <a href="12-internal-audit.html"><span class="num">12</span> Internal Audit</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Core Value Stream</h2>
+    <a href="04-design-and-development.html"><span class="num">04</span> Design &amp; Development</a>
+    <a href="05-supplier-management.html"><span class="num">05</span> Supplier Management</a>
+    <a href="06-counterfeit-parts-prevention.html"><span class="num">06</span> Counterfeit Parts Prevention</a>
+    <a href="07-production-and-inspection.html"><span class="num">07</span> Production &amp; Inspection</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Supporting Processes</h2>
+    <a href="08-document-control.html"><span class="num">08</span> Document Control</a>
+    <a href="09-configuration-management.html"><span class="num">09</span> Configuration Management</a>
+    <a href="10-training-and-competency.html"><span class="num">10</span> Training &amp; Competency</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Quality System &rsaquo; Risk Management</div>
+
+  <div class="page-header">
+    <span class="process-badge">Quality Process</span>
+    <h1>3. Risk Management</h1>
+    <p class="subtitle">Identifying, scoring, and treating risk at both the QMS level and the individual program level</p>
+  </div>
+
+  <div class="card">
+    <h2>Source Documents for This Topic</h2>
+    <table class="doc-table">
+      <thead>
+        <tr><th>Doc #</th><th>Title</th><th>Type</th><th>AS9100D Clause(s)</th><th>Owner / Status</th><th>Repository Path</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>QP-003</code></td>
+          <td>Risk Management Procedure</td>
+          <td>Procedure (Level 2)</td>
+          <td><span class="clause-tag">6.1</span><span class="clause-tag">6.1.1</span><span class="clause-tag">6.1.2</span><span class="clause-tag">8.1.1</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/procedures/QP-003-risk-management.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-001</code></td>
+          <td>Risk Register</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">6.1</span><span class="clause-tag">6.1.1</span><span class="clause-tag">6.1.2</span><span class="clause-tag">8.1.1</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-001-risk-register.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-017</code></td>
+          <td>Program Risk Register</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">6.1</span><span class="clause-tag">6.1.2</span><span class="clause-tag">8.1.1</span></td>
+          <td>Program Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-017-program-risk-register.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Student Introduction</h2>
+    <p>AS9100D does not treat risk as a paperwork exercise — clause 6.1 requires Jemba9 to determine the risks and opportunities that could affect whether the QMS achieves its intended results, and clause 8.1.1 goes further, requiring that risk thinking be built into day-to-day operations, not just strategic planning. This topic covers both levels: the QMS-wide Risk Register (QF-001), owned by the Quality Manager, and the Program Risk Register (QF-017), owned by each Program Manager, which tracks risk on an individual contract or program.</p>
+    <p>The two registers exist for different reasons and should not be confused. The QMS Risk Register covers risks to the quality system itself — things like a supplier base that is too concentrated, a recurring nonconformance category, or a training gap that could affect multiple programs. The Program Risk Register is scoped to one customer contract and tracks technical, schedule, cost, supplier, safety, regulatory, and customer risks specific to that program, starting at contract award and updated at every milestone (PDR, CDR, production release, delivery) and at least monthly.</p>
+    <p>This distinction matters more at Jemba9 than at a typical manufacturer because of the Spacify&trade; business model. Jemba9 adapts commercial-off-the-shelf computers, controllers, data routers, power supplies, robotics, and sensors into space-qualified hardware. That adaptation path is exactly where risk concentrates: a commercial part with a benign failure mode on the ground can have a mission-ending consequence in orbit, where there is no service call and no second chance. The severity scale in QP-003 §3.2 reflects this directly — a "Catastrophic" score (5) is defined as product safety failure, customer program failure, regulatory violation, or loss of certification, and any risk scoring in that range escalates immediately to the CEO. Likelihood and severity are scored independently and multiplied into a Risk Priority Number (RPN); a risk does not have to be likely to demand urgent treatment if the consequence of it occurring is severe enough.</p>
+    <p>Risk is also not a one-time entry. Both registers are living documents: risks flow in from contract review, design reviews, supplier qualification, internal audits, Management Review, and recurring nonconformances, and they are reviewed monthly (program level) and monthly-to-quarterly (QMS level), with any risk that blows past its target date automatically escalating to the next level of management. Treating risk actively — not just recording it once and moving on — is what clause 8.1.1's "operational" risk management requirement is actually asking for, and it is what distinguishes a program that catches a supplier or design problem early from one that discovers it in a failure review after delivery.</p>
+    <p><strong>Who needs this training:</strong> Program Managers, Quality Manager, Chief Engineer, Supply Chain Manager, and anyone who owns a mitigation action on either register; a general-awareness version is appropriate for all employees since any employee may submit a risk.</p>
+  </div>
+
+  <div class="card">
+    <h2>Syllabus &amp; Training Goals</h2>
+    <div class="syllabus-grid">
+      <div>
+        <h3>Class Syllabus</h3>
+        <ol>
+          <li>Clause 6.1 (risks/opportunities to QMS objectives) versus clause 8.1.1 (operational risk management) — what each requires</li>
+          <li>Core definitions: risk, opportunity, likelihood, severity, RPN, risk owner, residual risk</li>
+          <li>The Likelihood (1&ndash;5) and Severity (1&ndash;5) scales and how to score a risk against them, including why "Catastrophic" severity is defined in terms of safety, mission, and certification consequences</li>
+          <li>RPN thresholds and required action at each level: Low (accept/monitor), Medium (treat, monthly), High (treat urgently, escalate to Program/Quality Manager), Critical (immediate, escalate to CEO, stop work if safety-related)</li>
+          <li>QF-001 QMS Risk Register vs. QF-017 Program Risk Register — differences in scope, owner, fields, and review cadence</li>
+          <li>Where risks come from: contract review, PDR/CDR design reviews, supplier qualification, internal audits, Management Review, recurring NCRs, employee reports, context analysis, counterfeit-parts threat</li>
+          <li>The four treatment strategies: Mitigate, Accept, Avoid, Transfer, and when each applies</li>
+          <li>Monitoring cadence and escalation: monthly program/QMS reviews, quarterly Management Review risk summary, and what happens when a risk misses its target date</li>
+          <li>Capturing opportunities alongside risks and how they feed continuous improvement</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Learning Objectives</h3>
+        <p>By the end of this session, participants will be able to:</p>
+        <ul>
+          <li>Score a risk's Likelihood and Severity and calculate its RPN using the QP-003 matrix</li>
+          <li>Explain the difference between the QMS Risk Register (QF-001) and the Program Risk Register (QF-017) and identify which one a given risk belongs in</li>
+          <li>Identify the required treatment action and escalation path for a given RPN result</li>
+          <li>Name at least four sources that feed new entries into a risk register</li>
+          <li>Explain why space hardware programs carry disproportionate consequence-of-failure risk compared to commercial ground applications</li>
+          <li>Locate and update the risk register for their own program in SharePoint</li>
+        </ul>
+        <p style="margin-top:16px;"><strong>Recommended audience:</strong></p>
+        <div class="audience-tags">
+          <span>Program Managers</span>
+          <span>Quality Manager</span>
+          <span>Chief Engineer</span>
+          <span>Supply Chain Manager</span>
+          <span>Engineering leads</span>
+          <span>General awareness: all employees</span>
+        </div>
+        <p style="margin-top:10px;"><strong>Suggested periodicity:</strong> Program-level training at program kickoff for anyone assigned a risk owner role; QMS-level refresher annually alongside the internal audit cycle, since risk management is itself an audited process area.</p>
+      </div>
+    </div>
+  </div>
+
+  <fieldset class="notes-section">
+    <legend>Reviewer Notes</legend>
+    <div class="ref-strip">
+      <strong>Correlation reference:</strong> Page <code>03-risk-management.html</code> &middot; Topic: Risk Management &middot; Source docs: <code>QP-003</code>, <code>QF-001</code>, <code>QF-017</code> &middot; Clauses: 6.1, 6.1.1, 6.1.2, 8.1.1 &middot; Files under <code>docs/AS9100/procedures/</code> and <code>docs/AS9100/templates/</code>
+    </div>
+    <div class="field-row inline">
+      <div>
+        <label for="reviewer-name">Reviewer name</label>
+        <input type="text" id="reviewer-name" name="reviewer-name">
+      </div>
+      <div>
+        <label for="reviewer-date">Date</label>
+        <input type="date" id="reviewer-date" name="reviewer-date">
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="section-ref">Section or clause this note refers to</label>
+      <input type="text" id="section-ref" name="section-ref" placeholder="e.g. QP-003 &sect;3 RPN matrix, or clause 8.1.1">
+    </div>
+    <div class="field-row radio-set">
+      <label style="display:block;margin-bottom:6px;">Review status</label>
+      <label><input type="radio" name="status" value="approved"> Content approved as written</label>
+      <label><input type="radio" name="status" value="revise"> Needs revision</label>
+      <label><input type="radio" name="status" value="question"> Question for author</label>
+    </div>
+    <div class="field-row">
+      <label for="notes">Comments</label>
+      <textarea id="notes" name="notes" placeholder="Type your notes here before saving/printing this page..."></textarea>
+    </div>
+    <div class="save-instructions">
+      <strong>How to save these notes:</strong> Use your browser's <strong>Print &rarr; Save as PDF</strong> (recommended &mdash; captures exactly what you typed) or <strong>File &rarr; Save Page As &rarr; Webpage, Complete</strong>. The correlation reference above is included in the saved file so your notes can be matched back to this page and its source documents later. No data is transmitted anywhere &mdash; this page has no server and no script; your notes exist only in your browser until you save or print.
+    </div>
+  </fieldset>
+
+  <footer>
+    Jemba9 QMS Training Program &middot; Topic 3 of 13 &middot; Generated from Jemba9_QMS repository (branches <code>main</code> and <code>qms-review-notes</code>) &middot; Static reference material &mdash; not a controlled QMS document.
+  </footer>
+</main>
+</div>
+</body>
+</html>

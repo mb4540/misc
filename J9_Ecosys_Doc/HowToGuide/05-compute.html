@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — Compute</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 5</p>
+    <h1>Compute</h1>
+    <p>The code change to make first, three Dockerfiles, ECR, ECS Fargate task definitions and services,
+    autoscaling, and the load balancer that routes by path.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html" class="here">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>5.1 &mdash; Do this before you write a Dockerfile</h1>
+
+<p>The repository contains no Dockerfiles and none of the three Next configs sets an output mode. Two small
+code changes make containerisation straightforward. Raise them as pull requests in the app projects rather than
+editing quietly &mdash; they are build-behaviour changes and their owners should see them.</p>
+
+<h3>Change 1: standalone output for the two apps</h3>
+
+<p class="filename">Applications/OKR/next.config.ts  —  add one line</p>
+<pre><code>const nextConfig: NextConfig = {
+  basePath: "/okr",
+  output: "standalone",          // &lt;-- add this
+  reactStrictMode: true,
+  serverExternalPackages: ["@prisma/client", ".prisma/client", "prisma"],
+  turbopack: { root: import.meta.dirname },
+  async headers() { /* unchanged */ },
+};</code></pre>
+
+<p class="filename">Applications/dataroom/next.config.ts  —  add one line</p>
+<pre><code>const nextConfig: NextConfig = {
+  basePath: BASE_PATH,
+  output: "standalone",          // &lt;-- add this
+  reactStrictMode: true,
+  env: { NEXT_PUBLIC_BASE_PATH: BASE_PATH },
+};</code></pre>
+
+<p><code>output: "standalone"</code> makes <code>next build</code> emit a self-contained
+<code>.next/standalone</code> directory with a <code>server.js</code> and only the node modules the server actually
+traced. The resulting image is roughly 200&nbsp;MB instead of 1&nbsp;GB, which matters on every deploy and every
+task start.</p>
+
+<h3>Change 2: the platform does not get standalone, and here is why</h3>
+
+<div class="callout callout-note"><span class="label">The worker is a tsx script, so the platform image keeps its dependencies</span>
+
+<p><code>Ecosystem/package.json</code> defines the worker as:</p>
+<pre><code>"worker": "NODE_OPTIONS=--conditions=react-server tsx src/worker/index.ts"</code></pre>
+<p>That runs TypeScript source directly, through <code>tsx</code>, which is a devDependency. A standalone build
+prunes both the source tree and every module the Next server did not trace &mdash; so the same image could serve
+the web app but not run the worker.</p>
+<p>Rather than maintaining two platform images, build one image that keeps the full dependency tree and the source.
+It is larger (roughly 600&nbsp;MB), and both <code>npm start</code> and <code>npm run worker</code> work from it
+unchanged. If the platform later adds a compiled worker entry point, switch it to standalone and the image drops
+to app size. Note it as a known cost, not a mystery.</p>
+</div>
+
+<h2>5.2 &mdash; The three Dockerfiles</h2>
+
+<h3>Platform</h3>
+
+<p class="filename">Ecosystem/Dockerfile</p>
+<pre><code># Jemba9 platform. One image, two entry points:
+#   web:    node_modules/.bin/next start          (via npm start)
+#   worker: tsx src/worker/index.ts               (via npm run worker)
+# Not a standalone build — see the note about tsx in the primer.
+
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+# ------------------------------------------------------------------ deps
+FROM base AS deps
+COPY package.json package-lock.json ./
+COPY prisma ./prisma
+# postinstall runs `prisma generate`, which needs the schema present first.
+RUN npm ci
+
+# ----------------------------------------------------------------- build
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
+
+# ---------------------------------------------------------------- runner
+FROM base AS runner
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+RUN addgroup -g 1001 -S nodejs &amp;&amp; adduser -S nextjs -u 1001
+
+COPY --from=build --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=build --chown=nextjs:nodejs /app/.next        ./.next
+COPY --from=build --chown=nextjs:nodejs /app/public       ./public
+COPY --from=build --chown=nextjs:nodejs /app/src          ./src
+COPY --from=build --chown=nextjs:nodejs /app/prisma       ./prisma
+COPY --from=build --chown=nextjs:nodejs /app/packages     ./packages
+COPY --from=build --chown=nextjs:nodejs /app/branding     ./branding
+COPY --from=build --chown=nextjs:nodejs /app/company.config.yaml ./company.config.yaml
+COPY --from=build --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=build --chown=nextjs:nodejs /app/next.config.ts ./next.config.ts
+COPY --from=build --chown=nextjs:nodejs /app/tsconfig.json  ./tsconfig.json
+
+USER nextjs
+EXPOSE 3000
+
+# The ECS task definition overrides this for the worker service.
+CMD ["npm", "start"]</code></pre>
+
+<h3>OKR</h3>
+
+<p class="filename">Applications/OKR/Dockerfile</p>
+<pre><code># Jemba9 OKR app. basePath /okr, port 3001. Standalone build.
+
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json package-lock.json ./
+COPY prisma ./prisma
+RUN npm ci
+
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
+
+FROM base AS runner
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3001
+ENV HOSTNAME=0.0.0.0
+
+RUN addgroup -g 1001 -S nodejs &amp;&amp; adduser -S nextjs -u 1001
+
+# The standalone bundle, plus the two directories Next deliberately leaves out.
+COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /app/.next/static     ./.next/static
+COPY --from=build --chown=nextjs:nodejs /app/public           ./public
+
+# Prisma's query engine and the migration files, so the same image can run
+# `prisma migrate deploy` as a one-off task.
+COPY --from=build --chown=nextjs:nodejs /app/prisma           ./prisma
+COPY --from=build --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=build --chown=nextjs:nodejs /app/node_modules/prisma  ./node_modules/prisma
+COPY --from=build --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+
+USER nextjs
+EXPOSE 3001
+
+CMD ["node", "server.js"]</code></pre>
+
+<h3>Data Room</h3>
+
+<p class="filename">Applications/dataroom/Dockerfile</p>
+<pre><code># Jemba9 Data Room. basePath /dataroom, port 8080. Standalone build.
+# Uses the raw pg driver, and migrates with node scripts/db-migrate.mjs over the
+# plain SQL files in db/migrations — so both must survive into the runner stage.
+
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json package-lock.json ./
+RUN npm ci
+
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+# Baked into the client bundle at build time — see chapter 4.5.
+ARG NEXT_PUBLIC_PLATFORM_PORTAL_URL=""
+ENV NEXT_PUBLIC_PLATFORM_PORTAL_URL=$NEXT_PUBLIC_PLATFORM_PORTAL_URL
+RUN npm run build
+
+FROM base AS runner
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=8080
+ENV HOSTNAME=0.0.0.0
+
+RUN addgroup -g 1001 -S nodejs &amp;&amp; adduser -S nextjs -u 1001
+
+COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /app/.next/static     ./.next/static
+COPY --from=build --chown=nextjs:nodejs /app/public           ./public
+
+# Migration inputs.
+COPY --from=build --chown=nextjs:nodejs /app/db               ./db
+COPY --from=build --chown=nextjs:nodejs /app/scripts          ./scripts
+COPY --from=build --chown=nextjs:nodejs /app/node_modules/pg  ./node_modules/pg
+
+USER nextjs
+EXPOSE 8080
+
+CMD ["node", "server.js"]</code></pre>
+
+<p class="filename">.dockerignore  —  the same file in all three projects</p>
+<pre><code>node_modules
+.next
+.git
+.github
+.env
+.env.*
+!.env.example
+*.log
+coverage
+playwright-report
+test-results
+e2e
+tests
+docs
+prompts
+documents
+*.md
+Dockerfile
+.dockerignore
+terraform.tfstate*
+*.tfvars</code></pre>
+
+<div class="callout callout-stop"><span class="label">HOSTNAME=0.0.0.0 is not optional</span>
+
+<p>The Next standalone server reads <code>HOSTNAME</code> and defaults to <code>localhost</code>. Inside a Fargate
+task with <code>awsvpc</code> networking, a process bound to localhost is unreachable from the load balancer. The
+task will start, report healthy to Docker, log "ready in 400ms", and every ALB health check will time out.</p>
+<p>It is set in all three Dockerfiles above. Do not remove it, and do not let a task definition override it.</p>
+</div>
+
+<h2>5.3 &mdash; ECR</h2>
+
+<p>Three repositories, shared between environments. Image tags are the git SHA; promotion moves a digest.</p>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/ecr.tf</p>
+<pre><code># Repositories are NOT per environment — that is what makes dev-to-prod
+# promotion a digest reference rather than a rebuild. Guard against the
+# workspace loop creating them twice.
+resource "aws_ecr_repository" "service" {
+  for_each             = local.env == "prod" ? toset([]) : toset(["platform", "okr", "dataroom"])
+  name                 = "j9/${each.key}"
+  image_tag_mutability = "IMMUTABLE"
+
+  image_scanning_configuration { scan_on_push = true }
+
+  encryption_configuration {
+    encryption_type = "KMS"
+    kms_key         = data.terraform_remote_state.secrets.outputs.kms_key_arn
+  }
+}
+
+resource "aws_ecr_lifecycle_policy" "service" {
+  for_each   = aws_ecr_repository.service
+  repository = each.value.name
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Keep the 30 most recent images"
+        selection = {
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = 30
+        }
+        action = { type = "expire" }
+      },
+    ]
+  })
+}</code></pre>
+
+<div class="callout callout-note"><span class="label">IMMUTABLE tags will catch a real mistake</span>
+
+<p>With immutable tags, pushing a second image under the same tag fails. That is exactly what you want: it means a
+deployed SHA can never be quietly swapped for different bytes, and it means "prod is running <code>abc1234</code>"
+is a statement you can trust.</p>
+<p>Because <code>local.env == "prod"</code> creates nothing, the repositories are created when you first apply the
+compute layer in the <code>dev</code> workspace, and the prod workspace looks them up with a
+<code>data "aws_ecr_repository"</code> instead. An alternative, arguably cleaner, is to move ECR into the
+<code>00-bootstrap</code> layer, which has no workspaces at all.</p>
+</div>
+
+<h2>5.4 &mdash; The cluster and the log groups</h2>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/cluster.tf</p>
+<pre><code>resource "aws_cloudwatch_log_group" "service" {
+  for_each          = toset(local.services)
+  name              = "/j9/${local.env}/${each.key}"
+  retention_in_days = var.log_retention_days
+  kms_key_id        = data.terraform_remote_state.secrets.outputs.kms_key_arn
+}
+
+resource "aws_cloudwatch_log_group" "exec" {
+  name              = "/j9/${local.env}/ecs-exec"
+  retention_in_days = 30
+  kms_key_id        = data.terraform_remote_state.secrets.outputs.kms_key_arn
+}
+
+resource "aws_ecs_cluster" "main" {
+  name = "${local.prefix}-cluster"
+
+  setting {
+    name  = "containerInsights"
+    value = local.is_prod ? "enhanced" : "disabled"   # enhanced insights is not free
+  }
+
+  configuration {
+    execute_command_configuration {
+      kms_key_id = data.terraform_remote_state.secrets.outputs.kms_key_arn
+      logging    = "OVERRIDE"
+      log_configuration {
+        cloud_watch_encryption_enabled = true
+        cloud_watch_log_group_name     = aws_cloudwatch_log_group.exec.name
+      }
+    }
+  }
+}
+
+# Fargate Spot for dev only. A task eviction in dev is a shrug; in prod it is an
+# incident, and the savings are not worth the pager.
+resource "aws_ecs_cluster_capacity_providers" "main" {
+  cluster_name = aws_ecs_cluster.main.name
+
+  capacity_providers = local.is_prod ? ["FARGATE"] : ["FARGATE", "FARGATE_SPOT"]
+
+  default_capacity_provider_strategy {
+    capacity_provider = local.is_prod ? "FARGATE" : "FARGATE_SPOT"
+    weight            = 1
+    base              = local.is_prod ? 0 : 1
+  }
+}</code></pre>
+
+<h2>5.5 &mdash; Task definitions</h2>
+
+<p>Written out for the platform, then for OKR. The worker reuses the platform definition with a command override;
+the Data Room is the OKR pattern with a different port, image, and secret set.</p>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/task-platform.tf</p>
+<pre><code>locals {
+  ssm = "arn:aws:ssm:${var.region}:824999955649:parameter/j9/${local.env}"
+
+  # The internal URL app tasks use to reach the platform. Server-to-server —
+  # never out through CloudFront and back, which would double latency and put a
+  # WAF rate limit in front of your own authorization calls.
+  platform_internal_url = "http://${aws_lb.internal.dns_name}"
+}
+
+resource "aws_ecs_task_definition" "platform" {
+  family                   = "${local.prefix}-platform"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = var.task_cpu
+  memory                   = var.task_memory
+  execution_role_arn       = aws_iam_role.exec["platform"].arn
+  task_role_arn            = aws_iam_role.task["platform"].arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"      # Graviton: same price band, better price/performance
+  }
+
+  container_definitions = jsonencode([{
+    name      = "platform"
+    image     = "${data.aws_ecr_repository.platform.repository_url}:${var.platform_image_tag}"
+    essential = true
+
+    portMappings = [{ containerPort = 3000, protocol = "tcp" }]
+
+    environment = [
+      { name = "NODE_ENV",             value = "production" },
+      { name = "PORT",                 value = "3000" },
+      { name = "HOSTNAME",             value = "0.0.0.0" },
+      { name = "AUTH_PROVIDER",        value = "cognito" },
+      { name = "COGNITO_REGION",       value = var.region },
+      { name = "SESSION_COOKIE_NAME",  value = "j9_session" },
+      { name = "PLATFORM_SELF_URL",    value = var.front_door_url },
+      { name = "J9_OBJECTS_BUCKET",    value = data.terraform_remote_state.data.outputs.objects_bucket },
+    ]
+
+    # Resolved by ECS at task start, using the execution role. The application
+    # process never sees an SSM API call.
+    secrets = [
+      { name = "APP_DATABASE_URL",     valueFrom = "${local.ssm}/platform/APP_DATABASE_URL" },
+      { name = "REDIS_URL",            valueFrom = "${local.ssm}/shared/REDIS_URL" },
+      { name = "AUTH_CLIENT_ID",       valueFrom = "${local.ssm}/shared/COGNITO_CLIENT_ID" },
+      { name = "COGNITO_USER_POOL_ID", valueFrom = "${local.ssm}/shared/COGNITO_USER_POOL_ID" },
+      { name = "COGNITO_CLIENT_ID",    valueFrom = "${local.ssm}/shared/COGNITO_CLIENT_ID" },
+    ]
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.service["platform"].name
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "platform"
+      }
+    }
+
+    # A container-level check as well as the ALB check: this one catches a wedged
+    # process before the load balancer does.
+    healthCheck = {
+      command     = ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/healthz || exit 1"]
+      interval    = 30
+      timeout     = 5
+      retries     = 3
+      startPeriod = 60
+    }
+  }])
+}
+
+# The worker: same image, same secrets, different command, no port.
+resource "aws_ecs_task_definition" "worker" {
+  family                   = "${local.prefix}-worker"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 512
+  memory                   = 1024
+  execution_role_arn       = aws_iam_role.exec["worker"].arn
+  task_role_arn            = aws_iam_role.task["worker"].arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
+
+  container_definitions = jsonencode([{
+    name      = "worker"
+    image     = "${data.aws_ecr_repository.platform.repository_url}:${var.platform_image_tag}"
+    essential = true
+    command   = ["npm", "run", "worker"]
+
+    environment = [
+      { name = "NODE_ENV",          value = "production" },
+      { name = "PLATFORM_SELF_URL", value = var.front_door_url },
+    ]
+
+    secrets = [
+      { name = "APP_DATABASE_URL", valueFrom = "${local.ssm}/platform/APP_DATABASE_URL" },
+      { name = "REDIS_URL",        valueFrom = "${local.ssm}/shared/REDIS_URL" },
+    ]
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.service["worker"].name
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "worker"
+      }
+    }
+  }])
+}</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/task-okr.tf</p>
+<pre><code>resource "aws_ecs_task_definition" "okr" {
+  family                   = "${local.prefix}-okr"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = var.task_cpu
+  memory                   = var.task_memory
+  execution_role_arn       = aws_iam_role.exec["okr"].arn
+  task_role_arn            = aws_iam_role.task["okr"].arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
+
+  container_definitions = jsonencode([{
+    name      = "okr"
+    image     = "${data.aws_ecr_repository.okr.repository_url}:${var.okr_image_tag}"
+    essential = true
+
+    portMappings = [{ containerPort = 3001, protocol = "tcp" }]
+
+    environment = [
+      { name = "NODE_ENV",         value = "production" },
+      { name = "PORT",             value = "3001" },
+      { name = "HOSTNAME",         value = "0.0.0.0" },
+      { name = "J9_PLATFORM_URL",  value = local.platform_internal_url },
+    ]
+
+    secrets = [
+      { name = "APP_DATABASE_URL", valueFrom = "${local.ssm}/okr/APP_DATABASE_URL" },
+      { name = "REDIS_URL",        valueFrom = "${local.ssm}/shared/REDIS_URL" },
+      { name = "J9_APP_API_KEY",   valueFrom = "${local.ssm}/okr/J9_APP_API_KEY" },
+    ]
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.service["okr"].name
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "okr"
+      }
+    }
+
+    # Note the base path. /healthz alone is a 404 on this service.
+    healthCheck = {
+      command     = ["CMD-SHELL", "wget -qO- http://127.0.0.1:3001/okr/healthz || exit 1"]
+      interval    = 30
+      timeout     = 5
+      retries     = 3
+      startPeriod = 60
+    }
+  }])
+}</code></pre>
+
+<p>The Data Room definition is the same shape: image <code>j9/dataroom</code>, port <code>8080</code>, health path
+<code>/dataroom/healthz</code>, and its secrets are <code>APP_DATABASE_URL</code>,
+<code>J9_APP_API_KEY</code>, and <code>RESEND_API_KEY</code>. It has no <code>REDIS_URL</code>.</p>
+
+<h2>5.6 &mdash; Services</h2>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/services.tf</p>
+<pre><code>locals {
+  service_ports = { platform = 3000, okr = 3001, dataroom = 8080 }
+  service_counts = {
+    platform = var.platform_desired_count
+    okr      = var.okr_desired_count
+    dataroom = var.dataroom_desired_count
+  }
+  task_defs = {
+    platform = aws_ecs_task_definition.platform.arn
+    okr      = aws_ecs_task_definition.okr.arn
+    dataroom = aws_ecs_task_definition.dataroom.arn
+  }
+}
+
+resource "aws_ecs_service" "web" {
+  for_each = local.service_ports
+
+  name            = "${local.prefix}-${each.key}"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = local.task_defs[each.key]
+  desired_count   = local.service_counts[each.key]
+  launch_type     = null   # inherit the cluster capacity provider strategy
+
+  enable_execute_command = true
+
+  network_configuration {
+    subnets          = data.terraform_remote_state.network.outputs.private_subnet_ids
+    security_groups  = [data.terraform_remote_state.network.outputs.task_sg_id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.service[each.key].arn
+    container_name   = each.key
+    container_port   = each.value
+  }
+
+  # Give the app time to come up before the ALB starts counting failures against it.
+  health_check_grace_period_seconds = 90
+
+  # Roll back automatically on a bad deploy instead of leaving a broken service up.
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = local.is_prod ? 100 : 50
+
+  # The CI pipeline updates the image; Terraform should not fight it.
+  lifecycle {
+    ignore_changes = [task_definition, desired_count]
+  }
+
+  depends_on = [aws_lb_listener.https]
+}
+
+resource "aws_ecs_service" "worker" {
+  name            = "${local.prefix}-worker"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.worker.arn
+  desired_count   = var.worker_desired_count
+
+  enable_execute_command = true
+
+  network_configuration {
+    subnets          = data.terraform_remote_state.network.outputs.private_subnet_ids
+    security_groups  = [data.terraform_remote_state.network.outputs.task_sg_id]
+    assign_public_ip = false
+  }
+
+  # Exactly one worker at a time. See the warning in chapter 2.7.
+  deployment_maximum_percent         = 100
+  deployment_minimum_healthy_percent = 0
+
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
+}</code></pre>
+
+<h3>Autoscaling</h3>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/autoscaling.tf</p>
+<pre><code># Prod only. In dev, a fixed count of one is cheaper and easier to reason about.
+resource "aws_appautoscaling_target" "web" {
+  for_each = local.is_prod ? local.service_ports : {}
+
+  service_namespace  = "ecs"
+  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.web[each.key].name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  min_capacity       = 2
+  max_capacity       = 8
+}
+
+resource "aws_appautoscaling_policy" "cpu" {
+  for_each = aws_appautoscaling_target.web
+
+  name               = "${each.value.resource_id}-cpu"
+  policy_type        = "TargetTrackingScaling"
+  service_namespace  = each.value.service_namespace
+  resource_id        = each.value.resource_id
+  scalable_dimension = each.value.scalable_dimension
+
+  target_tracking_scaling_policy_configuration {
+    target_value       = 65
+    scale_in_cooldown  = 300      # slow to shrink
+    scale_out_cooldown = 60       # quick to grow
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+  }
+}</code></pre>
+
+<h2>5.7 &mdash; The load balancer</h2>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 300" role="img" aria-label="Path routing from CloudFront through the ALB">
+  <defs>
+    <marker id="arrow_routing" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_routing" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_routing" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="30" y="20" width="240" height="40" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="150.0" y="37.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">CloudFront behaviors</text>
+  <text x="150.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">cache policy per path</text>
+  <rect x="340" y="20" width="220" height="40" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="450.0" y="37.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ALB listener rules</text>
+  <text x="450.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">target selection</text>
+  <rect x="630" y="20" width="240" height="40" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="750.0" y="37.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Target groups</text>
+  <text x="750.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">one per Fargate service</text>
+  <line x1="270" y1="40" x2="336" y2="40" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_routing)"/>
+  <line x1="560" y1="40" x2="626" y2="40" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_routing)"/>
+  <line x1="30" y1="82" x2="870" y2="82" stroke="#c9cdd6" stroke-width="1.2"/>
+  <text x="36" y="104" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="11" font-weight="800" fill="#EB5616" text-anchor="start">/_next/static/*</text>
+  <text x="300" y="104" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="400" fill="#6b7280" text-anchor="start">cache 1 year, immutable</text>
+  <text x="600" y="104" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10.5" font-weight="400" fill="#1f2430" text-anchor="start">whichever app owns the prefix</text>
+  <text x="36" y="134" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="11" font-weight="800" fill="#EB5616" text-anchor="start">/okr/*</text>
+  <text x="300" y="134" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="400" fill="#6b7280" text-anchor="start">no cache, forward all cookies</text>
+  <text x="600" y="134" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10.5" font-weight="400" fill="#1f2430" text-anchor="start">j9-&lt;env&gt;-okr-tg  :3001</text>
+  <text x="36" y="164" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="11" font-weight="800" fill="#EB5616" text-anchor="start">/dataroom/*</text>
+  <text x="300" y="164" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="400" fill="#6b7280" text-anchor="start">no cache, forward all cookies</text>
+  <text x="600" y="164" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10.5" font-weight="400" fill="#1f2430" text-anchor="start">j9-&lt;env&gt;-dataroom-tg  :8080</text>
+  <text x="36" y="194" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="11" font-weight="800" fill="#EB5616" text-anchor="start">/admin/*</text>
+  <text x="300" y="194" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="400" fill="#6b7280" text-anchor="start">no cache, no compression on POST</text>
+  <text x="600" y="194" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10.5" font-weight="400" fill="#1f2430" text-anchor="start">j9-&lt;env&gt;-platform-tg  :3000</text>
+  <text x="36" y="224" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="11" font-weight="800" fill="#EB5616" text-anchor="start">default  /*</text>
+  <text x="300" y="224" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="400" fill="#6b7280" text-anchor="start">no cache</text>
+  <text x="600" y="224" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10.5" font-weight="400" fill="#1f2430" text-anchor="start">j9-&lt;env&gt;-platform-tg  :3000</text>
+  <text x="450" y="268" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700" fill="#15803d" text-anchor="middle">A dead app origin returns an error on its own path only. The lobby stays open.</text>
+</svg>
+<figcaption>CloudFront differentiates cache behaviour; the ALB selects the target. Two layers, each doing the job
+it is good at.</figcaption>
+</figure>
+
+<p>Two load balancers, and the second one is the part people forget.</p>
+
+<ul>
+<li><strong><code>j9-&lt;env&gt;-alb</code></strong> &mdash; internet-facing, in the public subnets, with its
+security group narrowed to the CloudFront origin-facing prefix list. This is what CloudFront talks to.</li>
+<li><strong><code>j9-&lt;env&gt;-alb-int</code></strong> &mdash; internal, in the private subnets. This is what the
+app tasks use to reach the platform for <code>can()</code> calls. Routing that traffic through the public ALB and
+CloudFront would work, and would be slower, more expensive, and subject to your own WAF rate limits.</li>
+</ul>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/alb.tf</p>
+<pre><code>resource "aws_lb" "public" {
+  name               = "${local.prefix}-alb"
+  load_balancer_type = "application"
+  internal           = false
+  subnets            = data.terraform_remote_state.network.outputs.public_subnet_ids
+  security_groups    = [data.terraform_remote_state.network.outputs.alb_sg_id]
+
+  drop_invalid_header_fields = true
+  enable_http2               = true
+  idle_timeout               = 60
+
+  access_logs {
+    bucket  = aws_s3_bucket.alb_logs.id
+    prefix  = "alb"
+    enabled = true
+  }
+
+  enable_deletion_protection = local.is_prod
+}
+
+resource "aws_lb" "internal" {
+  name               = "${local.prefix}-alb-int"
+  load_balancer_type = "application"
+  internal           = true
+  subnets            = data.terraform_remote_state.network.outputs.private_subnet_ids
+  security_groups    = [data.terraform_remote_state.network.outputs.task_sg_id]
+  idle_timeout       = 30
+}
+
+# ---------------------------------------------------------------- target groups
+resource "aws_lb_target_group" "service" {
+  for_each = local.service_ports
+
+  name        = "${local.prefix}-${each.key}-tg"
+  port        = each.value
+  protocol    = "HTTP"
+  target_type = "ip"                # required for awsvpc / Fargate
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+
+  # THE BASE PATH GOES IN THE HEALTH CHECK. This is the line that most often
+  # gets copied wrong.
+  health_check {
+    enabled             = true
+    path                = each.key == "platform" ? "/healthz" : "/${each.key}/healthz"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+  }
+
+  # Short, so a deploy does not strand in-flight can() calls; long enough that a
+  # response in progress can finish.
+  deregistration_delay = 20
+
+  stickiness {
+    enabled = false                 # sessions live in Redis, not in a task
+    type    = "lb_cookie"
+  }
+}
+
+# ------------------------------------------------------------------- listeners
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.public.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = var.alb_certificate_arn      # regional cert, us-west-2
+
+  # Default: reject anything that did not come through CloudFront.
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Direct access is not permitted."
+      status_code  = "403"
+    }
+  }
+}
+
+# Rule 1 (priority 10): the shared secret proves the request came from our
+# CloudFront distribution, not from someone who resolved the ALB hostname.
+resource "aws_lb_listener_rule" "okr" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.service["okr"].arn
+  }
+
+  condition {
+    path_pattern { values = ["/okr", "/okr/*"] }
+  }
+
+  condition {
+    http_header {
+      http_header_name = "X-Origin-Verify"
+      values           = [var.origin_verify_secret]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "dataroom" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 20
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.service["dataroom"].arn
+  }
+
+  condition {
+    path_pattern { values = ["/dataroom", "/dataroom/*"] }
+  }
+
+  condition {
+    http_header {
+      http_header_name = "X-Origin-Verify"
+      values           = [var.origin_verify_secret]
+    }
+  }
+}
+
+# Everything else that carries the secret goes to the platform.
+resource "aws_lb_listener_rule" "platform" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.service["platform"].arn
+  }
+
+  condition {
+    http_header {
+      http_header_name = "X-Origin-Verify"
+      values           = [var.origin_verify_secret]
+    }
+  }
+}
+
+# The internal ALB carries only platform traffic and needs no verification —
+# reaching it already requires being inside the VPC with the task security group.
+resource "aws_lb_listener" "internal" {
+  load_balancer_arn = aws_lb.internal.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.internal_platform.arn
+  }
+}
+
+resource "aws_lb_target_group" "internal_platform" {
+  name        = "${local.prefix}-plat-int-tg"
+  port        = 3000
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+
+  health_check {
+    path                = "/healthz"
+    matcher             = "200"
+    interval            = 15
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+
+  deregistration_delay = 10
+}</code></pre>
+
+<div class="callout"><span class="label">The platform service registers with two target groups</span>
+
+<p>An ECS service can have several <code>load_balancer</code> blocks. The platform needs both the public target
+group and the internal one, so its service definition gets two:</p>
+<pre><code>load_balancer {
+  target_group_arn = aws_lb_target_group.service["platform"].arn
+  container_name   = "platform"
+  container_port   = 3000
+}
+load_balancer {
+  target_group_arn = aws_lb_target_group.internal_platform.arn
+  container_name   = "platform"
+  container_port   = 3000
+}</code></pre>
+<p>The <code>for_each</code> service resource above cannot express that cleanly. Split the platform out into its
+own <code>aws_ecs_service</code> resource with both blocks, and keep the <code>for_each</code> for
+<code>okr</code> and <code>dataroom</code> only. It is slightly more Terraform and much less surprising.</p>
+</div>
+
+<h2>5.8 &mdash; Verifying compute before you put CloudFront in front of it</h2>
+
+<p>Do not add the CDN until the ALB works. Debugging through a cache is miserable.</p>
+
+<pre><code># 1. Are the tasks running?
+aws ecs describe-services --cluster j9-dev-cluster \
+  --services j9-dev-platform j9-dev-okr j9-dev-dataroom j9-dev-worker \
+  --query 'services[].{name:serviceName,running:runningCount,desired:desiredCount}'
+
+# 2. Are the targets healthy? This is where the base-path mistake shows up.
+for tg in platform okr dataroom; do
+  echo "== $tg"
+  aws elbv2 describe-target-health \
+    --target-group-arn "$(aws elbv2 describe-target-groups \
+        --names "j9-dev-$tg-tg" --query 'TargetGroups[0].TargetGroupArn' --output text)" \
+    --query 'TargetHealthDescriptions[].TargetHealth.{state:State,reason:Reason,desc:Description}'
+done
+
+# 3. Talk to the ALB directly, supplying the header CloudFront would add.
+#    Temporarily widen the ALB security group to your own IP to do this.
+ALB=$(aws elbv2 describe-load-balancers --names j9-dev-alb \
+      --query 'LoadBalancers[0].DNSName' --output text)
+
+curl -sk -H "X-Origin-Verify: $SECRET" "https://$ALB/healthz"           | head
+curl -sk -H "X-Origin-Verify: $SECRET" "https://$ALB/okr/healthz"       | head
+curl -sk -H "X-Origin-Verify: $SECRET" "https://$ALB/dataroom/healthz"  | head
+
+# 4. Without the header: expect 403.
+curl -sk -o /dev/null -w '%{http_code}\n' "https://$ALB/healthz"
+
+# 5. Get a shell in a task if something is wrong.
+aws ecs execute-command --cluster j9-dev-cluster \
+  --task "$(aws ecs list-tasks --cluster j9-dev-cluster --service-name j9-dev-okr \
+            --query 'taskArns[0]' --output text)" \
+  --container okr --interactive --command "/bin/sh"</code></pre>
+
+<div class="callout callout-ok"><span class="label">What good looks like</span>
+
+<p>All four services at <code>running == desired</code>. All three target groups reporting
+<code>healthy</code>. The three <code>/healthz</code> curls returning 200 with a JSON body. The unheadered curl
+returning 403. A worker log stream showing the grant-expiry sweep firing on its 15-minute cadence.</p>
+<p>If the OKR or Data Room healthz returns 200 but a real page denies everything, that is the task-to-task security
+group rule &mdash; chapter 3.2.</p>
+</div>
+
+</section>
+
+<div class="pager"><a href="04-secrets-identity.html">&larr; 4. Secrets and Identity</a><span class="spacer"></span><a href="06-frontdoor.html">6. The Front Door &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — CI/CD</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 7</p>
+    <h1>CI/CD</h1>
+    <p>GitHub OIDC into AWS with no stored keys, one build per service, migrations as a gated one-off task,
+    and promotion by image digest.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html" class="here">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>7.1 &mdash; The pipeline</h1>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 300" role="img" aria-label="The GitHub Actions deployment pipeline">
+  <defs>
+    <marker id="arrow_cicd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_cicd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_cicd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="24" y="60" width="96" height="70" rx="8" fill="#f8f9fb" stroke="#c9cdd6" stroke-width="1.6"/>
+  <text x="72.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">push to</text>
+  <text x="72.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">main</text>
+  <line x1="122" y1="95" x2="136" y2="95" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_cicd)"/>
+  <rect x="138" y="60" width="96" height="70" rx="8" fill="#f8f9fb" stroke="#c9cdd6" stroke-width="1.6"/>
+  <text x="186.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">CI gates</text>
+  <text x="186.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">typecheck lint test</text>
+  <line x1="236" y1="95" x2="250" y2="95" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_cicd)"/>
+  <rect x="252" y="60" width="96" height="70" rx="8" fill="#f4fbf6" stroke="#15803d" stroke-width="1.6"/>
+  <text x="300.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">assume role</text>
+  <text x="300.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">via OIDC</text>
+  <line x1="350" y1="95" x2="364" y2="95" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_cicd)"/>
+  <rect x="366" y="60" width="96" height="70" rx="8" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.6"/>
+  <text x="414.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">build + push</text>
+  <text x="414.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">image to ECR</text>
+  <line x1="464" y1="95" x2="478" y2="95" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_cicd)"/>
+  <rect x="480" y="60" width="96" height="70" rx="8" fill="#fff8f4" stroke="#EB5616" stroke-width="1.6"/>
+  <text x="528.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">migrate</text>
+  <text x="528.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">ECS RunTask</text>
+  <line x1="578" y1="95" x2="592" y2="95" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_cicd)"/>
+  <rect x="594" y="60" width="96" height="70" rx="8" fill="#fff8f4" stroke="#EB5616" stroke-width="1.6"/>
+  <text x="642.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">deploy</text>
+  <text x="642.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">update-service</text>
+  <line x1="692" y1="95" x2="706" y2="95" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_cicd)"/>
+  <rect x="708" y="60" width="96" height="70" rx="8" fill="#f4fbf6" stroke="#15803d" stroke-width="1.6"/>
+  <text x="756.0" y="90" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="800" fill="#1f2430" text-anchor="middle">smoke</text>
+  <text x="756.0" y="106" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">/healthz</text>
+  <text x="450" y="34" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700" fill="#1f2430" text-anchor="middle">one workflow, two environments — dev on every push to main, prod on demand behind approval</text>
+  <rect x="24" y="170" width="420" height="56" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="234.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">dev</text>
+  <text x="234.0" y="210.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">runs automatically &middot; migrations auto-apply</text>
+  <rect x="468" y="170" width="408" height="56" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="672.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">prod</text>
+  <text x="672.0" y="210.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">same image digest &middot; environment approval gate</text>
+  <line x1="444" y1="198" x2="464" y2="198" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_cicd)"/>
+  <text x="450" y="260" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#1f2430" text-anchor="middle">Promotion moves an image digest, never a rebuild. What passed dev is byte-identical in prod.</text>
+  <text x="450" y="278" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700" fill="#15803d" text-anchor="middle">No long-lived AWS access keys exist anywhere in this pipeline.</text>
+</svg>
+<figcaption>Dev deploys on every push to <code>main</code>. Prod deploys the same image digest behind an approval
+gate. Nothing is ever rebuilt for prod.</figcaption>
+</figure>
+
+<p>What already exists: <code>.github/workflows/ci.yml</code> at the repo root, which runs typecheck, lint,
+format check, unit tests, a build, and an integration suite against a Postgres service container. It is solid and
+you should not touch it. What is missing is everything after the green check.</p>
+
+<div class="callout callout-stop"><span class="label">Delete these two files first</span>
+
+<p><code>Applications/dataroom/.github/workflows/deploy.yml</code> and
+<code>deploy-staging.yml</code> both contain:</p>
+<pre><code>AWS_ROLE_ARN: arn:aws:iam::573631993254:role/CloudCowboyWebDeploy
+S3_BUCKET: cloudcowboy-us-prod-site
+CLOUDFRONT_DISTRIBUTION_ID: E17S88TQPA7PM1</code></pre>
+<p>They deploy a static Vite bundle &mdash; which this app no longer produces &mdash; to another company's account,
+and they inject <code>VITE_SUPABASE_*</code> variables the app no longer reads. They are dead code pointed at the
+wrong target. Delete both, along with the empty <code>.github</code> directory under
+<code>Applications/dataroom/</code>.</p>
+<p>Note also that workflows nested in a subdirectory do not run on GitHub &mdash; only
+<code>.github/workflows/</code> at the repository root does &mdash; so they are currently inert. That is luck, not
+design. Remove them before someone restructures the repo.</p>
+</div>
+
+<h2>7.2 &mdash; The deploy roles</h2>
+
+<p>Two roles: one that can only touch dev, one that can only touch prod. The dev role trusts pushes to
+<code>main</code>; the prod role trusts a GitHub <em>environment</em>, which is what gives you the approval gate.</p>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/iam-deploy.tf</p>
+<pre><code>variable "github_repo" {
+  description = "owner/repo, e.g. jemba9/Jemba9_Ecosystem"
+  type        = string
+}
+
+data "aws_iam_policy_document" "gha_assume" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [data.terraform_remote_state.bootstrap.outputs.github_oidc_provider_arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    # This is the whole security boundary. Get the subject wrong — a bare
+    # `repo:owner/repo:*` — and any branch in the repo, including one opened by a
+    # fork's pull request, can assume the role.
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:sub"
+      values = local.is_prod ? [
+        "repo:${var.github_repo}:environment:prod",
+      ] : [
+        "repo:${var.github_repo}:ref:refs/heads/main",
+        "repo:${var.github_repo}:environment:dev",
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role" "deploy" {
+  name               = "${local.prefix}-deploy"
+  description        = "Assumed by GitHub Actions to deploy the ${local.env} environment."
+  assume_role_policy = data.aws_iam_policy_document.gha_assume.json
+  max_session_duration = 3600
+}
+
+data "aws_iam_policy_document" "deploy" {
+  # --- ECR: push images. Repositories are shared, so this is not env-scoped.
+  statement {
+    actions   = ["ecr:GetAuthorizationToken"]
+    resources = ["*"]
+  }
+
+  statement {
+    actions = [
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart",
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:DescribeImages",
+    ]
+    resources = [
+      "arn:aws:ecr:${var.region}:824999955649:repository/j9/platform",
+      "arn:aws:ecr:${var.region}:824999955649:repository/j9/okr",
+      "arn:aws:ecr:${var.region}:824999955649:repository/j9/dataroom",
+    ]
+  }
+
+  # --- ECS: register task definitions and update this environment's services only.
+  statement {
+    actions   = ["ecs:RegisterTaskDefinition", "ecs:DescribeTaskDefinition"]
+    resources = ["*"]      # this API does not support resource-level permissions
+  }
+
+  statement {
+    actions = [
+      "ecs:UpdateService",
+      "ecs:DescribeServices",
+      "ecs:RunTask",
+      "ecs:DescribeTasks",
+      "ecs:ListTasks",
+      "ecs:StopTask",
+    ]
+    resources = [
+      "arn:aws:ecs:${var.region}:824999955649:service/${local.prefix}-cluster/*",
+      "arn:aws:ecs:${var.region}:824999955649:task/${local.prefix}-cluster/*",
+      "arn:aws:ecs:${var.region}:824999955649:task-definition/${local.prefix}-*:*",
+    ]
+  }
+
+  # --- Pass only this environment's task roles into a task definition.
+  statement {
+    actions = ["iam:PassRole"]
+    resources = [
+      "arn:aws:iam::824999955649:role/${local.prefix}-*-exec",
+      "arn:aws:iam::824999955649:role/${local.prefix}-*-task",
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+      values   = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+
+  # --- Read logs from the migration task so the workflow can print them.
+  statement {
+    actions   = ["logs:GetLogEvents", "logs:DescribeLogStreams"]
+    resources = ["arn:aws:logs:${var.region}:824999955649:log-group:/j9/${local.env}/*"]
+  }
+
+  # --- Invalidate the CDN after a deploy.
+  statement {
+    actions   = ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"]
+    resources = ["arn:aws:cloudfront::824999955649:distribution/*"]
+  }
+}
+
+resource "aws_iam_role_policy" "deploy" {
+  name   = "deploy"
+  role   = aws_iam_role.deploy.id
+  policy = data.aws_iam_policy_document.deploy.json
+}</code></pre>
+
+<div class="callout"><span class="label">The sub condition is the whole boundary</span>
+
+<p><code>iam:PassRole</code> scoped to <code>${local.prefix}-*</code> is what stops the dev deploy role from
+launching a task with the prod task role &mdash; which would give it the prod SSM parameters. Combined with the
+<code>sub</code> condition on the trust policy, a compromised pull request from a fork gets nothing: it cannot
+assume either role, because a fork's token subject is neither <code>refs/heads/main</code> nor a protected
+environment.</p>
+<p>Never write <code>values = ["repo:owner/repo:*"]</code>. It is the single most common OIDC misconfiguration and
+it is equivalent to publishing an access key.</p>
+</div>
+
+<h2>7.3 &mdash; The deploy workflow</h2>
+
+<p>One workflow, three services, driven by a matrix. It only builds what changed, so an OKR-only commit does not
+redeploy the platform.</p>
+
+<p class="filename">.github/workflows/deploy.yml</p>
+<pre><code>name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      services:
+        description: 'Comma-separated services to force-deploy (platform,okr,dataroom)'
+        required: false
+        default: ''
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false      # queue deploys; never cancel one mid-flight
+
+permissions:
+  id-token: write                # required for OIDC
+  contents: read
+
+env:
+  AWS_REGION: us-west-2
+  AWS_ACCOUNT: "824999955649"
+  ENVIRONMENT: dev
+  CLUSTER: j9-dev-cluster
+
+jobs:
+  # ------------------------------------------------------------------ changes
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      platform: ${{ steps.filter.outputs.platform }}
+      okr:      ${{ steps.filter.outputs.okr }}
+      dataroom: ${{ steps.filter.outputs.dataroom }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            platform:
+              - 'Ecosystem/**'
+            okr:
+              - 'Applications/OKR/**'
+            dataroom:
+              - 'Applications/dataroom/**'
+
+  # -------------------------------------------------------------------- build
+  build:
+    needs: changes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: platform
+            path: Ecosystem
+            changed: ${{ needs.changes.outputs.platform }}
+          - service: okr
+            path: Applications/OKR
+            changed: ${{ needs.changes.outputs.okr }}
+          - service: dataroom
+            path: Applications/dataroom
+            changed: ${{ needs.changes.outputs.dataroom }}
+
+    steps:
+      - name: Skip unchanged
+        if: matrix.changed != 'true' &amp;&amp; github.event_name == 'push'
+        run: echo "No changes in ${{ matrix.path }} — skipping." &amp;&amp; exit 0
+
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/j9-${{ env.ENVIRONMENT }}-deploy
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: gha-${{ matrix.service }}-${{ github.run_id }}
+
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.path }}
+          file: ${{ matrix.path }}/Dockerfile
+          platforms: linux/arm64          # matches the Graviton task definitions
+          push: true
+          tags: ${{ steps.ecr.outputs.registry }}/j9/${{ matrix.service }}:${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+          build-args: |
+            NEXT_PUBLIC_PLATFORM_PORTAL_URL=${{ vars.FRONT_DOOR_URL }}
+
+  # ---------------------------------------------------------------- migrate
+  # Runs before the services roll, as a one-off task using the OWNER credential.
+  # Prisma migrations are additive and forward-only, so this ordering is safe.
+  migrate:
+    needs: [changes, build]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1               # never two migrations at once
+      matrix:
+        include:
+          - service: platform
+            changed: ${{ needs.changes.outputs.platform }}
+            command: '["npx","prisma","migrate","deploy"]'
+          - service: okr
+            changed: ${{ needs.changes.outputs.okr }}
+            command: '["npx","prisma","migrate","deploy"]'
+          - service: dataroom
+            changed: ${{ needs.changes.outputs.dataroom }}
+            command: '["node","scripts/db-migrate.mjs"]'
+
+    steps:
+      - name: Skip unchanged
+        if: matrix.changed != 'true' &amp;&amp; github.event_name == 'push'
+        run: echo "skip" &amp;&amp; exit 0
+
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/j9-${{ env.ENVIRONMENT }}-deploy
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Run the migration task and wait
+        run: |
+          set -euo pipefail
+
+          TASK_ARN=$(aws ecs run-task \
+            --cluster "$CLUSTER" \
+            --task-definition "j9-${ENVIRONMENT}-${{ matrix.service }}-migrate" \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[${{ vars.PRIVATE_SUBNETS }}],securityGroups=[${{ vars.TASK_SG }}],assignPublicIp=DISABLED}" \
+            --overrides "{\"containerOverrides\":[{\"name\":\"migrate\",\"command\":${{ matrix.command }},\"environment\":[{\"name\":\"IMAGE_SHA\",\"value\":\"$GITHUB_SHA\"}]}]}" \
+            --query 'tasks[0].taskArn' --output text)
+
+          echo "task: $TASK_ARN"
+          aws ecs wait tasks-stopped --cluster "$CLUSTER" --tasks "$TASK_ARN"
+
+          EXIT=$(aws ecs describe-tasks --cluster "$CLUSTER" --tasks "$TASK_ARN" \
+                 --query 'tasks[0].containers[0].exitCode' --output text)
+
+          # Print the logs whether it worked or not — a failed migration with no
+          # visible output is the worst possible pipeline outcome.
+          TASK_ID=${TASK_ARN##*/}
+          aws logs get-log-events \
+            --log-group-name "/j9/${ENVIRONMENT}/${{ matrix.service }}" \
+            --log-stream-name "migrate/migrate/$TASK_ID" \
+            --query 'events[].message' --output text || true
+
+          if [ "$EXIT" != "0" ]; then
+            echo "::error::Migration for ${{ matrix.service }} exited $EXIT"
+            exit 1
+          fi
+
+  # ----------------------------------------------------------------- deploy
+  deploy:
+    needs: [changes, build, migrate]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: platform
+            changed: ${{ needs.changes.outputs.platform }}
+          - service: worker
+            changed: ${{ needs.changes.outputs.platform }}   # same image
+          - service: okr
+            changed: ${{ needs.changes.outputs.okr }}
+          - service: dataroom
+            changed: ${{ needs.changes.outputs.dataroom }}
+
+    steps:
+      - name: Skip unchanged
+        if: matrix.changed != 'true' &amp;&amp; github.event_name == 'push'
+        run: echo "skip" &amp;&amp; exit 0
+
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/j9-${{ env.ENVIRONMENT }}-deploy
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Render the new task definition
+        id: taskdef
+        run: |
+          IMAGE_SERVICE=${{ matrix.service }}
+          [ "$IMAGE_SERVICE" = "worker" ] &amp;&amp; IMAGE_SERVICE=platform
+
+          aws ecs describe-task-definition \
+            --task-definition "j9-${ENVIRONMENT}-${{ matrix.service }}" \
+            --query taskDefinition &gt; taskdef.json
+
+          jq --arg img "${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/j9/$IMAGE_SERVICE:$GITHUB_SHA" \
+             'del(.taskDefinitionArn,.revision,.status,.requiresAttributes,
+                  .compatibilities,.registeredAt,.registeredBy)
+              | .containerDefinitions[0].image = $img' \
+             taskdef.json &gt; new-taskdef.json
+
+          ARN=$(aws ecs register-task-definition \
+                --cli-input-json file://new-taskdef.json \
+                --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "arn=$ARN" &gt;&gt; "$GITHUB_OUTPUT"
+
+      - name: Update the service and wait for stability
+        run: |
+          aws ecs update-service \
+            --cluster "$CLUSTER" \
+            --service "j9-${ENVIRONMENT}-${{ matrix.service }}" \
+            --task-definition "${{ steps.taskdef.outputs.arn }}" \
+            --query 'service.serviceName' --output text
+
+          # The deployment circuit breaker rolls back on failure; this wait is how
+          # the workflow finds out that happened.
+          aws ecs wait services-stable \
+            --cluster "$CLUSTER" \
+            --services "j9-${ENVIRONMENT}-${{ matrix.service }}"
+
+  # ------------------------------------------------------------------ smoke
+  smoke:
+    needs: deploy
+    if: always() &amp;&amp; needs.deploy.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health checks through the front door
+        run: |
+          set -euo pipefail
+          BASE="${{ vars.FRONT_DOOR_URL }}"
+          fail=0
+          for p in /healthz /okr/healthz /dataroom/healthz; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$BASE$p")
+            echo "$p -&gt; $code"
+            [ "$code" = "200" ] || fail=1
+          done
+
+          # HSTS is set by next.config.ts; if it is missing we are seeing an
+          # error page rather than the app.
+          curl -sI "$BASE/healthz" | grep -qi strict-transport-security \
+            || { echo "::error::No HSTS header — not reaching the app"; fail=1; }
+
+          exit $fail</code></pre>
+
+<h3>The migration task definitions</h3>
+
+<p>Three small task definitions, one per app, that exist only to be run once and stop. They differ from the service
+definitions in exactly two ways: they get the <strong>owner</strong> connection string, and they have no port
+mapping or health check.</p>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/task-migrate.tf</p>
+<pre><code>locals {
+  migrate = {
+    platform = { repo = "platform", db_scope = "platform" }
+    okr      = { repo = "okr",      db_scope = "okr" }
+    dataroom = { repo = "dataroom", db_scope = "dataroom" }
+  }
+}
+
+# A dedicated role, because this is the only thing in the system allowed to read
+# the owner credentials.
+resource "aws_iam_role" "migrate_exec" {
+  for_each           = local.migrate
+  name               = "${local.prefix}-${each.key}-migrate-exec"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume.json
+}
+
+resource "aws_iam_role_policy_attachment" "migrate_exec_managed" {
+  for_each   = aws_iam_role.migrate_exec
+  role       = each.value.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy" "migrate_exec_secrets" {
+  for_each = local.migrate
+  name     = "read-owner-credential"
+  role     = aws_iam_role.migrate_exec[each.key].id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["ssm:GetParameters", "ssm:GetParameter"]
+        Resource = "arn:aws:ssm:${var.region}:824999955649:parameter/j9/${local.env}/${each.value.db_scope}/DATABASE_URL"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["kms:Decrypt"]
+        Resource = data.terraform_remote_state.secrets.outputs.kms_key_arn
+      },
+    ]
+  })
+}
+
+resource "aws_ecs_task_definition" "migrate" {
+  for_each                 = local.migrate
+  family                   = "${local.prefix}-${each.key}-migrate"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 512
+  memory                   = 1024
+  execution_role_arn       = aws_iam_role.migrate_exec[each.key].arn
+  task_role_arn            = aws_iam_role.migrate_exec[each.key].arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
+
+  container_definitions = jsonencode([{
+    name      = "migrate"
+    image     = "824999955649.dkr.ecr.${var.region}.amazonaws.com/j9/${each.value.repo}:latest"
+    essential = true
+    # The command is always supplied as an override by the workflow.
+    command   = ["true"]
+
+    secrets = [
+      { name = "DATABASE_URL", valueFrom = "${local.ssm}/${each.value.db_scope}/DATABASE_URL" },
+    ]
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.service[each.key].name
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "migrate"
+      }
+    }
+  }])
+}</code></pre>
+
+<div class="callout callout-note"><span class="label">The image tag on the migration task</span>
+
+<p>The task definition above pins <code>:latest</code>, which is wrong for the same reason immutable tags are right.
+The workflow should override the image, not just the command &mdash; but <code>ecs run-task</code> container
+overrides cannot change the image. The clean fix is for the workflow to register a fresh revision of the migration
+task definition with the correct SHA before running it, exactly as the deploy job does for the services. Add that
+step; the version above is deliberately left simple so the shape is legible.</p>
+</div>
+
+<h2>7.4 &mdash; Promotion to prod</h2>
+
+<p>Prod never builds. It re-tags a digest that already ran in dev and rolls the services onto it.</p>
+
+<p class="filename">.github/workflows/promote.yml</p>
+<pre><code>name: Promote to prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 'The commit SHA already deployed and verified in dev'
+        required: true
+      services:
+        description: 'platform, okr, dataroom, or all'
+        required: true
+        default: all
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    # This is the approval gate. Configure required reviewers on the `prod`
+    # environment in GitHub settings; the job pauses until someone approves.
+    environment: prod
+
+    env:
+      AWS_REGION: us-west-2
+      AWS_ACCOUNT: "824999955649"
+      CLUSTER: j9-prod-cluster
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::824999955649:role/j9-prod-deploy
+          aws-region: us-west-2
+
+      - name: Verify the image exists and record its digest
+        run: |
+          set -euo pipefail
+          for svc in platform okr dataroom; do
+            case "${{ inputs.services }}" in all|*"$svc"*) ;; *) continue ;; esac
+            DIGEST=$(aws ecr describe-images \
+              --repository-name "j9/$svc" \
+              --image-ids imageTag=${{ inputs.sha }} \
+              --query 'imageDetails[0].imageDigest' --output text)
+            echo "$svc -&gt; $DIGEST"
+            # If this fails, the SHA was never built — which means it was never
+            # in dev, which means it must not go to prod.
+          done
+
+      - name: Roll the prod services
+        run: |
+          set -euo pipefail
+          for svc in platform worker okr dataroom; do
+            IMG=$svc; [ "$svc" = "worker" ] &amp;&amp; IMG=platform
+            case "${{ inputs.services }}" in
+              all) ;;
+              *"$IMG"*) ;;
+              *) continue ;;
+            esac
+
+            aws ecs describe-task-definition --task-definition "j9-prod-$svc" \
+              --query taskDefinition &gt; td.json
+
+            jq --arg img "824999955649.dkr.ecr.us-west-2.amazonaws.com/j9/$IMG:${{ inputs.sha }}" \
+               'del(.taskDefinitionArn,.revision,.status,.requiresAttributes,
+                    .compatibilities,.registeredAt,.registeredBy)
+                | .containerDefinitions[0].image = $img' td.json &gt; new.json
+
+            ARN=$(aws ecs register-task-definition --cli-input-json file://new.json \
+                  --query 'taskDefinition.taskDefinitionArn' --output text)
+
+            aws ecs update-service --cluster "$CLUSTER" --service "j9-prod-$svc" \
+              --task-definition "$ARN" --query 'service.serviceName' --output text
+          done
+
+          aws ecs wait services-stable --cluster "$CLUSTER" \
+            --services j9-prod-platform j9-prod-worker j9-prod-okr j9-prod-dataroom
+
+      - name: Smoke test
+        run: |
+          for p in /healthz /okr/healthz /dataroom/healthz; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "https://jemba9.com$p")
+            echo "$p -&gt; $code"
+            [ "$code" = "200" ]
+          done</code></pre>
+
+<div class="callout"><span class="label">Prod migrations are not in this workflow, on purpose</span>
+
+<p>A schema change against production data is a decision, not a step. Run it deliberately, as its own
+<code>ecs run-task</code>, after reading the migration SQL, with a fresh snapshot taken first:</p>
+<pre><code>aws rds create-db-snapshot --db-instance-identifier j9-prod-pg \
+  --db-snapshot-identifier "j9-prod-pre-$(date +%Y%m%d%H%M)"</code></pre>
+<p>Then run the migration task, then promote the image. Two of the platform's migrations install append-only
+triggers and RLS policies on the audit and event tables; a partial application of that is not something you want to
+discover from a dashboard.</p>
+</div>
+
+<h2>7.5 &mdash; GitHub configuration</h2>
+
+<p>No secrets are needed for AWS &mdash; that is the point of OIDC. What you do need is a handful of
+<strong>variables</strong>, plus two environments.</p>
+
+<table>
+<tr><th>Where</th><th>Name</th><th>Value</th></tr>
+<tr><td>Repository variables</td><td><code>FRONT_DOOR_URL</code></td>
+    <td>the dev CloudFront URL, or <code>https://dev.jemba9.com</code></td></tr>
+<tr><td>Repository variables</td><td><code>PRIVATE_SUBNETS</code></td>
+    <td><code>subnet-aaa,subnet-bbb</code> from the network layer output</td></tr>
+<tr><td>Repository variables</td><td><code>TASK_SG</code></td><td><code>sg-xxxx</code></td></tr>
+<tr><td>Environment <code>dev</code></td><td>&mdash;</td>
+    <td>no reviewers; exists so the OIDC subject can reference it</td></tr>
+<tr><td>Environment <code>prod</code></td><td>required reviewers</td>
+    <td>at least one person who is not the author; optionally a wait timer</td></tr>
+<tr><td>Branch protection on <code>main</code></td><td>&mdash;</td>
+    <td>require the CI workflow to pass; require a pull request</td></tr>
+</table>
+
+<div class="callout callout-ok"><span class="label">Verify the trust boundary before you trust it</span>
+
+<p>Open a pull request from a branch (not <code>main</code>) that adds a step calling
+<code>configure-aws-credentials</code> with the dev role. It must fail with
+<code>Not authorized to perform sts:AssumeRoleWithWebIdentity</code>.</p>
+<p>If it succeeds, your <code>sub</code> condition is too broad and any contributor can deploy. Fix it before you
+put a real secret in SSM.</p>
+</div>
+
+</section>
+
+<div class="pager"><a href="06-frontdoor.html">&larr; 6. The Front Door</a><span class="spacer"></span><a href="08-runbook.html">8. Runbook &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

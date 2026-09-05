@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Exchange — TALARIA Customer Portal</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Customer Portal &mdash; Model Exchange</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">This screen has no equivalent in TALARIA today</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-customer">Customer Portal</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">ProtoPD Customer Corp</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <a class="nav-item" href="overview.html"><span class="icon">&#9632;</span> Overview</a>
+      <a class="nav-item" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">2</span></a>
+      <a class="nav-item" href="deliverables.html"><span class="icon">&#9634;</span> Deliverables</a>
+      <span class="nav-item"><span class="icon">&#9745;</span> Tasks <span class="nav-badge">1</span></span>
+      <div class="sidebar-section-label">Model</div>
+      <a class="nav-item active" href="model-exchange.html"><span class="icon">&#8644;</span> Model Exchange <span class="nav-badge-sysml">SysML</span></a>
+      <div class="sidebar-section-label">Account</div>
+      <span class="nav-item"><span class="icon">&#9787;</span> Team</span>
+      <span class="nav-item"><span class="icon">&#9998;</span> Feedback</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">JW</div>
+        <div><div>James Wilson</div><span class="role">Customer Admin</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Model Exchange</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">SysML v2 API &amp; Services 1.0</span>
+        <span>ProtoPD Customer Corp</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="page-header">
+        <div>
+          <h1>Model Exchange</h1>
+          <div class="subtitle">Bring your model in, or take ours out. Over the standard API, or as files.</div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Opening…">API credentials</button>
+        </div>
+      </div>
+
+      <div class="tabs" data-tab-group>
+        <button class="tab active" data-tab="pull">Publish to your repository <span class="sysml-pin" data-pin="1">1</span></button>
+        <button class="tab" data-tab="push">Import your model <span class="sysml-pin" data-pin="2">2</span></button>
+        <button class="tab" data-tab="api">API reference <span class="sysml-pin" data-pin="3">3</span></button>
+      </div>
+
+      <!-- Publish -->
+      <div data-tab-panel="pull" class="tab-panel active">
+        <div class="two-col">
+          <div>
+            <div class="card mb-16">
+              <div class="card-header">
+                <h3>Connected repository</h3>
+                <span class="badge badge-pass">connected</span>
+              </div>
+              <div class="card-body">
+                <div class="detail-grid mb-16">
+                  <div class="detail-field"><div class="label">Endpoint</div><div class="value mono" style="font-size:12px;">models.protopd.example/api/v1</div></div>
+                  <div class="detail-field"><div class="label">Tool</div><div class="value">Cameo Systems Modeler 2026x</div></div>
+                  <div class="detail-field"><div class="label">Project</div><div class="value mono">ProtoPD-Avionics</div></div>
+                  <div class="detail-field"><div class="label">Last publish</div><div class="value">2026-03-09 08:14Z</div></div>
+                </div>
+                <div class="sysml-note" style="margin-bottom:0;">
+                  TALARIA is not the system of record for your architecture &mdash; it is the assurance service in front of it. Publishing writes verification results back as commits on a branch you control. <span class="sysml-pin" data-pin="1">1</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Publish assurance results</h3></div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label>Baseline to publish</label>
+                  <select>
+                    <option>baseline/phase5-entry &mdash; 8f2c1ae (current)</option>
+                    <option>baseline/phase4-entry &mdash; 3d7b902</option>
+                    <option>branch/rev-d &mdash; c02f5b1 (not baselined)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Include</label>
+                  <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+                    <label style="font-weight:400;display:flex;gap:8px;align-items:center;"><input type="checkbox" checked style="width:auto;"> Requirement definitions and verification verdicts</label>
+                    <label style="font-weight:400;display:flex;gap:8px;align-items:center;"><input type="checkbox" checked style="width:auto;"> Derating constraints with source clauses</label>
+                    <label style="font-weight:400;display:flex;gap:8px;align-items:center;"><input type="checkbox" checked style="width:auto;"> Waivers and approvals as element metadata</label>
+                    <label style="font-weight:400;display:flex;gap:8px;align-items:center;"><input type="checkbox" style="width:auto;"> Part attributes as assured (overwrites your values)</label>
+                    <label style="font-weight:400;display:flex;gap:8px;align-items:center;"><input type="checkbox" checked style="width:auto;"> Agent decision traces</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Write to branch</label>
+                  <input type="text" value="talaria/assurance-phase5">
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-sysml" data-demo-action="Publishing…">Publish as commit</button>
+                  <button class="btn btn-outline" data-demo-action="Preparing…">Download .sysml instead</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>What gets written</h3><span class="text-muted">preview</span></div>
+            <div class="card-body">
+              <pre class="code" style="font-size:11.5px;"><span class="c">POST /projects/ProtoPD-Avionics/commits</span>
+<span class="c">Branch: talaria/assurance-phase5</span>
+
+<span class="k">package</span> <span class="n">TalariaAssurance</span> {
+
+  <span class="k">import</span> ProtoPDAvionics::TIAPowerBoard::**;
+
+  <span class="c">// Constraints from the Jemba9 standards library,</span>
+  <span class="c">// with the clause they came from.</span>
+  <span class="d">requirement def</span> <span class="n">CeramicCapacitorVoltageDerating</span> {
+      <span class="k">subject</span> cap : CeramicCapacitor;
+      <span class="k">attribute</span> :&gt;&gt; source = <span class="s">"EEE-INST-002 Rev C, Tbl 3-2"</span>;
+      <span class="k">require constraint</span> {
+          cap.appliedVoltage &lt;= cap.ratedVoltage * 0.75
+      }
+  }
+
+  <span class="c">// Verdicts against your part usages.</span>
+  <span class="k">verification</span> v_C24 : VerifyVoltageDerating {
+      <span class="k">subject</span> = TIAPowerBoard.powerStage.C24;
+      verdict = <span class="bad">fail</span>;                     <span class="c">// 48 V &gt; 37.5 V</span>
+      <span class="k">@</span><span class="n">EvidenceRef</span> { runId = <span class="s">"run-0042"</span>;
+                     clause = <span class="s">"3-2"</span>; }
+  }
+
+  <span class="k">verification</span> v_C28 : VerifyVoltageDerating {
+      <span class="k">subject</span> = TIAPowerBoard.powerStage.C28;
+      verdict = <span class="ok">pass</span>;
+  }
+
+  <span class="c">// 1,560 further verdicts…</span>
+}</pre>
+              <div class="sysml-note" style="margin-bottom:0;">
+                Your engineers review this the way they review any other commit &mdash; a diff, on a branch, with an author and a timestamp.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import -->
+      <div data-tab-panel="push" class="tab-panel">
+        <div class="two-col">
+          <div>
+            <div class="card mb-16">
+              <div class="card-header"><h3>Import a model</h3></div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label>Source</label>
+                  <select>
+                    <option>Pull from models.protopd.example at a commit</option>
+                    <option>Upload a .sysml file</option>
+                    <option>Upload a BOM CSV (legacy path)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Commit or tag</label>
+                  <input type="text" value="release/tia-revd-candidate">
+                </div>
+                <div class="form-group">
+                  <label>Map into</label>
+                  <select><option>J9Avionics &mdash; new revision</option><option>J9Avionics &mdash; new project</option></select>
+                </div>
+                <button class="btn btn-sysml" data-demo-action="Importing…">Import model</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Last import &mdash; what came across</h3><span class="badge badge-pass">complete</span></div>
+              <div class="card-body">
+                <table class="data-table">
+                  <thead><tr><th>Element kind</th><th>Count</th><th>Mapped to</th></tr></thead>
+                  <tbody>
+                    <tr><td class="mono">part def</td><td>69</td><td class="text-muted">part definitions</td></tr>
+                    <tr><td class="mono">part usage</td><td>142</td><td class="text-muted">placements</td></tr>
+                    <tr><td class="mono">port / connect</td><td>318</td><td class="text-muted">applied stress derivation</td></tr>
+                    <tr><td class="mono">attribute</td><td>1,204</td><td class="text-muted">typed quantities</td></tr>
+                    <tr><td class="mono">requirement def</td><td>6</td><td class="text-muted">customer requirements</td></tr>
+                    <tr style="background:#fffbeb;"><td class="mono">state def</td><td>1</td><td class="text-muted">not imported &mdash; lifecycle is TALARIA's</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="sysml-note" style="margin-top:0;">
+              <strong>Why this matters more than it looks.</strong> A customer with an existing MBSE estate currently cannot use an assurance platform without retyping their model into a spreadsheet. That is not a small friction &mdash; it is the reason a prime with a mature Cameo or Rhapsody practice will not evaluate the product at all. <span class="sysml-pin" data-pin="2">2</span>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Round trip</h3></div>
+              <div class="card-body">
+                <div class="pipeline">
+                  <div class="pipeline-step done">
+                    <div class="pipeline-dot">1</div>
+                    <div class="pipeline-body">
+                      <div class="pipeline-title">You publish a design</div>
+                      <div class="pipeline-detail">Your tool commits the board to your repository.</div>
+                    </div>
+                  </div>
+                  <div class="pipeline-step done">
+                    <div class="pipeline-dot">2</div>
+                    <div class="pipeline-body">
+                      <div class="pipeline-title">TALARIA reads it at that commit</div>
+                      <div class="pipeline-detail">No copy, no retyping, no drift &mdash; a pinned read.</div>
+                    </div>
+                  </div>
+                  <div class="pipeline-step done">
+                    <div class="pipeline-dot">3</div>
+                    <div class="pipeline-body">
+                      <div class="pipeline-title">Assurance runs</div>
+                      <div class="pipeline-detail">Constraints from the Jemba9 standards library evaluate against your usages.</div>
+                    </div>
+                  </div>
+                  <div class="pipeline-step done">
+                    <div class="pipeline-dot">4</div>
+                    <div class="pipeline-body">
+                      <div class="pipeline-title">Results publish back</div>
+                      <div class="pipeline-detail">Verdicts, evidence and waivers land as a commit on a branch you review.</div>
+                    </div>
+                  </div>
+                  <div class="pipeline-step active">
+                    <div class="pipeline-dot">5</div>
+                    <div class="pipeline-body">
+                      <div class="pipeline-title">Your authority reads the same model</div>
+                      <div class="pipeline-detail">Insurer or agency gets a scoped read at a tag &mdash; not a PDF someone assembled for them.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API -->
+      <div data-tab-panel="api" class="tab-panel">
+        <div class="card mb-16">
+          <div class="card-header">
+            <h3>TALARIA as a Systems Modeling API endpoint <span class="sysml-pin" data-pin="3">3</span></h3>
+            <span class="badge badge-sysml">OMG API &amp; Services 1.0</span>
+          </div>
+          <div class="card-body">
+            <p class="mb-16">Your tools talk to TALARIA the same way they talk to any conformant model repository. No proprietary SDK, no export-import cycle.</p>
+            <pre class="code" style="font-size:11.5px;"><span class="c"># The project</span>
+GET  /projects/J9Avionics
+
+<span class="c"># Named baselines — every gate passage tags one</span>
+GET  /projects/J9Avionics/tags
+     → baseline/phase5-entry → 8f2c1ae
+       baseline/phase4-entry → 3d7b902
+       baseline/req-freeze   → a41e6c8
+
+<span class="c"># The board at a baseline, immutable</span>
+GET  /projects/J9Avionics/commits/8f2c1ae/elements?type=PartUsage
+
+<span class="c"># Which requirements does this revision put at risk?</span>
+POST /projects/J9Avionics/queries
+     { "from": "8f2c1ae", "to": "c02f5b1",
+       "select": "requirements affected by changed usages" }
+
+<span class="c"># Scoped read for an insurer — one tag, read-only, L3+ only</span>
+GET  /projects/J9Avionics/commits/8f2c1ae/elements
+     Authorization: Bearer &lt;stakeholder token&gt;</pre>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><h3>What this replaces</h3></div>
+            <div class="card-body">
+              <ul class="checklist">
+                <li><span class="check-icon met">&#10003;</span><div><strong>The bespoke insurer portal.</strong> A scoped read against a tag, rather than a purpose-built read-only SPA.</div></li>
+                <li><span class="check-icon met">&#10003;</span><div><strong>The CSV round trip.</strong> Customers with a model no longer flatten it to import it.</div></li>
+                <li><span class="check-icon met">&#10003;</span><div><strong>"Which version was this?"</strong> Every artefact cites a commit.</div></li>
+                <li><span class="check-icon met">&#10003;</span><div><strong>Custom integrations per customer.</strong> One protocol instead of one connector each.</div></li>
+              </ul>
+            </div>
+          </div>
+          <div class="sysml-note" style="margin:0;">
+            <strong>The positioning shift.</strong> With an API endpoint, TALARIA stops being an application customers log into and becomes a service in their digital thread. That is a different conversation with a prime's tooling group &mdash; and a much easier one, because it asks them to adopt a standard rather than a vendor.
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Publishing assurance back as commits</div>
+              <div class="sysml-entry-text">Verification verdicts, the constraints that produced them and the waivers that excuse them are written into the customer's own repository on a branch they review. The assurance argument lives next to the design it is about.</div>
+              <div class="sysml-today"><strong>Today:</strong> results stay inside TALARIA. What the customer gets is a document, and their model knows nothing about it.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Import as a first-class ingress path</div>
+              <div class="sysml-entry-text">A SysML v2 model becomes an alternative to the CSV and interview path, carrying structure the spreadsheet cannot &mdash; nesting, ports, connections, typed quantities and the customer's own requirements.</div>
+              <div class="sysml-today"><strong>Today:</strong> the <code>bom-import</code> route accepts CSV and the customer interview captures mission context. Both work well; neither can accept a model.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Systems Modeling API &amp; Services 1.0</div>
+              <div class="sysml-entry-text">The third specification in the SysML v2 stack, alongside KerML and SysML itself: a REST/HTTP model with Projects, Commits, Branches, Tags, Elements and Queries. It is the piece that makes a federated digital thread practical rather than aspirational.</div>
+              <div class="sysml-today"><strong>Today:</strong> the backend has 44 REST route modules over 48 Postgres tables &mdash; most of the substance the API describes, and none of the protocol. Implementing it is a shaping exercise over an existing store rather than new capability.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Your repository at <code>models.protopd.example</code> is connected. Last publish was 2026-03-09.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">James Wilson</div>
+        If we publish back, does it overwrite our design?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Not unless you tick the fourth box. By default I write requirements, constraints, verdicts, waivers and traces onto branch <code>talaria/assurance-phase5</code> &mdash; additive, on a branch, for your team to merge or reject. The one option that touches your values is part attributes, which is off.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">James Wilson</div>
+        Our insurer wants access.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        A scoped read token against <code>baseline/phase5-entry</code>, restricted to L3 and above. They see the assured state at that tag and nothing after it &mdash; and the same read a year from now returns the same answer.
+        <div class="rapda-actions">
+          <button class="btn btn-accent btn-sm" data-demo-action="Issuing…">Issue read token</button>
+        </div>
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about model exchange…">
+    </div>
+  </aside>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

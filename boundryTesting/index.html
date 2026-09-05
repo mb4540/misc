@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tenant &amp; Project Boundary Review — RAPDA Chat Context</title>
+<style>
+  body {
+    margin: 0;
+    padding: 40px 24px 80px;
+    background: #f4f5f7;
+    color: #1f2430;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e2e5ea;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .header {
+    background: #14213d;
+    color: #ffffff;
+    padding: 32px 40px;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 700;
+    color: #9fb3d9;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    margin: 0 0 8px 0;
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .header .meta {
+    color: #c3cee4;
+    font-size: 13px;
+  }
+  .body {
+    padding: 32px 40px 8px;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #14213d;
+    border-bottom: 2px solid #e2e5ea;
+    padding-bottom: 8px;
+    margin: 36px 0 16px;
+  }
+  h2:first-of-type { margin-top: 0; }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #14213d;
+    margin: 20px 0 8px;
+  }
+  p { margin: 0 0 12px; }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background: #eef1f6;
+    border: 1px solid #dde2eb;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 13px;
+    color: #b3261e;
+  }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  .callout {
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    border-left: 4px solid;
+  }
+  .callout-good {
+    background: #eefaf1;
+    border-color: #2e7d46;
+  }
+  .callout-bad {
+    background: #fdecea;
+    border-color: #b3261e;
+  }
+  .callout-info {
+    background: #eef3fb;
+    border-color: #2f5fae;
+  }
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .callout-good .callout-title { color: #1e5c34; }
+  .callout-bad .callout-title { color: #8a1c15; }
+  .callout-info .callout-title { color: #1e3f78; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 13.5px;
+  }
+  th, td {
+    border: 1px solid #e2e5ea;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f4f6f9;
+    font-weight: 700;
+    color: #14213d;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+  .badge-done { background: #dcf3e3; color: #1e5c34; }
+  .badge-missing { background: #fbdedb; color: #8a1c15; }
+
+  .diagram-wrap {
+    margin: 20px 0 28px;
+    text-align: center;
+    background: #fafbfc;
+    border: 1px solid #e2e5ea;
+    border-radius: 8px;
+    padding: 16px 8px;
+  }
+  .diagram-caption {
+    font-size: 12.5px;
+    color: #5a6474;
+    margin-top: 6px;
+  }
+
+  .promptblock {
+    background: #14213d;
+    color: #e7ecf7;
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12.8px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+  }
+  .promptblock code {
+    background: none;
+    border: none;
+    color: #ffd479;
+    padding: 0;
+  }
+
+  .footer {
+    padding: 20px 40px 32px;
+    color: #7a8496;
+    font-size: 12.5px;
+    border-top: 1px solid #e2e5ea;
+  }
+  .refpath {
+    display: block;
+    font-size: 12px;
+    color: #5a6474;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="eyebrow">Security Review — P0-04 Follow-Up</div>
+    <h1>Tenant &amp; Project Boundary Review — RAPDA Chat Context</h1>
+    <div class="meta">Reviewed repo: j9ccgit &nbsp;·&nbsp; Reviewed: 2026-08-16 &nbsp;·&nbsp; Requested by: Mike Berry</div>
+  </div>
+
+  <div class="body">
+
+    <h2>What I Reviewed</h2>
+    <p>I reviewed the actual implementation of <strong>P0-04 — Tenant boundary integration test suite</strong> in
+    <code>j9ccgit</code> (not just the roadmap's status badge) to confirm whether project/program-level boundaries
+    are covered in addition to tenant-level boundaries — specifically, whether the RAPDA agent can be made to
+    answer using data from a <em>different project belonging to the same tenant</em>.</p>
+
+    <div class="callout callout-good">
+      <span class="callout-title">What P0-04 covers well</span>
+      <code>backend/src/test/tenant-isolation/</code> — 63 integration tests across ~45 routes, booting a real
+      disposable Postgres via Testcontainers, proving that <strong>Tenant A cannot read or write Tenant B's</strong>
+      projects, runs, requirements, schedule, risks, SOW, change requests, plan documents, lessons learned, boards,
+      parts, and RAPDA config/conversations. This is real, solid, CI-enforced coverage of the cross-tenant boundary.
+    </div>
+
+    <h2>The Gap You Suspected Is Real</h2>
+    <p>Project/program-level boundary testing is <strong>not covered</strong> — and it's worse than simply
+    "untested." It surfaced a known, documented, unfixed bug that sits underneath your question.</p>
+
+    <ol>
+      <li>
+        <strong><code>POST /api/chat/stream</code></strong> (the actual RAPDA answer endpoint) takes
+        <code>activeProjectId</code> straight from the client request body and passes it into
+        <code>buildProjectContext(activeProjectId)</code>, which queries the database by <code>project_id</code>
+        alone — with <strong>zero ownership check of any kind</strong>: not tenant-level, not project-level.
+        <span class="refpath">backend/src/routes/chat.ts (lines 69–76) &nbsp;→&nbsp; backend/src/lib/rapda-context.ts (lines 6–21)</span>
+      </li>
+      <li>
+        This is explicitly <em>excluded</em> from the isolation matrix
+        (<code>route-inventory.ts</code> line 124: <em>"SSE + external AI Gateway LLM; not harness-testable…
+        buildProjectContext(activeProjectId) has no tenant check"</em>) and documented as
+        <strong>Follow-Up Item #8</strong> in the P0-04 execution plan — flagged in the runbook as
+        <em>"the highest-priority open item from this suite's build-out."</em> It has never been fixed, and there
+        is no automated test proving it, cross-tenant <em>or</em> same-tenant.
+        <span class="refpath">documents/plans/done/18-tenant-isolation-test-suite-execution.md &nbsp;·&nbsp; app/roadmap/src/pages/runbooks/rb02-tenant-isolation-testing.ts §5</span>
+      </li>
+      <li>
+        More fundamental to your specific question: <strong>the app has no project-level access-control model at
+        all.</strong> <code>extractTenantId</code> / <code>requireTenantAccess</code> / <code>assertProjectTenant</code>
+        only ever check <code>tenant_id</code>; there is no user-to-project membership table. Any customer
+        authenticated to Tenant A can already list and read <em>every</em> project belonging to Tenant A
+        (<code>GET /api/projects</code> filters by <code>tenant_id</code> only). "RAPDA should not answer for a
+        different project in the same tenant" is not currently a stated product requirement anywhere in the
+        docs — it's a gap in both the test suite <em>and</em> the underlying authorization model.
+        <span class="refpath">backend/src/middleware/tenant.ts &nbsp;·&nbsp; backend/src/lib/tenant-ownership.ts</span>
+      </li>
+    </ol>
+
+    <div class="diagram-wrap">
+      <svg width="820" height="300" viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tenant A boundary -->
+        <rect x="20" y="20" width="380" height="255" rx="10" fill="#eef3fb" stroke="#2f5fae" stroke-width="2"/>
+        <text x="40" y="45" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1e3f78">Tenant A</text>
+
+        <rect x="45" y="60" width="150" height="80" rx="6" fill="#ffffff" stroke="#2f5fae" stroke-width="1.5"/>
+        <text x="120" y="95" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1f2430">Customer User</text>
+        <text x="120" y="112" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#5a6474">assigned to Project X</text>
+
+        <rect x="235" y="45" width="150" height="60" rx="6" fill="#dcf3e3" stroke="#2e7d46" stroke-width="1.5"/>
+        <text x="310" y="70" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1e5c34">Project X</text>
+        <text x="310" y="86" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#1e5c34">own data — OK</text>
+
+        <rect x="235" y="150" width="150" height="60" rx="6" fill="#fdecea" stroke="#b3261e" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="310" y="175" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#8a1c15">Project Y</text>
+        <text x="310" y="191" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#8a1c15">same tenant — untested</text>
+
+        <!-- arrow to project X (allowed) -->
+        <line x1="195" y1="90" x2="232" y2="78" stroke="#2e7d46" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+        <!-- arrow to project Y (leak) -->
+        <line x1="195" y1="110" x2="232" y2="172" stroke="#b3261e" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowRed)"/>
+        <text x="150" y="145" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#8a1c15" font-weight="700">activeProjectId</text>
+        <text x="150" y="158" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#8a1c15" font-weight="700">no ownership check</text>
+
+        <!-- RAPDA box spanning both -->
+        <rect x="420" y="100" width="150" height="60" rx="6" fill="#fff7e6" stroke="#a06b00" stroke-width="1.5"/>
+        <text x="495" y="125" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#7a5300">RAPDA chat</text>
+        <text x="495" y="141" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#7a5300">buildProjectContext()</text>
+
+        <line x1="386" y1="75" x2="418" y2="115" stroke="#2e7d46" stroke-width="2" marker-end="url(#arrowGreen)"/>
+        <line x1="386" y1="180" x2="418" y2="140" stroke="#b3261e" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+        <!-- Tenant B boundary -->
+        <rect x="620" y="20" width="180" height="255" rx="10" fill="#f4f5f7" stroke="#7a8496" stroke-width="2"/>
+        <text x="640" y="45" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#3c4353">Tenant B</text>
+
+        <rect x="640" y="150" width="140" height="60" rx="6" fill="#dcf3e3" stroke="#2e7d46" stroke-width="1.5"/>
+        <text x="710" y="175" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1e5c34">Project Z</text>
+        <text x="710" y="191" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#1e5c34">cross-tenant — blocked</text>
+
+        <line x1="570" y1="130" x2="638" y2="170" stroke="#2e7d46" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowGreen)"/>
+        <text x="575" y="150" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#1e5c34">P0-04 matrix</text>
+        <text x="575" y="163" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#1e5c34">covers this path</text>
+
+        <defs>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#2e7d46"/>
+          </marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#b3261e"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="diagram-caption">Green = proven by the P0-04 isolation suite. Red / dashed = open gap: RAPDA's chat
+      context has no ownership check at all, so it is exposed both across tenants and across sibling projects
+      within the same tenant.</div>
+    </div>
+
+    <h2>Coverage Summary</h2>
+    <table>
+      <thead>
+        <tr><th>Boundary</th><th>Status</th><th>Evidence</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cross-tenant, CRUD routes (~45 routes)</td>
+          <td><span class="badge badge-done">Covered</span></td>
+          <td>63 isolation tests, run in CI on every PR via <code>pr-validation.yml</code></td>
+        </tr>
+        <tr>
+          <td>Cross-tenant, RAPDA chat (<code>/api/chat/stream</code>)</td>
+          <td><span class="badge badge-missing">Not covered</span></td>
+          <td>Explicitly excluded from the matrix — documented as Follow-Up Item #8, unfixed</td>
+        </tr>
+        <tr>
+          <td>Same-tenant, cross-project, any route</td>
+          <td><span class="badge badge-missing">Not covered</span></td>
+          <td>No per-project ACL exists in the app; not modeled in the isolation suite's seed data</td>
+        </tr>
+        <tr>
+          <td>Same-tenant, cross-project, RAPDA chat specifically</td>
+          <td><span class="badge badge-missing">Not covered</span></td>
+          <td>Your original concern — confirmed as an open gap, no test or fix exists</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-bad">
+      <span class="callout-title">Bottom line</span>
+      Same-tenant, cross-project RAPDA isolation is not covered — and the closely related, already-known
+      chat/stream leak (which affects cross-tenant too) is sitting open and untracked as its own backlog item.
+    </div>
+
+    <h2>Prompt Delivered — Add This Gap to the QMS Roadmap</h2>
+    <p>As requested, only a prompt was produced (no edits were made directly) for the Jemba9_QMS roadmap app:</p>
+
+    <div class="promptblock">Update the roadmap app at <code>app/roadmap/src</code> to record a security gap I found while reviewing P0-04 in <code>j9ccgit</code>.
+
+Context: P0-04 ("Tenant boundary integration test suite") is marked "Done" and covers ~45 routes for cross-tenant (Tenant A vs Tenant B) isolation via <code>backend/src/test/tenant-isolation/</code>. It does NOT cover: (a) <code>POST /api/chat/stream</code>'s <code>activeProjectId</code> parameter, which <code>buildProjectContext()</code> (<code>backend/src/lib/rapda-context.ts</code>) uses with zero tenant/ownership check at all — documented as Follow-Up Item #8 in <code>documents/plans/done/18-tenant-isolation-test-suite-execution.md</code> and flagged as the highest-priority open item in the runbook at <code>app/roadmap/src/pages/runbooks/rb02-tenant-isolation-testing.ts</code> §5; and (b) same-tenant, cross-project RAPDA boundary — the app has no project-level ACL (<code>backend/src/middleware/tenant.ts</code> and <code>backend/src/lib/tenant-ownership.ts</code> only check <code>tenant_id</code>, never a per-project user assignment), so a customer authenticated to one tenant can already reach every project under that tenant, and there's no isolation test proving RAPDA won't answer using a sibling project's data within the same tenant.
+
+Please:
+1. Add a new backlog item to <code>app/roadmap/src/pages/backlogTimeline.ts</code> (pick the next available ID per the existing P0/P1 numbering convention and table format used for <code>p0-04</code> and neighboring <code>p1-*</code> rows) titled something like "RAPDA chat context has no project/tenant ownership check (<code>activeProjectId</code>)". Mark it <code>badge-miss</code> (Missing) or <code>badge-part</code> (Partial) as appropriate, cite Follow-Up Item #8 in plan <code>18-tenant-isolation-test-suite-execution.md</code>, note it depends on / is a residual risk from P0-04, and flag that it needs a product decision on whether customer users should be scoped per-project within a tenant (not just per-tenant) before a fix can be fully specified.
+2. Cross-link that new ID from <code>p0-04</code>'s "Why" cell in the same file, noting P0-04 covered cross-tenant routes but this residual chat-context gap (and the untested same-tenant/cross-project case) remains open.
+3. Update <code>app/roadmap/src/pages/overviewVerdict.ts</code> — the "Tenant boundary integration test suite is complete" bullet under "Verdict at a Glance" currently overstates coverage; qualify it to note the open RAPDA chat-context gap, or link to the new backlog ID.
+4. Update <code>app/roadmap/src/pages/runbooks/rb02-tenant-isolation-testing.ts</code> §5 "Known Gaps" — the <code>chat/stream</code> bullet already documents the ownership-check gap; add a second bullet (or extend the existing one) explicitly calling out that same-tenant cross-project RAPDA isolation has never been tested or specified, distinct from the cross-tenant case, and link it to the new backlog ID.
+5. Keep formatting, tone, and citation style (file paths, PR/commit refs) consistent with the surrounding content in each file.
+
+Do not change the <code>p0-04</code> row's own "Done" status — the cross-tenant route matrix it delivered is real and complete; this is net-new residual risk, not a retraction of that work.</div>
+
+    <div class="callout callout-info">
+      <span class="callout-title">Status update</span>
+      This prompt has since been actioned in the Jemba9_QMS roadmap: a new item <strong>P0-07</strong> ("RAPDA chat
+      context has no project/tenant ownership check") was added to <code>backlogTimeline.ts</code>, cross-linked
+      from P0-04, called out in <code>overviewVerdict.ts</code>, and folded into
+      <code>rb02-tenant-isolation-testing.ts</code> §5 as a second, distinct "Known Gap." P0-07 remains
+      <span class="badge badge-missing">Missing</span> and blocked on a product decision about per-project
+      scoping within a tenant.
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Generated as a static record of the review conducted 2026-08-16 against <code>j9ccgit</code> and
+    <code>Jemba9_QMS/app/roadmap</code>. No production data was accessed; all findings are based on static code
+    review of route handlers, middleware, and the existing test suite.
+  </div>
+
+</div>
+</body>
+</html>

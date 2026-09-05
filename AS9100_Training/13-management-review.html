@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Management Review | Jemba9 QMS Training</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c2b39;
+    background: #f4f6f9;
+  }
+  a { color: #0e6e73; }
+  a:visited { color: #0e6e73; }
+  .layout { display: flex; align-items: flex-start; min-height: 100vh; }
+  .sidebar {
+    width: 270px;
+    flex: 0 0 270px;
+    background: #0f2942;
+    color: #dce6ef;
+    padding: 22px 18px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .brand {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .sidebar .brand small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #8fa9c2;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .sidebar .home-link {
+    display: inline-block;
+    margin: 14px 0 18px;
+    font-size: 0.82rem;
+    color: #f5c064;
+    text-decoration: none;
+    border: 1px solid #2c4a68;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .sidebar .home-link:hover { background: #16324f; }
+  .nav-group { margin-top: 18px; }
+  .nav-group h2 {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7fa0bd;
+    margin: 0 0 6px;
+    font-weight: 700;
+    border-bottom: 1px solid #23405e;
+    padding-bottom: 5px;
+  }
+  .nav-group a {
+    display: block;
+    color: #cddbe8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 8px 6px 10px;
+    border-left: 3px solid transparent;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .nav-group a:hover { background: #16324f; }
+  .nav-group a.active {
+    background: #16324f;
+    border-left: 3px solid #f5a623;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .nav-group a .num {
+    display: inline-block;
+    min-width: 20px;
+    color: #7fa0bd;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-group a.active .num { color: #f5a623; }
+
+  .main { flex: 1 1 auto; min-width: 0; padding: 32px 44px 70px; max-width: 980px; }
+  .breadcrumb {
+    font-size: 0.8rem;
+    color: #5b7085;
+    margin-bottom: 18px;
+  }
+  .breadcrumb a { color: #0e6e73; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    color: #0f2942;
+  }
+  .page-header .subtitle {
+    color: #4a5b6c;
+    font-size: 1rem;
+    margin: 0 0 26px;
+  }
+  .process-badge {
+    display: inline-block;
+    background: #eaf3f2;
+    color: #0e6e73;
+    border: 1px solid #bfdbd9;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #dde5ec;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 26px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #0f2942;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+  }
+  .card h3 { font-size: 1.02rem; color: #163a54; }
+
+  table.doc-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  table.doc-table th, table.doc-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e6ebf0;
+    vertical-align: top;
+  }
+  table.doc-table th {
+    background: #f5f8fa;
+    color: #33495e;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  table.doc-table td code { font-size: 0.8rem; background: #f0f4f7; padding: 1px 5px; border-radius: 3px; }
+  .clause-tag {
+    display: inline-block;
+    background: #fbeedd;
+    color: #8a5a12;
+    border: 1px solid #f0d4a6;
+    font-size: 0.72rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    margin: 1px 2px 1px 0;
+    white-space: nowrap;
+  }
+
+  .jemba9-fact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 10px 24px;
+    font-size: 0.9rem;
+  }
+  .jemba9-fact-grid dt { font-weight: 700; color: #163a54; }
+  .jemba9-fact-grid dd { margin: 0 0 10px; color: #33495e; }
+
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .syllabus-grid { grid-template-columns: 1fr; } }
+  .syllabus-grid ol, .syllabus-grid ul { padding-left: 20px; margin: 0; }
+  .syllabus-grid li { margin-bottom: 9px; font-size: 0.92rem; }
+  .audience-tags span {
+    display: inline-block;
+    background: #eef3f8;
+    color: #234a68;
+    border: 1px solid #d4e0ec;
+    font-size: 0.78rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+
+  fieldset.notes-section {
+    background: #fffaf1;
+    border: 1px solid #f0dbb0;
+    border-radius: 8px;
+    padding: 20px 24px 24px;
+    margin: 0 0 20px;
+  }
+  fieldset.notes-section legend {
+    font-weight: 700;
+    color: #8a5a12;
+    padding: 0 8px;
+    font-size: 1.02rem;
+  }
+  .ref-strip {
+    background: #ffffff;
+    border: 1px solid #eadab8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #4a5b6c;
+    margin-bottom: 16px;
+  }
+  .ref-strip strong { color: #163a54; }
+  .field-row { margin-bottom: 14px; }
+  .field-row label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #33495e;
+    margin-bottom: 4px;
+  }
+  .field-row input[type="text"], .field-row input[type="date"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 7px 9px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .field-row.inline { display: flex; gap: 24px; flex-wrap: wrap; }
+  .field-row.inline > div { flex: 1 1 200px; }
+  .radio-set label { font-weight: 400; display: inline-flex; align-items: center; gap: 5px; margin-right: 18px; font-size: 0.88rem; }
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 10px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .save-instructions {
+    background: #eef6f6;
+    border: 1px solid #bfdbd9;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #204a4d;
+    margin-top: 16px;
+  }
+  .save-instructions strong { color: #0e6e73; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e6eb;
+    font-size: 0.76rem;
+    color: #8593a0;
+  }
+
+  @media print {
+    .sidebar, .breadcrumb, .save-instructions { display: none !important; }
+    .main { max-width: 100%; padding: 0; }
+    .layout { display: block; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+    textarea { min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand">Jemba9 QMS Training Program<small>AS9100D Rev D &middot; Document Review Portal</small></div>
+  <a class="home-link" href="index.html">&#8962; Program Home</a>
+
+  <div class="nav-group">
+    <h2>Leadership</h2>
+    <a href="01-qms-overview.html"><span class="num">01</span> QMS Overview &amp; Company Context</a>
+    <a href="02-quality-policy-objectives.html"><span class="num">02</span> Quality Policy &amp; Objectives</a>
+    <a class="active" href="13-management-review.html"><span class="num">13</span> Management Review</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Quality System</h2>
+    <a href="03-risk-management.html"><span class="num">03</span> Risk Management</a>
+    <a href="11-nonconformance-and-corrective-action.html"><span class="num">11</span> Nonconformance &amp; CAPA</a>
+    <a href="12-internal-audit.html"><span class="num">12</span> Internal Audit</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Core Value Stream</h2>
+    <a href="04-design-and-development.html"><span class="num">04</span> Design &amp; Development</a>
+    <a href="05-supplier-management.html"><span class="num">05</span> Supplier Management</a>
+    <a href="06-counterfeit-parts-prevention.html"><span class="num">06</span> Counterfeit Parts Prevention</a>
+    <a href="07-production-and-inspection.html"><span class="num">07</span> Production &amp; Inspection</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Supporting Processes</h2>
+    <a href="08-document-control.html"><span class="num">08</span> Document Control</a>
+    <a href="09-configuration-management.html"><span class="num">09</span> Configuration Management</a>
+    <a href="10-training-and-competency.html"><span class="num">10</span> Training &amp; Competency</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Leadership Processes &rsaquo; Management Review</div>
+
+  <div class="page-header">
+    <span class="process-badge">Leadership Process</span>
+    <h1>13. Management Review</h1>
+    <p class="subtitle">Where the entire QMS converges for leadership decision-making, quarterly</p>
+  </div>
+
+  <div class="card">
+    <h2>Source Documents for This Topic</h2>
+    <table class="doc-table">
+      <thead>
+        <tr><th>Doc #</th><th>Title</th><th>Type</th><th>AS9100D Clause(s)</th><th>Owner / Status</th><th>Repository Path</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>QP-011</code></td>
+          <td>Management Review Procedure</td>
+          <td>Procedure (Level 2)</td>
+          <td><span class="clause-tag">9.3</span><span class="clause-tag">9.3.1</span><span class="clause-tag">9.3.2</span><span class="clause-tag">9.3.3</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/procedures/QP-011-management-review.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-005</code></td>
+          <td>Management Review Minutes</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">9.3</span><span class="clause-tag">9.3.1</span><span class="clause-tag">9.3.2</span><span class="clause-tag">9.3.3</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-005-management-review-minutes.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.82rem;color:#5b7085;margin-top:14px;">No Jemba9-specific reviewer notes have been submitted against QP-011 or QF-005 as of this writing; content below is drawn directly from the approved procedure and template.</p>
+  </div>
+
+  <div class="card">
+    <h2>Student Introduction</h2>
+    <p>Every other topic in this training program feeds into this one. Management Review, required by AS9100D clause 9.3, is the quarterly meeting where Jemba9's top management &mdash; the CEO, chairing, together with the Quality Manager, Program Managers, Chief Engineer, Manufacturing Manager, and Supply Chain Manager &mdash; steps back from day-to-day operations and asks a single question: is the Quality Management System still suitable, adequate, and effective, and what do we need to change?</p>
+    <p>What makes this session different from every other topic is that it produces almost nothing new on its own. Instead, it pulls together data that other processes have already generated: open action items from the last review; changes in Jemba9's business context and interested-party needs (QP-POL-002, QP-POL-003); the Quality Objectives dashboard (QP-OBJ-001) covering on-time delivery, customer satisfaction, first pass yield, and more; NCR and CAPA performance and trends (QP-009); internal audit results and open findings (QP-010); supplier performance, ASL changes, and counterfeit-parts events (QP-005, QP-006); the status of open High and Critical risks in the Risk Register (QP-003); resource and training adequacy; and lessons learned and improvement opportunities surfaced from programs and audits. Management Review is the place all of that converges, quarter after quarter, so leadership makes decisions with the full picture rather than isolated fragments of it.</p>
+    <p>The output side matters just as much as the input side. AS9100D requires that Management Review produce documented decisions, not just discussion: decisions on improvement opportunities, resource needs (staffing, training, tooling, infrastructure), changes to the QMS itself, adjustments to Quality Objectives, and a formal reconfirmation (or revision) of the Quality Policy's continued suitability. Each decision is assigned an owner and a due date in the Management Review Minutes (QF-005), which the Quality Manager issues within five business days and the CEO approves before distribution via SharePoint. Overdue action items past 30 days escalate directly to the CEO &mdash; there is no quiet way for a Management Review commitment to be forgotten.</p>
+    <p>Because this is a leadership-level decision forum rather than an operational training session, the specific mechanics of it &mdash; agenda structure, KPI dashboard format, minutes template &mdash; are not something most employees need to memorize. What every employee does benefit from understanding is that the data they generate in their own corner of the QMS (an NCR they raised, an audit finding they closed, a supplier scorecard they compiled, a risk they flagged) is not filed away and forgotten; it surfaces here, quarterly, in front of the CEO, as part of how Jemba9 actually runs the business.</p>
+    <p><strong>Who needs this training:</strong> CEO and the executive leadership team, and the Quality Manager who prepares, facilitates, and documents the review. This is not a training every employee takes.</p>
+  </div>
+
+  <div class="card">
+    <h2>Syllabus &amp; Training Goals</h2>
+    <div class="syllabus-grid">
+      <div>
+        <h3>Class Syllabus</h3>
+        <ol>
+          <li>Purpose and scope of Management Review under clause 9.3; required and as-applicable attendees; quarterly minimum frequency plus triggers for an off-cycle review (major customer NCR, loss of certification scope, significant organizational change)</li>
+          <li>Building the input package: the Quality Manager's five-business-day preparation cycle and the nine required input categories (§2.1&ndash;2.9 of QP-011)</li>
+          <li>Status of prior actions: how open items from the last review are tracked and reported, and what "closed / in progress / overdue" means for accountability</li>
+          <li>Reading the Quality Objectives dashboard (QP-OBJ-001, QO-01 through QO-10): on-time delivery, customer satisfaction, first pass yield, supplier OTD, audit completion, CAPA closure rate, NCR rate, incoming rejection rate, training completion, product safety coverage</li>
+          <li>NCR/CAPA performance and internal audit results as inputs, and how they connect back to QP-009 and QP-010</li>
+          <li>Supplier performance and risk register status as inputs, connecting back to QP-005 and QP-003</li>
+          <li>Required outputs per §4: improvement opportunities, resource needs, QMS changes, Quality Objectives adjustments, and the Quality Policy suitability confirmation</li>
+          <li>Completing and approving the Management Review Minutes (QF-005): five-business-day issuance, CEO approval, SharePoint filing, and next-review scheduling</li>
+          <li>Action item governance: ownership, due dates, and the 30-day overdue escalation to the CEO</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Learning Objectives</h3>
+        <p>By the end of this session, participants will be able to:</p>
+        <ul>
+          <li>List the nine required Management Review input categories and name the QMS process that supplies each one</li>
+          <li>Explain the difference between design verification-style QMS metrics (e.g., first pass yield) and the higher-level suitability/adequacy/effectiveness judgment Management Review makes</li>
+          <li>Describe the five required output categories and give an example decision for each</li>
+          <li>State the review frequency, who chairs it, and the escalation path for an overdue action item</li>
+          <li>Locate the Management Review Minutes (QF-005) template and identify where each required output is documented</li>
+        </ul>
+        <p style="margin-top:16px;"><strong>Recommended audience:</strong></p>
+        <div class="audience-tags">
+          <span>CEO</span>
+          <span>Executive leadership team</span>
+          <span>Quality Manager</span>
+        </div>
+        <p style="margin-top:10px;"><strong>Suggested periodicity:</strong> Once at appointment to an executive leadership role or the Quality Manager position; brief refresher at the start of each calendar year to align on the coming year's review schedule and any QP-011 revisions.</p>
+      </div>
+    </div>
+  </div>
+
+  <fieldset class="notes-section">
+    <legend>Reviewer Notes</legend>
+    <div class="ref-strip">
+      <strong>Correlation reference:</strong> Page <code>13-management-review.html</code> &middot; Topic: Management Review &middot; Source docs: <code>QP-011</code>, <code>QF-005</code> &middot; Clauses: 9.3, 9.3.1, 9.3.2, 9.3.3 &middot; Files under <code>docs/AS9100/procedures/</code> and <code>docs/AS9100/templates/</code>
+    </div>
+    <div class="field-row inline">
+      <div>
+        <label for="reviewer-name">Reviewer name</label>
+        <input type="text" id="reviewer-name" name="reviewer-name">
+      </div>
+      <div>
+        <label for="reviewer-date">Date</label>
+        <input type="date" id="reviewer-date" name="reviewer-date">
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="section-ref">Section or clause this note refers to</label>
+      <input type="text" id="section-ref" name="section-ref" placeholder="e.g. QP-011 &sect;4 Management Review Outputs, or clause 9.3.3">
+    </div>
+    <div class="field-row radio-set">
+      <label style="display:block;margin-bottom:6px;">Review status</label>
+      <label><input type="radio" name="status" value="approved"> Content approved as written</label>
+      <label><input type="radio" name="status" value="revise"> Needs revision</label>
+      <label><input type="radio" name="status" value="question"> Question for author</label>
+    </div>
+    <div class="field-row">
+      <label for="notes">Comments</label>
+      <textarea id="notes" name="notes" placeholder="Type your notes here before saving/printing this page..."></textarea>
+    </div>
+    <div class="save-instructions">
+      <strong>How to save these notes:</strong> Use your browser's <strong>Print &rarr; Save as PDF</strong> (recommended &mdash; captures exactly what you typed) or <strong>File &rarr; Save Page As &rarr; Webpage, Complete</strong>. The correlation reference above is included in the saved file so your notes can be matched back to this page and its source documents later. No data is transmitted anywhere &mdash; this page has no server and no script; your notes exist only in your browser until you save or print.
+    </div>
+  </fieldset>
+
+  <footer>
+    Jemba9 QMS Training Program &middot; Topic 13 of 13 &middot; Generated from Jemba9_QMS repository (branches <code>main</code> and <code>qms-review-notes</code>) &middot; Static reference material &mdash; not a controlled QMS document.
+  </footer>
+</main>
+</div>
+</body>
+</html>

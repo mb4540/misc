@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 4 — SysML 2.0 in the Context of TALARIA</title>
+</head>
+<body style="margin:0;padding:0;background:#0e1116;color:#d7dee8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.65;">
+<div style="max-width:1000px;margin:0 auto;padding:40px 28px 80px 28px;">
+
+<div style="font-size:13px;margin-bottom:26px;"><a href="03-api-and-tooling.html" style="color:#4da3ff;text-decoration:none;">&#8592; Part 3</a> <span style="color:#3a4553;">|</span> <a href="index.html" style="color:#4da3ff;text-decoration:none;">Contents</a></div>
+
+<div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#7f8ea3;">Part 4</div>
+<h1 style="margin:6px 0 20px 0;font-size:34px;line-height:1.2;color:#f2f6fb;">SysML 2.0 in the Context of TALARIA</h1>
+
+<div style="background:#1a1f16;border:1px solid #4a5a3a;border-radius:10px;padding:18px 22px;margin-bottom:26px;">
+  <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8fd4a8;margin-bottom:8px;">Two artefacts, not one</div>
+  <p style="margin:0 0 8px 0;color:#c8d4e2;">This part reviews <strong style="color:#f2f6fb;">two distinct things</strong>, and keeps them separate throughout:</p>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:10px;">
+    <tr>
+      <td style="padding:8px 12px 8px 0;vertical-align:top;width:50%;">
+        <div style="color:#f0a868;font-weight:600;margin-bottom:4px;">THE MOCK UI</div>
+        <div style="color:#9fb0c4;font-size:13.5px;"><code style="color:#8fd4a8;">_project-docs/mockups/active</code><br>
+        Node + Express + EJS, 24 JSON files, one server process. A clickable specification artefact. Explicitly disposable.</div>
+      </td>
+      <td style="padding:8px 0 8px 12px;vertical-align:top;border-left:1px solid #2b3542;">
+        <div style="color:#4da3ff;font-weight:600;margin-bottom:4px;">THE REAL APPLICATION</div>
+        <div style="color:#9fb0c4;font-size:13.5px;"><code style="color:#8fd4a8;">j9ccgit/</code> monorepo<br>
+        4 React 19 SPAs, Express + Drizzle backend over Postgres (48 tables), LangGraph.js agent pipeline, AWS CDK infra, Databricks. Under active development.</div>
+      </td>
+    </tr>
+  </table>
+  <p style="margin:12px 0 0 0;color:#9fb0c4;font-size:14px;">They are not the same maturity and they do not warrant the same recommendation. Where a statement applies to only one, it is labelled.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #4da3ff;border-radius:10px;padding:20px 24px;margin-bottom:34px;">
+  <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#4da3ff;margin-bottom:10px;">Headline finding</div>
+  <p style="margin:0 0 10px 0;">The real application has already converged on most of SysML v2's structure independently.</p>
+  <p style="margin:0;color:#c8d4e2;">The Drizzle schema carries a three-level physical decomposition (<code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#8fd4a8;">board &#8594; assembly &#8594; part</code>), typed numeric rated/actual/limit/margin columns, a <strong style="color:#f2f6fb;">data-driven rule table</strong> with provenance back to a document section, a stress-case table that is literally a constraint evaluation, a requirement-trace relationship table, and an agent-trace/evidence/approval chain. Those are, respectively, part usages, attributes, a constraint library, constraint assertions, <code style="color:#8fd4a8;">satisfy</code>/<code style="color:#8fd4a8;">derive</code> relationships, and provenance. Adopting SysML v2 here is a <em>renaming and a formalisation</em>, not a re-architecture. The gaps that remain are narrow and specific — see §4.4.</p>
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.1 The mock UI — what it is and what it is for</h2>
+
+<p>Reviewed from <code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#8fd4a8;">_project-docs/mockups/active</code>. A Node 20 + Express + EJS server on port 4000, no build step, backed by 24 JSON files acting as a mock database, driven by the FE-01 to FE-09 feature requirements. Its own SOLUTION.md is explicit that it exists to be a specification artefact for the production build, and to be thrown away afterwards. Six scripted flows demonstrate the <strong style="color:#f2f6fb;">Input &#8594; Agent Workflow &#8594; Output &#8594; Review</strong> loop.</p>
+
+<div style="background:#26201a;border-left:3px solid #f0a868;padding:14px 18px;border-radius:0 8px 8px 0;margin:18px 0;font-size:14.5px;">
+  <strong style="color:#f0a868;">Bearing on SysML v2:</strong> the mock is a <em>UX</em> specification, not a data specification. Its JSON is deliberately shallow — <code style="color:#8fd4a8;">"50V"</code> as a string, designators as a comma-separated list, rules baked into narration. Do not draw data-architecture conclusions from it, and do not target it for SysML work beyond a throwaway demo. The recommendations below are aimed at the real backend.
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.2 The real application — as built</h2>
+
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">TALARIA — REAL APPLICATION ARCHITECTURE (j9ccgit monorepo)</text>
+
+  <text x="450" y="58" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">apps/ &#8212; FOUR REACT 19 + VITE SPAs</text>
+
+  <rect x="40" y="70" width="196" height="62" rx="7" fill="#141d2b" stroke="#4da3ff" stroke-width="1.4"/>
+  <text x="138" y="92" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Employee Console</text>
+  <text x="138" y="110" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">:5173 &#183; 18 + 13 workspace</text>
+  <text x="138" y="125" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">Cognito, employee roles</text>
+
+  <rect x="248" y="70" width="196" height="62" rx="7" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="346" y="92" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Customer Portal</text>
+  <text x="346" y="110" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">:5174 &#183; 25 pages</text>
+  <text x="346" y="125" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">role-gated</text>
+
+  <rect x="456" y="70" width="196" height="62" rx="7" fill="#221a26" stroke="#a78bfa" stroke-width="1.4"/>
+  <text x="554" y="92" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Control Center</text>
+  <text x="554" y="110" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">:5175 &#183; 36 pages</text>
+  <text x="554" y="125" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">platform admin</text>
+
+  <rect x="664" y="70" width="196" height="62" rx="7" fill="#26201a" stroke="#f0a868" stroke-width="1.4"/>
+  <text x="762" y="92" text-anchor="middle" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Stakeholder Portal</text>
+  <text x="762" y="110" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">:5176 &#183; 12 pages</text>
+  <text x="762" y="125" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">insurer, read-only</text>
+
+  <text x="450" y="152" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">shared via packages/ui &#183; packages/config &#183; packages/styles &#183; packages/types (944-line entity model)</text>
+
+  <line x1="450" y1="160" x2="450" y2="180" stroke="#3a4553" stroke-width="1.6"/>
+  <polygon points="450,188 444,178 456,178" fill="#3a4553"/>
+
+  <rect x="40" y="190" width="820" height="58" rx="8" fill="#16202c" stroke="#4da3ff" stroke-width="1.8"/>
+  <text x="60" y="214" fill="#4da3ff" font-family="sans-serif" font-size="14" font-weight="bold">backend/ &#8212; Express + TypeScript, 44 route modules</text>
+  <text x="60" y="236" fill="#9fb0c4" font-family="monospace" font-size="11">parts &#183; boards &#183; runs &#183; findings &#183; requirements &#183; lifecycle &#183; evidence &#183; approvals &#183; waivers &#183; standards</text>
+
+  <line x1="260" y1="248" x2="260" y2="268" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="640" y1="248" x2="640" y2="268" stroke="#3a4553" stroke-width="1.6"/>
+
+  <rect x="40" y="270" width="400" height="112" rx="8" fill="#1c1a26" stroke="#a78bfa" stroke-width="1.6"/>
+  <text x="60" y="294" fill="#a78bfa" font-family="sans-serif" font-size="13.5" font-weight="bold">LangGraph.js agent pipeline</text>
+  <text x="60" y="315" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">load_run &#8594; plan &#8594; standards_librarian &#8594;</text>
+  <text x="60" y="331" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">derating_analyst &#8594; [evidence_builder |</text>
+  <text x="60" y="347" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">exception_reviewer] &#8594; employee_review &#8594;</text>
+  <text x="60" y="363" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">report_builder &#8594; customer_review &#8594; finalize</text>
+  <text x="60" y="378" fill="#8fd4a8" font-family="sans-serif" font-size="11">checkpointed &#183; interrupt() HITL gates &#183; 23 YAML skill/rule packs</text>
+
+  <rect x="456" y="270" width="404" height="112" rx="8" fill="#16221b" stroke="#5fbf8f" stroke-width="1.6"/>
+  <text x="476" y="294" fill="#5fbf8f" font-family="sans-serif" font-size="13.5" font-weight="bold">Postgres via Drizzle &#8212; 48 tables</text>
+  <text x="476" y="315" fill="#9fb0c4" font-family="monospace" font-size="11">board &#8594; assembly &#8594; part &#183; mission_profile &#183; stress_case</text>
+  <text x="476" y="331" fill="#9fb0c4" font-family="monospace" font-size="11">derating_rule &#183; derating_run &#183; derating_finding &#183; waiver</text>
+  <text x="476" y="347" fill="#9fb0c4" font-family="monospace" font-size="11">requirement &#183; requirement_trace &#183; lifecycle_phase</text>
+  <text x="476" y="363" fill="#9fb0c4" font-family="monospace" font-size="11">standard_document &#8594; document_section &#183; vector_chunk</text>
+  <text x="476" y="378" fill="#9fb0c4" font-family="monospace" font-size="11">agent_trace &#183; evidence &#183; approval &#183; deliverable</text>
+
+  <line x1="450" y1="382" x2="450" y2="402" stroke="#3a4553" stroke-width="1.6"/>
+  <polygon points="450,410 444,400 456,400" fill="#3a4553"/>
+
+  <rect x="40" y="412" width="400" height="52" rx="8" fill="#1a2030" stroke="#3a4a63" stroke-width="1.4"/>
+  <text x="60" y="434" fill="#9fb0c4" font-family="sans-serif" font-size="12.5">infra/ &#8212; AWS CDK v2</text>
+  <text x="60" y="453" fill="#6b7a8d" font-family="sans-serif" font-size="11">Cognito &#183; ECS &#183; S3 &#183; CloudFront &#183; WAF &#183; staging pipeline</text>
+
+  <rect x="456" y="412" width="404" height="52" rx="8" fill="#1a2030" stroke="#3a4a63" stroke-width="1.4"/>
+  <text x="476" y="434" fill="#9fb0c4" font-family="sans-serif" font-size="12.5">databricks/ &#8212; DDL, seeds, agent prompts</text>
+  <text x="476" y="453" fill="#6b7a8d" font-family="sans-serif" font-size="11">AI Gateway (GPT-4o) &#183; DLT ingestion &#183; MLflow eval</text>
+
+  <text x="450" y="494" text-anchor="middle" fill="#f0a868" font-family="sans-serif" font-size="12">The green box is where SysML v2 lands. The agent pipeline and the SPAs are consumers of it, largely unchanged.</text>
+  <text x="450" y="512" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11">Status: under active development. Deploys governed by deploy-constitution.md; plans under documents/plans/.</text>
+</svg>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.3 What the real app already does right</h2>
+
+<p>Four of these are worth calling out, because each one materially shapes the SysML v2 recommendation that follows.</p>
+
+<div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+  <div style="color:#8fd4a8;font-weight:600;font-size:16px;margin-bottom:6px;">1 &#183; Derating rules are already data, with provenance</div>
+  <p style="margin:0;color:#c8d4e2;">The <code style="color:#8fd4a8;">derating_rule</code> table holds <code>standard</code>, <code>version</code>, <code>componentType</code>, <code>parameter</code>, <code>deratingFactor</code>, <code>environment</code>, <code>rationale</code>, <code>effectiveDate</code>, <code>isActive</code>, plus <code>documentId</code> and <code>sectionCode</code> pointing back into <code style="color:#8fd4a8;">standard_document</code> / <code style="color:#8fd4a8;">document_section</code>. New rules arrive through <code style="color:#8fd4a8;">derating_rule_staging</code> with an LLM <code>confidence</code> score and a human review gate before promotion. That is a versioned, auditable, provenance-linked rule library — <em>the hard part of a SysML v2 constraint library is already done.</em> What is missing is only the formal expression syntax and the ability to evaluate a rule symbolically rather than through hand-written TypeScript.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+  <div style="color:#8fd4a8;font-weight:600;font-size:16px;margin-bottom:6px;">2 &#183; The arithmetic is deterministic; only rule selection is LLM-mediated</div>
+  <p style="margin:0;color:#c8d4e2;">In <code style="color:#8fd4a8;">nodes/derating-analyst.ts</code>, <code>computeMargin()</code> and <code>determineStatus()</code> are plain functions with unit tests. The LLM resolves <em>which</em> rule applies to a given component type; it does not compute the verdict. This is the right architecture and it is the reason a SysML v2 migration is tractable — you are replacing a rule-selection heuristic with typed specialisation, not replacing a language model's judgement with a solver.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+  <div style="color:#8fd4a8;font-weight:600;font-size:16px;margin-bottom:6px;">3 &#183; Decomposition and relationships exist as tables</div>
+  <p style="margin:0;color:#c8d4e2;"><code style="color:#8fd4a8;">board &#8594; assembly &#8594; part</code> is a genuine containment hierarchy — a part usage tree in SysML terms. <code style="color:#8fd4a8;">requirement_trace</code> carries <code>sourceReqId</code>, <code>targetReqId</code> and a <code>relationshipType</code>, which is exactly the shape of <code style="color:#8fd4a8;">derive</code> / <code style="color:#8fd4a8;">satisfy</code> / <code style="color:#8fd4a8;">refine</code>. The decomposition and the traceability graph are both real structures, not conventions.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #2b3a2c;border-radius:10px;padding:18px 22px;margin:14px 0;">
+  <div style="color:#8fd4a8;font-weight:600;font-size:16px;margin-bottom:6px;">4 &#183; Provenance is a chain, not a log</div>
+  <p style="margin:0;color:#c8d4e2;"><code style="color:#8fd4a8;">agent_trace</code> (with <code>parentTraceId</code>, <code>reasoningSummary</code>, <code>inputSummary</code>/<code>outputSummary</code>, <code>brickType</code>) links to <code style="color:#8fd4a8;">evidence</code> (with <code>sourceDocument</code>, <code>sourceUrl</code>) and to <code style="color:#8fd4a8;">approval</code> (with <code>reviewerRole</code>, <code>versionReviewed</code>, <code>decision</code>). Every row carries <code>createdBy</code>/<code>updatedBy</code>/<code>tenantId</code>. An insurer-grade evidence trail is largely present; what it lacks is immutable snapshotting, which is precisely what the v2 API's commit model provides.</p>
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.4 The real gaps</h2>
+
+<p>Set against what is already built, five gaps remain. These are the ones SysML v2 actually addresses.</p>
+
+<table style="width:100%;border-collapse:collapse;font-size:14.5px;margin:16px 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:26%;">Gap</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Evidence in the real codebase, and what v2 offers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">No connectivity model</td><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">There is no net, node, or port table. <code style="color:#8fd4a8;">part.actualVoltage</code> is an asserted number with no modelled source, so the platform cannot answer "what drives this node?" — the first question a reviewer asks about a 48&#160;V stress on a 50&#160;V part. v2 <code style="color:#8fd4a8;">port def</code> / <code style="color:#8fd4a8;">connect</code> supplies the missing layer and is the prerequisite for real ECAD netlist ingest (FE-08 currently stubs this).</td></tr>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Quantities are unitless doubles</td><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">ratedVoltage</code>, <code style="color:#8fd4a8;">actualPower</code>, <code style="color:#8fd4a8;">marginPercent</code> are all <code>doublePrecision</code> with the unit implied by the column name. Better than the mock's strings, but a krad/rad or mW/W error is still a silent data bug rather than a type error. v2's ISQ/SI quantity libraries make it a parse failure.</td></tr>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">Requirements are prose beside the rules, not above them</td><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">The <code style="color:#8fd4a8;">requirement</code> table holds <code>title</code>, <code>description</code>, <code>status</code>, <code>tbxStatus</code> — with no structural link to the <code style="color:#8fd4a8;">derating_rule</code> rows that would verify them. The verification relationship lives in the analyst's logic, not in data. v2 makes a requirement a specialised constraint, so <code>status</code> becomes computed.</td></tr>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">No configuration baseline</td><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Grepping the schema, <code>version</code> appears only as per-row integers on deliverables and approvals. There is no table representing "the state of project P at gate 5". Rows mutate in place with <code>updatedAt</code>. FE-06 calls for configuration baselines; the v2 API's Commit/Branch/Tag model is a ready-made answer.</td></tr>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#f2f6fb;">No variability model</td><td style="padding:10px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">board.revision</code> is a varchar. Rev C versus Rev D is a naming convention, not a structure, so "which requirements does Rev D put at risk?" cannot be computed. v2 <code style="color:#8fd4a8;">variation</code>/<code style="color:#8fd4a8;">variant</code>, or API branches, close this.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:44px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.5 The mapping, against the real schema</h2>
+
+<svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">DRIZZLE SCHEMA &#8594; SysML v2 &#8212; CORRESPONDENCE, NOT COINCIDENCE</text>
+
+  <text x="215" y="60" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">POSTGRES / DRIZZLE</text>
+  <text x="700" y="60" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">SysML v2</text>
+
+  <rect x="55" y="74" width="320" height="30" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.2"/>
+  <text x="70" y="94" fill="#c8d4e2" font-family="monospace" font-size="12">board &#8594; assembly &#8594; part</text>
+  <line x1="375" y1="89" x2="530" y2="89" stroke="#4a5a63" stroke-width="1.3"/>
+  <polygon points="538,89 528,84 528,94" fill="#4a5a63"/>
+  <rect x="540" y="74" width="310" height="30" rx="5" fill="#141d2b" stroke="#4da3ff" stroke-width="1.2"/>
+  <text x="555" y="94" fill="#c8d4e2" font-family="monospace" font-size="12">nested part usages</text>
+
+  <rect x="55" y="112" width="320" height="30" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.2"/>
+  <text x="70" y="132" fill="#c8d4e2" font-family="monospace" font-size="12">part.ratedVoltage / actualVoltage</text>
+  <line x1="375" y1="127" x2="530" y2="127" stroke="#4a5a63" stroke-width="1.3"/>
+  <polygon points="538,127 528,122 528,132" fill="#4a5a63"/>
+  <rect x="540" y="112" width="310" height="30" rx="5" fill="#141d2b" stroke="#4da3ff" stroke-width="1.2"/>
+  <text x="555" y="132" fill="#c8d4e2" font-family="monospace" font-size="12">attribute : VoltageValue</text>
+
+  <rect x="55" y="150" width="320" height="30" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.2"/>
+  <text x="70" y="170" fill="#c8d4e2" font-family="monospace" font-size="12">derating_rule (+ document_section)</text>
+  <line x1="375" y1="165" x2="530" y2="165" stroke="#4a5a63" stroke-width="1.3"/>
+  <polygon points="538,165 528,160 528,170" fill="#4a5a63"/>
+  <rect x="540" y="150" width="310" height="30" rx="5" fill="#141d2b" stroke="#4da3ff" stroke-width="1.2"/>
+  <text x="555" y="170" fill="#c8d4e2" font-family="monospace" font-size="12">constraint def (library)</text>
+
+  <rect x="55" y="188" width="320" height="30" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.2"/>
+  <text x="70" y="208" fill="#c8d4e2" font-family="monospace" font-size="12">stress_case (applied / limit / margin)</text>
+  <line x1="375" y1="203" x2="530" y2="203" stroke="#4a5a63" stroke-width="1.3"/>
+  <polygon points="538,203 528,198 528,208" fill="#4a5a63"/>
+  <rect x="540" y="188" width="310" height="30" rx="5" fill="#141d2b" stroke="#4da3ff" stroke-width="1.2"/>
+  <text x="555" y="208" fill="#c8d4e2" font-family="monospace" font-size="12">constraint assertion instance</text>
+
+  <rect x="55" y="226" width="320" height="30" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.2"/>
+  <text x="70" y="246" fill="#c8d4e2" font-family="monospace" font-size="12">derating_run + derating_finding</text>
+  <line x1="375" y1="241" x2="530" y2="241" stroke="#4a5a63" stroke-width="1.3"/>
+  <polygon points="538,241 528,236 528,246" fill="#4a5a63"/>
+  <rect x="540" y="226" width="310" height="30" rx="5" fill="#141d2b" stroke="#4da3ff" stroke-width="1.2"/>
+  <text x="555" y="246" fill="#c8d4e2" font-family="monospace" font-size="12">analysis case + verdicts</text>
+
+  <rect x="55" y="264" width="320" height="30" rx="5" fill="#16221b" stroke="#5fbf8f" stroke-width="1.2"/>
+  <text x="70" y="284" fill="#c8d4e2" font-family="monospace" font-size="12">requirement_trace.relationshipType</text>
+  <line x1="375" y1="279" x2="530" y2="279" stroke="#4a5a63" stroke-width="1.3"/>
+  <polygon points="538,279 528,274 528,284" fill="#4a5a63"/>
+  <rect x="540" y="264" width="310" height="30" rx="5" fill="#141d2b" stroke="#4da3ff" stroke-width="1.2"/>
+  <text x="555" y="284" fill="#c8d4e2" font-family="monospace" font-size="12">satisfy / derive / refine</text>
+
+  <rect x="55" y="302" width="320" height="30" rx="5" fill="#251a1e" stroke="#e08a8a" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="70" y="322" fill="#e08a8a" font-family="monospace" font-size="12">&#8212; no equivalent &#8212;</text>
+  <line x1="375" y1="317" x2="530" y2="317" stroke="#5a3a3a" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <polygon points="538,317 528,312 528,322" fill="#5a3a3a"/>
+  <rect x="540" y="302" width="310" height="30" rx="5" fill="#251a1e" stroke="#e08a8a" stroke-width="1.2"/>
+  <text x="555" y="322" fill="#e08a8a" font-family="monospace" font-size="12">port def / connect &#183; variation &#183; Commit</text>
+</svg>
+
+<table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:23%;">Real app (Drizzle)</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:18%;">Mock UI (JSON)</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:20%;">SysML v2</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Gain</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">board</code>/<code style="color:#8fd4a8;">assembly</code>/<code style="color:#8fd4a8;">part</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">flat <code>parts.json</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>part def</code> + usages</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Arbitrary nesting depth; <code>refDes</code> becomes an addressable usage.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">doublePrecision</code> columns</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;"><code>"50V"</code> strings</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">ISQ/SI quantity</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Unit errors caught at parse time.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">derating_rule</code> + staging</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">narrated in chat</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>constraint def</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Rules become executable expressions, not factor lookups plus TS.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">skills/*.yaml</code> (23 packs)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">&#8212;</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>analysis def</code> + <code>metadata def</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">A bespoke YAML DSL becomes a standard one others can read.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">mission_profile</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;"><code>mission-profiles.json</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>part def</code> + attributes</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">TID/RDM/thermal feed constraints directly.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">stress_case</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">&#8212;</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">constraint assertion</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Already the right shape; gains a formal expression.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">requirement</code> + <code style="color:#8fd4a8;">requirement_trace</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">flat list + status</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>requirement def</code>, <code>satisfy</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Status computed; coverage gaps surface as query results.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">lifecycle_phase.gateCriteria</code> (jsonb)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">JSON array</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>state def</code> + guarded <code>transition</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Gate logic inspectable and tailorable without a code change.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">agent_trace</code> / <code style="color:#8fd4a8;">evidence</code> / <code style="color:#8fd4a8;">approval</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">evidence page</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>Commit</code> history (API)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Immutability you did not have to build; baselines as tags.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">board.revision</code> (varchar)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;"><code>qty_old</code>/<code>delta</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>variation</code> / branches</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Rev-to-rev impact becomes a diff query.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">deliverable</code> (S3 URI + version)</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">deliverables list</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>view</code> / <code>viewpoint</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Documents generated from a baseline instead of drifting from it.</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#e08a8a;">&#8212; absent &#8212;</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#7f8ea3;">&#8212;</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;"><code>port def</code> / <code>connect</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">Provenance for applied stresses; the door to ECAD ingest.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:44px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.6 What a rule looks like in each form</h2>
+
+<p>The same NASA-EEE-INST-002 Class B ceramic-capacitor voltage rule, three ways. This is the clearest illustration of what changes and what does not.</p>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;color:#c8d4e2;margin:16px 0;">
+<span style="color:#6b7a8d;">// 1. REAL APP TODAY — a factor row, plus TypeScript that knows what to do with it.</span>
+<span style="color:#6b7a8d;">//    derating_rule:</span>
+{ standard: <span style="color:#e0b48a;">"EEE-INST-002"</span>, version: <span style="color:#e0b48a;">"Rev C"</span>, componentType: <span style="color:#e0b48a;">"Capacitor, Ceramic"</span>,
+  parameter: <span style="color:#e0b48a;">"voltage"</span>, deratingFactor: 0.75, environment: <span style="color:#e0b48a;">"Class B"</span>,
+  documentId: <span style="color:#e0b48a;">"&lt;uuid&gt;"</span>, sectionCode: <span style="color:#e0b48a;">"3-2"</span>, isActive: <span style="color:#c98fd4;">true</span> }
+
+<span style="color:#6b7a8d;">//    nodes/derating-analyst.ts:</span>
+<span style="color:#c98fd4;">export function</span> <span style="color:#5fbf8f;">computeMargin</span>(deratedLimit: number, actualValue: number): number {
+  <span style="color:#c98fd4;">if</span> (deratedLimit === 0) <span style="color:#c98fd4;">return</span> -100.0;
+  <span style="color:#c98fd4;">return</span> ((deratedLimit - actualValue) / deratedLimit) * 100.0;
+}
+<span style="color:#6b7a8d;">//    ^ correct, tested, and completely opaque to any tool that is not TALARIA.</span>
+</pre>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;color:#c8d4e2;margin:16px 0;">
+<span style="color:#6b7a8d;">// 2. SysML v2 — the rule carries its own meaning.</span>
+<span style="color:#5fbf8f;">requirement def</span> CeramicCapacitorVoltageDerating {
+    <span style="color:#c98fd4;">doc</span> <span style="color:#e0b48a;">/* Ceramic capacitors shall be derated to 75% of rated voltage at
+             maximum operating temperature. NASA-EEE-INST-002 Rev C, Table 3-2, Class B. */</span>
+
+    <span style="color:#c98fd4;">subject</span> cap : CeramicCapacitor;
+    <span style="color:#4da3ff;">attribute</span> deratingFactor : Real <span style="color:#c98fd4;">default</span> 0.75;
+    <span style="color:#c98fd4;">attribute</span> :&gt;&gt; sourceSection = <span style="color:#e0b48a;">"3-2"</span>;      <span style="color:#6b7a8d;">// provenance travels with the rule</span>
+
+    <span style="color:#c98fd4;">require constraint</span> {
+        cap.appliedVoltage &lt;= cap.ratedVoltage * deratingFactor
+    }
+}
+
+<span style="color:#6b7a8d;">// The margin computation is derivable from the constraint, not hand-written.</span>
+<span style="color:#6b7a8d;">// Any conformant tool can evaluate this. computeMargin() stays as a fast path.</span>
+</pre>
+
+<div style="background:#141b24;border-left:3px solid #4da3ff;padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;font-size:14.5px;">
+  <strong style="color:#f2f6fb;">The delta is small and the leverage is large.</strong> You are not replacing the rule pipeline — the ingestion, staging, human review and provenance chain all stay. You are changing the <em>representation</em> of the promoted rule from a factor plus interpreter into a self-describing constraint. That is a serialiser and a schema addition, not a rewrite.
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:44px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.7 Five integration options</h2>
+
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">EFFORT VS. STRATEGIC VALUE &#8212; TARGETING THE REAL BACKEND</text>
+
+  <line x1="90" y1="330" x2="850" y2="330" stroke="#3a4553" stroke-width="1.5"/>
+  <line x1="90" y1="60" x2="90" y2="330" stroke="#3a4553" stroke-width="1.5"/>
+  <text x="470" y="358" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="12">engineering effort &#8594;</text>
+  <text x="62" y="195" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="12" transform="rotate(-90 62 195)">strategic value &#8594;</text>
+
+  <circle cx="180" cy="280" r="13" fill="#5fbf8f"/>
+  <text x="180" y="286" text-anchor="middle" fill="#0e1116" font-family="sans-serif" font-size="12" font-weight="bold">A</text>
+  <text x="205" y="278" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Export &#8212; /projects/:id/model.sysml from Drizzle</text>
+  <text x="205" y="294" fill="#6b7a8d" font-family="sans-serif" font-size="11">days &#183; one new route &#183; zero schema change</text>
+
+  <circle cx="300" cy="228" r="13" fill="#5fbf8f"/>
+  <text x="300" y="234" text-anchor="middle" fill="#0e1116" font-family="sans-serif" font-size="12" font-weight="bold">B</text>
+  <text x="325" y="226" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Formalise &#8212; derating_rule gains an expression column</text>
+  <text x="325" y="242" fill="#6b7a8d" font-family="sans-serif" font-size="11">weeks &#183; rules library becomes portable and saleable</text>
+
+  <circle cx="450" cy="170" r="13" fill="#4da3ff"/>
+  <text x="450" y="176" text-anchor="middle" fill="#0e1116" font-family="sans-serif" font-size="12" font-weight="bold">C</text>
+  <text x="475" y="168" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Import &#8212; ingest customer v2 models alongside CSV</text>
+  <text x="475" y="184" fill="#6b7a8d" font-family="sans-serif" font-size="11">weeks&#8211;months &#183; opens the MBSE-mature segment</text>
+
+  <circle cx="600" cy="112" r="13" fill="#4da3ff"/>
+  <text x="600" y="118" text-anchor="middle" fill="#0e1116" font-family="sans-serif" font-size="12" font-weight="bold">D</text>
+  <text x="585" y="110" text-anchor="end" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Serve &#8212; v2 API endpoint over the existing store</text>
+  <text x="585" y="126" text-anchor="end" fill="#6b7a8d" font-family="sans-serif" font-size="11">months &#183; commits/baselines &#183; scoped insurer reads</text>
+
+  <circle cx="760" cy="72" r="13" fill="#a78bfa"/>
+  <text x="760" y="78" text-anchor="middle" fill="#0e1116" font-family="sans-serif" font-size="12" font-weight="bold">E</text>
+  <text x="600" y="52" fill="#c8d4e2" font-family="sans-serif" font-size="12.5">Native &#8212; v2 repository as system of record</text>
+  <text x="600" y="68" fill="#6b7a8d" font-family="sans-serif" font-size="11">quarters &#183; revisit after D, do not pre-commit</text>
+
+  <path d="M 180 280 Q 380 230 450 170 T 760 72" stroke="#2c3d54" stroke-width="1.5" fill="none" stroke-dasharray="5 4"/>
+</svg>
+
+<div style="background:#151a22;border:1px solid #242c38;border-radius:10px;padding:20px 24px;margin:18px 0;">
+  <div style="color:#5fbf8f;font-weight:600;font-size:16px;margin-bottom:6px;">A &#8212; Export a .sysml view of a project</div>
+  <p style="margin:0 0 8px 0;color:#c8d4e2;">A serialiser that walks <code style="color:#8fd4a8;">board &#8594; assembly &#8594; part</code>, <code style="color:#8fd4a8;">mission_profile</code>, <code style="color:#8fd4a8;">requirement</code> and <code style="color:#8fd4a8;">derating_finding</code> and emits SysML v2 textual notation. One new route module alongside the existing 44. No schema change, no agent change.</p>
+  <p style="margin:0;color:#9fb0c4;font-size:14px;"><strong style="color:#f2f6fb;">Target the real backend, not the mock.</strong> The real schema already has the typed numerics and the hierarchy; the mock does not. Exporting from the mock would produce a demo that misrepresents what you can actually do. Do it against Drizzle and validate the output through the pilot parser.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #242c38;border-radius:10px;padding:20px 24px;margin:14px 0;">
+  <div style="color:#5fbf8f;font-weight:600;font-size:16px;margin-bottom:6px;">B &#8212; Formalise the rule library</div>
+  <p style="margin:0 0 8px 0;color:#c8d4e2;">Add an expression column to <code style="color:#8fd4a8;">derating_rule</code> holding the SysML v2 constraint text, populated during staging promotion. The Standards Librarian keeps its RAG retrieval for narrative and rule discovery; the promoted artefact becomes a formal constraint rather than a bare factor. <code>computeMargin()</code> remains as the fast evaluation path, now with a checkable specification above it.</p>
+  <p style="margin:0;color:#9fb0c4;font-size:14px;"><strong style="color:#f2f6fb;">Why this is the high-value move:</strong> the ingestion-plus-review pipeline that produces these rules is the expensive thing Jemba9 has already built. Expressing its output in a standard formal language turns a private database into a portable, citable asset — and makes the assurance claim demonstrable to a third party rather than merely asserted.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #242c38;border-radius:10px;padding:20px 24px;margin:14px 0;">
+  <div style="color:#4da3ff;font-weight:600;font-size:16px;margin-bottom:6px;">C &#8212; Ingest customer models</div>
+  <p style="margin:0 0 8px 0;color:#c8d4e2;">Accept a v2 model as an alternative to the CSV/interview ingress: text upload, or a pull from a customer API endpoint at a named commit, populating board/assembly/part, mission profile and requirements. The existing <code style="color:#8fd4a8;">bom-import</code> route becomes one of two paths. This is also where ports and connections would first land, since a customer model will carry them.</p>
+  <p style="margin:0;color:#9fb0c4;font-size:14px;"><strong style="color:#f2f6fb;">Segment unlocked:</strong> primes and agencies who currently cannot use TALARIA without retyping an existing model into a spreadsheet.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #242c38;border-radius:10px;padding:20px 24px;margin:14px 0;">
+  <div style="color:#4da3ff;font-weight:600;font-size:16px;margin-bottom:6px;">D &#8212; Serve the API</div>
+  <p style="margin:0 0 8px 0;color:#c8d4e2;">Implement Projects, Commits, Branches, Elements and Queries over the existing Postgres store. This is where the missing configuration-baseline capability (FE-06) arrives for free: a gate passage becomes a tag, a BOM revision becomes a branch, and the <code style="color:#8fd4a8;">agent_trace</code>/<code style="color:#8fd4a8;">evidence</code>/<code style="color:#8fd4a8;">approval</code> chain gains the immutability it currently lacks.</p>
+  <p style="margin:0;color:#9fb0c4;font-size:14px;"><strong style="color:#f2f6fb;">Positioning:</strong> the stakeholder portal stops being a bespoke read-only SPA and becomes a scoped read against a tagged baseline. That is a much easier thing to explain to an insurer's technical reviewer, and a much easier thing to audit.</p>
+</div>
+
+<div style="background:#151a22;border:1px solid #2b2036;border-radius:10px;padding:20px 24px;margin:14px 0;">
+  <div style="color:#a78bfa;font-weight:600;font-size:16px;margin-bottom:6px;">E &#8212; Go native</div>
+  <p style="margin:0 0 8px 0;color:#c8d4e2;">Make a v2 repository the system of record; the Drizzle tables become a read projection for query performance.</p>
+  <p style="margin:0;color:#9fb0c4;font-size:14px;"><strong style="color:#f2f6fb;">Do not start here.</strong> The backend is under active development with a working migration path and a deploy constitution; a foundational swap now would stall feature delivery for an uncertain return. A&#8211;D each stand alone, and each teaches you something you need before E is a sensible question.</p>
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:44px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.8 A phased path</h2>
+
+<svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">SUGGESTED SEQUENCE &#8212; EACH PHASE SHIPS INDEPENDENTLY</text>
+
+  <rect x="40" y="62" width="196" height="196" rx="8" fill="#16221b" stroke="#5fbf8f" stroke-width="1.6"/>
+  <text x="138" y="88" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="13" font-weight="bold">PHASE 1 &#183; Prove</text>
+  <text x="55" y="112" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Serialiser: Drizzle &#8594; .sysml</text>
+  <text x="55" y="130" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">New backend route</text>
+  <text x="55" y="148" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Validate vs pilot parser</text>
+  <text x="55" y="166" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Export button in console</text>
+  <line x1="55" y1="184" x2="221" y2="184" stroke="#24382c"/>
+  <text x="55" y="204" fill="#6b7a8d" font-family="sans-serif" font-size="11">Outcome: demo asset and a</text>
+  <text x="55" y="220" fill="#6b7a8d" font-family="sans-serif" font-size="11">tested, written-down mapping.</text>
+  <text x="55" y="242" fill="#8fd4a8" font-family="sans-serif" font-size="11">Weeks. No schema change.</text>
+
+  <polygon points="258,160 240,152 240,168" fill="#3a4553"/>
+
+  <rect x="264" y="62" width="196" height="196" rx="8" fill="#141d2b" stroke="#4da3ff" stroke-width="1.6"/>
+  <text x="362" y="88" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="13" font-weight="bold">PHASE 2 &#183; Formalise</text>
+  <text x="279" y="112" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Constraint expression on</text>
+  <text x="279" y="130" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">derating_rule, set at promotion</text>
+  <text x="279" y="148" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Typed quantities (ISQ/SI)</text>
+  <text x="279" y="166" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Requirements &#8594; requirement def</text>
+  <line x1="279" y1="184" x2="445" y2="184" stroke="#243244"/>
+  <text x="279" y="204" fill="#6b7a8d" font-family="sans-serif" font-size="11">Outcome: portable rule library;</text>
+  <text x="279" y="220" fill="#6b7a8d" font-family="sans-serif" font-size="11">verification status computed</text>
+  <text x="279" y="236" fill="#6b7a8d" font-family="sans-serif" font-size="11">rather than curated.</text>
+
+  <polygon points="482,160 464,152 464,168" fill="#3a4553"/>
+
+  <rect x="488" y="62" width="196" height="196" rx="8" fill="#26201a" stroke="#f0a868" stroke-width="1.6"/>
+  <text x="586" y="88" text-anchor="middle" fill="#f0a868" font-family="sans-serif" font-size="13" font-weight="bold">PHASE 3 &#183; Connect</text>
+  <text x="503" y="112" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Import v2 models (text/API)</text>
+  <text x="503" y="130" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Ports &amp; connections tables</text>
+  <text x="503" y="148" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">ECAD netlist ingest (FE-08)</text>
+  <text x="503" y="166" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Revisions as variation</text>
+  <line x1="503" y1="184" x2="669" y2="184" stroke="#3a2e1e"/>
+  <text x="503" y="204" fill="#6b7a8d" font-family="sans-serif" font-size="11">Outcome: MBSE-mature</text>
+  <text x="503" y="220" fill="#6b7a8d" font-family="sans-serif" font-size="11">customers onboard without</text>
+  <text x="503" y="236" fill="#6b7a8d" font-family="sans-serif" font-size="11">retyping; stress provenance.</text>
+
+  <polygon points="706,160 688,152 688,168" fill="#3a4553"/>
+
+  <rect x="712" y="62" width="150" height="196" rx="8" fill="#221a26" stroke="#a78bfa" stroke-width="1.6"/>
+  <text x="787" y="88" text-anchor="middle" fill="#a78bfa" font-family="sans-serif" font-size="13" font-weight="bold">PHASE 4 &#183; Serve</text>
+  <text x="727" y="112" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">v2 API endpoint</text>
+  <text x="727" y="130" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Commits = evidence</text>
+  <text x="727" y="148" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Tags = baselines (FE-06)</text>
+  <text x="727" y="166" fill="#c8d4e2" font-family="sans-serif" font-size="11.5">Scoped insurer reads</text>
+  <line x1="727" y1="184" x2="847" y2="184" stroke="#332844"/>
+  <text x="727" y="204" fill="#6b7a8d" font-family="sans-serif" font-size="11">Outcome: TALARIA</text>
+  <text x="727" y="220" fill="#6b7a8d" font-family="sans-serif" font-size="11">is a node in the</text>
+  <text x="727" y="236" fill="#6b7a8d" font-family="sans-serif" font-size="11">customer's thread.</text>
+
+  <text x="450" y="290" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">The mock UI's role is unchanged: it remains the place to prototype the UX of a SysML import or export before building it for real.</text>
+  <text x="450" y="308" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">Option E (native v2 repository) sits beyond Phase 4 and should be re-evaluated, not pre-committed.</text>
+</svg>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:44px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.9 The RAPDA angle</h2>
+
+<p>TALARIA's differentiator is the LangGraph pipeline: Standards Librarian retrieves, Derating Analyst applies, Evidence Builder assembles, Exception Reviewer adjudicates, with <code style="color:#8fd4a8;">interrupt()</code> gates for employee and customer review. The architecture is sound — deterministic computation with LLM-mediated selection, checkpointed, traced.</p>
+
+<p>What it lacks is a formal substrate for the agents to <em>write into</em>. Today a node's output is rows and prose. SysML v2 offers three properties that rows and prose do not:</p>
+
+<ul style="padding-left:22px;">
+  <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">Generatable.</strong> An LLM can author textual notation against a published grammar. The Plan Drafter and Customer Interview graphs already produce structured artefacts; targeting a standard model language rather than a bespoke JSON shape costs little and buys interoperability.</li>
+  <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">Checkable.</strong> Generated output passes or fails a parser and a constraint evaluation. That is a verification loop on agent output — the hardest problem in shipping agents into a regulated domain, and one the existing MLflow/evaluation harness could measure directly.</li>
+  <li style="margin-bottom:8px;"><strong style="color:#f2f6fb;">Attributable.</strong> Elements sit at a commit with an author. <code style="color:#8fd4a8;">agent_trace</code> already captures who did what; commits make the <em>result</em> immutable too, which is what an insurer's evidence trail actually requires.</li>
+</ul>
+
+<div style="background:#191f14;border-left:3px solid #8fd4a8;padding:16px 20px;border-radius:0 8px 8px 0;margin:22px 0;">
+  <p style="margin:0;color:#c8d4e2;">Framed for a demo: <em>"RAPDA doesn't summarise your engineering. It edits your model, and every edit is checked against a formal rule and recorded against a commit."</em> The real application can nearly say that truthfully today — the rule provenance, the deterministic evaluation and the trace chain are all in place. What is missing is the standard representation that makes the claim verifiable by someone outside Jemba9.</p>
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:44px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">4.10 What I would do next week</h2>
+
+<ol style="padding-left:22px;">
+  <li style="margin-bottom:9px;">Write the serialiser against <strong style="color:#f2f6fb;">Drizzle, not the mock JSON</strong> — one project, covering board/assembly/part with typed quantities, mission profile, requirements, and the findings from one completed run. Run the output through the pilot implementation's parser. The mapping decisions will take longer than the code.</li>
+  <li style="margin-bottom:9px;">Take three <code style="color:#8fd4a8;">derating_rule</code> rows and hand-write their SysML v2 <code style="color:#8fd4a8;">constraint def</code> equivalents. Evaluate them over the same parts and confirm they reproduce what <code>computeMargin()</code> produced. That is the proof that the domain content survives formalisation.</li>
+  <li style="margin-bottom:9px;">Model one project's <code style="color:#8fd4a8;">lifecycle_phase.gateCriteria</code> as guarded transitions and check the result against what the lifecycle route computes today.</li>
+  <li style="margin-bottom:9px;">Stand up the reference API Services implementation locally, push the exported model as a commit, query it back. Two hours; it will tell you more about option D than any amount of reading.</li>
+  <li style="margin-bottom:9px;">Prototype the <em>UX</em> of SysML import/export in the mock — that is what the mock is for — while the real work happens in the backend.</li>
+  <li style="margin-bottom:0;">Decide whether the formalised standards library is a Jemba9 product in its own right. Given that the ingestion, staging and human-review pipeline already exists and is the expensive part, this is the highest-leverage commercial question on the list.</li>
+</ol>
+
+<div style="margin-top:44px;padding-top:20px;border-top:1px solid #242c38;font-size:13px;color:#6b7a8d;">
+  <div style="color:#7f8ea3;letter-spacing:.14em;text-transform:uppercase;font-size:11.5px;margin-bottom:8px;">Sources</div>
+  <div style="margin-bottom:6px;"><strong style="color:#9fb0c4;">Real application</strong> — reviewed from <code style="color:#8fd4a8;">j9ccgit/</code>: <code>README.md</code>, <code>CLAUDE.md</code>, <code>backend/src/db/schema.ts</code> (48 tables), <code>backend/src/routes/</code> (44 modules), <code>backend/src/agents/graph.ts</code>, <code>backend/src/agents/nodes/derating-analyst.ts</code>, <code>backend/src/agents/skills/*.yaml</code> (23 packs), <code>apps/*/src/pages/</code>, <code>packages/types/src/entities.ts</code>, <code>infra/</code>, <code>databricks/agents/prompts/</code>, and git history.</div>
+  <div style="margin-bottom:10px;"><strong style="color:#9fb0c4;">Mock UI</strong> — reviewed from <code style="color:#8fd4a8;">_project-docs/mockups/active/</code>: <code>README.md</code>, <code>SOLUTION.md</code>, <code>server.js</code>, <code>views/</code>, <code>data/*.json</code>.</div>
+  <a href="https://github.com/Systems-Modeling/SysML-v2-API-Services" style="color:#4da3ff;">SysML v2 API Services &#8212; reference implementation</a><br>
+  <a href="https://github.com/Systems-Modeling/SysML-v2-Release" style="color:#4da3ff;">SysML v2 Release &#8212; parser, Jupyter kernel, libraries</a><br>
+  <a href="https://mbse.solutions/what-the-presentations-taught-us-about-ai-sysml-v2-pipelines-in-digital-engineering/" style="color:#4da3ff;">MBSE Solutions &#8212; AI + SysML v2 + pipelines in digital engineering</a><br>
+  <a href="https://nepp.nasa.gov/docs/tasks/004a-Model-Based-Mission-Assurance/NEPP-CP-2021-Ryder-Austin-FUEE-Paper-SEAM-20210010222.pdf" style="color:#4da3ff;">NASA NEPP &#8212; Systems Engineering and Assurance Modeling (SEAM)</a><br>
+  <a href="https://www.sodiuswillert.com/en/blog/a-practical-guide-for-sysml-v2-adoption" style="color:#4da3ff;">SodiusWillert &#8212; A Practical Guide for SysML v2 Adoption</a>
+</div>
+
+<div style="margin-top:30px;font-size:14px;"><a href="03-api-and-tooling.html" style="color:#4da3ff;text-decoration:none;">&#8592; Part 3</a> <span style="color:#3a4553;">&nbsp;|&nbsp;</span> <a href="index.html" style="color:#4da3ff;text-decoration:none;">Contents</a></div>
+
+</div>
+</body>
+</html>

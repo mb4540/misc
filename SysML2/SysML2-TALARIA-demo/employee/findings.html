@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings — TALARIA Employee Console</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Employee Console &mdash; Findings</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Try <strong style="color:#fff;">Request exception</strong> on the first finding</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-employee">Employee Console</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">TIA Power Board Rev C &middot; Phase 5</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <span class="nav-item"><span class="icon">&#9632;</span> Workspace</span>
+      <a class="nav-item" href="bom.html"><span class="icon">&#9776;</span> Product BOM</a>
+      <a class="nav-item" href="run.html"><span class="icon">&#9881;</span> Analyses</a>
+      <a class="nav-item active" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="requirements.html"><span class="icon">&#9636;</span> Requirements</a>
+      <a class="nav-item" href="phase-gate.html"><span class="icon">&#8599;</span> Phase Gate</a>
+      <div class="sidebar-section-label">Model</div>
+      <span class="nav-item">&#9671; Model Browser <span class="nav-badge-sysml">SysML</span></span>
+      <span class="nav-item">&#8644; Model Exchange <span class="nav-badge-sysml">SysML</span></span>
+      <div class="sidebar-section-label">Program</div>
+      <span class="nav-item"><span class="icon">&#9635;</span> Schedule</span>
+      <span class="nav-item"><span class="icon">&#9650;</span> Risks</span>
+      <span class="nav-item"><span class="icon">&#9634;</span> Deliverables</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SC</div>
+        <div><div>Sarah Chen</div><span class="role">Lead Engineer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Findings</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">model @ commit 8f2c1ae</span>
+        <span>Jemba9 Internal</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="breadcrumb">
+        <span>J9Avionics</span><span class="separator">/</span>
+        <span>Analyses</span><span class="separator">/</span>
+        <span>run-0042</span><span class="separator">/</span>
+        <span class="current">Findings</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1>Findings &mdash; run-0042</h1>
+          <div class="subtitle">1,562 constraint evaluations &middot; 3 failures &middot; 1 existing waiver matched</div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Exported">Export evidence pack</button>
+          <button class="btn btn-primary btn-sm" data-demo-action="Approved">Approve run</button>
+        </div>
+      </div>
+
+      <!-- Finding 1 -->
+      <div class="card mb-16">
+        <div class="card-header" style="background:#fffafa;">
+          <h3>
+            <span class="badge badge-fail">FAIL</span>
+            F-001 &middot; Voltage derating &middot; <span class="mono">C24</span> and 18 sibling usages
+          </h3>
+          <span class="badge badge-neutral">severity 2</span>
+        </div>
+        <div class="card-body">
+          <div class="detail-grid mb-16">
+            <div class="detail-field"><div class="label">Component</div><div class="value">10&micro;F X7R 1206</div></div>
+            <div class="detail-field"><div class="label">MPN</div><div class="value mono">CGA5L1X7R1H106K160AE</div></div>
+            <div class="detail-field"><div class="label">Rated</div><div class="value mono">50 [V]</div></div>
+            <div class="detail-field"><div class="label">Derated limit</div><div class="value mono">37.5 [V]</div></div>
+            <div class="detail-field"><div class="label">Applied</div><div class="value mono" style="color:var(--color-danger);">48 [V]</div></div>
+            <div class="detail-field"><div class="label">Margin</div><div class="value mono" style="color:var(--color-danger);">&minus;28.0%</div></div>
+          </div>
+
+          <div class="mb-16">
+            <div class="margin-bar-container" style="max-width:420px;">
+              <div class="margin-bar">
+                <div class="margin-bar-fill margin-bar-fill--fail" style="width:96%;"></div>
+                <div class="margin-bar-marker" style="left:75%;"></div>
+              </div>
+              <span class="margin-bar-label margin-bar-label--fail">&minus;28.0%</span>
+            </div>
+            <div class="text-muted" style="margin-top:4px;">Marker at 75% is the Class B derated limit. Fill is applied voltage as a fraction of rated.</div>
+          </div>
+
+          <div class="card" style="box-shadow:none;">
+            <div class="card-header" style="padding:10px 14px;">
+              <h3 style="font-size:12.5px;">The constraint that produced this verdict <span class="sysml-pin" data-pin="1">1</span></h3>
+              <span class="badge badge-sysml">EEE-INST-002 Rev C &middot; Table 3-2</span>
+            </div>
+            <div class="card-body" style="padding:14px;">
+              <pre class="code" style="font-size:11.5px;"><span class="k">require constraint</span> {
+    cap.appliedVoltage &lt;= cap.ratedVoltage * deratingFactor
+}
+<span class="c">// bound and evaluated for usage C24:</span>
+<span class="c">//   48 [V] &lt;= 50 [V] * 0.75  &rarr;  48 &lt;= 37.5  &rarr;</span>  <span class="bad">false</span></pre>
+            </div>
+          </div>
+
+          <div class="sysml-note">
+            <strong>The finding names 19 usages, individually.</strong> Each of <span class="mono">C24, C47, C52, C53, C54, C55</span> and the rest is a distinct part usage that failed the same bound constraint &mdash; so a waiver can cover some and not others, and a fix on one does not silently clear the group. <span class="sysml-pin" data-pin="2">2</span>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-accent btn-sm" data-modal-open="waiver-modal">Request exception</button>
+            <button class="btn btn-outline btn-sm" data-demo-action="Opening…">View 19 usages</button>
+            <button class="btn btn-outline btn-sm" data-demo-action="Opening…">Source clause &rarr;</button>
+            <button class="btn btn-outline btn-sm" data-demo-action="Tracing…">Trace applied stress <span class="sysml-pin" data-pin="4">4</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding 2 -->
+      <div class="card mb-16">
+        <div class="card-header" style="background:#fffafa;">
+          <h3>
+            <span class="badge badge-fail">FAIL</span>
+            F-002 &middot; Power derating &middot; <span class="mono">R44</span>, <span class="mono">R45</span>
+          </h3>
+          <span class="badge badge-neutral">severity 3</span>
+        </div>
+        <div class="card-body">
+          <div class="detail-grid mb-16">
+            <div class="detail-field"><div class="label">Component</div><div class="value">0.05&#8486; 1W 2512 sense</div></div>
+            <div class="detail-field"><div class="label">Rated</div><div class="value mono">1.00 [W]</div></div>
+            <div class="detail-field"><div class="label">Derated limit</div><div class="value mono">0.70 [W]</div></div>
+            <div class="detail-field"><div class="label">Applied</div><div class="value mono" style="color:var(--color-danger);">0.78 [W]</div></div>
+            <div class="detail-field"><div class="label">Margin</div><div class="value mono" style="color:var(--color-danger);">&minus;11.4%</div></div>
+            <div class="detail-field"><div class="label">Clause</div><div class="value mono">Table 3-4</div></div>
+          </div>
+          <div class="margin-bar-container" style="max-width:420px;">
+            <div class="margin-bar">
+              <div class="margin-bar-fill margin-bar-fill--fail" style="width:78%;"></div>
+              <div class="margin-bar-marker" style="left:70%;"></div>
+            </div>
+            <span class="margin-bar-label margin-bar-label--fail">&minus;11.4%</span>
+          </div>
+          <div class="sysml-note">
+            Applied power is computed from the model, not entered: <span class="mono">I&sup2;R</span> using the peak current on the sense path resolved through <span class="mono">connect</span>. Change the current limit upstream and this verdict recomputes. <span class="sysml-pin" data-pin="4">4</span>
+          </div>
+          <button class="btn btn-accent btn-sm" data-modal-open="waiver-modal">Request exception</button>
+        </div>
+      </div>
+
+      <!-- Finding 3 - waived -->
+      <div class="card mb-16">
+        <div class="card-header" style="background:#fffbeb;">
+          <h3>
+            <span class="badge badge-waiver">WAIVED</span>
+            F-003 &middot; No applicable rule &middot; <span class="mono">D7</span>
+          </h3>
+          <span class="badge badge-approved">w-001 approved</span>
+        </div>
+        <div class="card-body">
+          <p class="mb-16">Thorlabs FDS100 silicon PIN photodiode in TO-5. EEE-INST-002 Table 7 covers photodetectors but does not include commercial TO-5 silicon PIN devices, so no constraint in the library has a subject that binds to this part definition.</p>
+
+          <div class="card" style="box-shadow:none;background:#fffbeb;border-color:#fde68a;">
+            <div class="card-body" style="padding:14px;">
+              <pre class="code" style="font-size:11.5px;"><span class="k">part</span> D7 : Photodiode {
+    <span class="k">@</span><span class="n">WaiverRecord</span> {
+        waiverId      = <span class="s">"w-001"</span>;
+        status        = <span class="s">"approved"</span>;
+        approvedBy    = <span class="s">"C. Fisher"</span>;
+        justification = <span class="s">"No applicable EEE-INST-002 rule for commercial TO-5 Si PIN. "</span>
+                        <span class="s">"Alternative analysis per JPL-approved methodology shows the "</span>
+                        <span class="s">"device operates at &lt;10% of absolute maximum ratings."</span>;
+    }
+}</pre>
+            </div>
+          </div>
+
+          <div class="sysml-note">
+            <strong>The waiver is part of the model, not a footnote about it.</strong> Export the board and the exception travels with D7 &mdash; an insurer reading the model sees the gap and the justification in the same place. <span class="sysml-pin" data-pin="3">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coverage -->
+      <div class="card mb-16">
+        <div class="card-header">
+          <h3>Rule coverage <span class="sysml-pin" data-pin="5">5</span></h3>
+          <span class="text-muted">generated as a model query</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Constraint</th><th>Clause</th><th>Bound usages</th><th>Pass</th><th>Fail</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">CeramicCapacitorVoltageDerating</td><td class="mono">3-2</td><td>81</td><td>62</td><td>19</td><td><span class="badge badge-fail">fail</span></td></tr>
+              <tr><td class="mono">ResistorPowerDerating</td><td class="mono">3-4</td><td>34</td><td>32</td><td>2</td><td><span class="badge badge-fail">fail</span></td></tr>
+              <tr><td class="mono">SemiconductorJunctionTemp</td><td class="mono">4-1</td><td>12</td><td>12</td><td>0</td><td><span class="badge badge-pass">pass</span></td></tr>
+              <tr><td class="mono">MissionRadiationTolerance</td><td class="mono">6-3</td><td>14</td><td>14</td><td>0</td><td><span class="badge badge-pass">pass</span></td></tr>
+              <tr><td class="mono">ProhibitedFinishPureTin</td><td class="mono">5-2</td><td>142</td><td>142</td><td>0</td><td><span class="badge badge-pass">pass</span></td></tr>
+              <tr style="background:#fffbeb;"><td class="mono">PhotodetectorDerating</td><td class="mono">7-1</td><td>0</td><td>&mdash;</td><td>&mdash;</td><td><span class="badge badge-waiver">no subject binds</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>verification case</code> &mdash; a finding shows its working</div>
+              <div class="sysml-entry-text">The verdict carries the expression that produced it, the values that were bound, and the clause it came from. A reviewer does not have to trust the number; they can read the evaluation.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>derating_finding</code> stores <code>ratedValue</code>, <code>deratedLimit</code>, <code>actualValue</code>, <code>marginPercent</code> and a <code>ruleId</code>. All the inputs are there, but the rule itself is a factor, so the finding cannot show the expression &mdash; only the arithmetic result.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Findings resolve to individual part usages</div>
+              <div class="sysml-entry-text">Because each reference designator is a real usage in the model, a failure can be attributed, waived or fixed one component at a time. Partial dispositions stop being a spreadsheet exercise.</div>
+              <div class="sysml-today"><strong>Today:</strong> a finding points at one <code>part_id</code> whose <code>refDes</code> is a string covering many components. Waiving "C24 but not C47" has nowhere to live.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>metadata def</code> &mdash; waivers attach to the element</div>
+              <div class="sysml-entry-text">A waiver is domain vocabulary added through KerML metadata rather than a stereotype or a side table. It rides with the part through export, API read and document generation.</div>
+              <div class="sysml-today"><strong>Today:</strong> the <code>waiver</code> table is complete and well-modelled &mdash; requester, reason, risk assessment, mitigation, reviewer, decision. It simply does not leave the database with the part it excuses.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-4">
+            <div class="sysml-entry-num">4</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>connect</code> &mdash; applied stress has provenance</div>
+              <div class="sysml-entry-text">The single most common review question about a derating failure is "where does that number come from?". With ports and connections in the model, the answer is a traversal rather than a conversation with whoever built the spreadsheet.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>actualVoltage</code> and <code>actualPower</code> are asserted values with no modelled source. This is the largest genuine gap in the current schema.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-5">
+            <div class="sysml-entry-num">5</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Coverage as a query, including the negative result</div>
+              <div class="sysml-entry-text">Because constraints declare their subject type, the set of rules with nothing to bind to is computable. "We checked everything applicable, and here is what was not applicable and why" is a much stronger assurance claim than a list of passes.</div>
+              <div class="sysml-today"><strong>Today:</strong> coverage is inferred from which findings exist. A rule that never fired is indistinguishable from a rule that was never considered.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        3 failures out of 1,562 evaluations. Two are real; one already has an approved waiver.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        F-001 is the one to look at. 19 usages on the 5&nbsp;V bypass network sit at 48&nbsp;V against a 37.5&nbsp;V Class&nbsp;B limit. A 100&nbsp;V part in the same package would clear it &mdash; I can check availability and lead time.
+        <div class="rapda-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Searching…">Find alternates</button>
+        </div>
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">Sarah Chen</div>
+        Which requirements does F-001 put at risk?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        <code>EEE-003</code> directly &mdash; it is the requirement this constraint verifies. <code>EEE-001</code> inherits the failure through a <code>derive</code> relationship. Both flip to <em>not verified</em> until this is dispositioned.
+        <div class="rapda-actions">
+          <a href="requirements.html" class="btn btn-accent btn-sm">Open traceability</a>
+        </div>
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about these findings…">
+    </div>
+  </aside>
+
+</div>
+
+<!-- Waiver modal -->
+<div class="modal-overlay" id="waiver-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Request exception &mdash; F-001</h3>
+      <button class="modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="sysml-note" style="margin-top:0;">
+        The waiver will be written as a <span class="mono">@WaiverRecord</span> metadata annotation on the selected part usages and committed with the run. The constraint still evaluates to <span class="mono">false</span> &mdash; the exception records a decision, it does not rewrite the result. <span class="sysml-pin" data-pin="3">3</span>
+      </div>
+      <div class="form-group">
+        <label>Applies to</label>
+        <select>
+          <option>All 19 failing usages</option>
+          <option>C24, C47 only</option>
+          <option>Select individually&hellip;</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Justification</label>
+        <textarea placeholder="Technical rationale, alternative analysis, referenced methodology…">Applied voltage of 48 V occurs only during the 200 ms hot-swap inrush window. Steady-state applied voltage is 5.1 V, well inside the Class B limit. Requesting a transient-duration exception per EEE-INST-002 §3.2.4.</textarea>
+      </div>
+      <div class="form-group">
+        <label>Risk assessment</label>
+        <textarea placeholder="Consequence and likelihood…">Dielectric stress during a bounded transient. Accelerated life testing on the same MPN shows no measurable degradation at 96% of rated for 10^6 cycles.</textarea>
+      </div>
+      <div class="form-group">
+        <label>Reviewer</label>
+        <select><option>Chad Fisher — Component Engineering</option><option>Mike Berry — Program</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" data-modal-close>Cancel</button>
+      <button class="btn btn-accent" data-demo-action="Submitted for review">Submit for review</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

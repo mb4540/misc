@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase Gate & Revision Diff — TALARIA Employee Console</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Employee Console &mdash; Phase Gate &amp; Revision Diff</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Try <strong style="color:#fff;">Advance phase</strong>, then switch to the Revision Diff tab</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-employee">Employee Console</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">TIA Power Board Rev C &middot; Phase 5</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <span class="nav-item"><span class="icon">&#9632;</span> Workspace</span>
+      <a class="nav-item" href="bom.html"><span class="icon">&#9776;</span> Product BOM</a>
+      <a class="nav-item" href="run.html"><span class="icon">&#9881;</span> Analyses</a>
+      <a class="nav-item" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="requirements.html"><span class="icon">&#9636;</span> Requirements</a>
+      <a class="nav-item active" href="phase-gate.html"><span class="icon">&#8599;</span> Phase Gate</a>
+      <div class="sidebar-section-label">Model</div>
+      <span class="nav-item">&#9671; Model Browser <span class="nav-badge-sysml">SysML</span></span>
+      <span class="nav-item">&#8644; Model Exchange <span class="nav-badge-sysml">SysML</span></span>
+      <div class="sidebar-section-label">Program</div>
+      <span class="nav-item"><span class="icon">&#9635;</span> Schedule</span>
+      <span class="nav-item"><span class="icon">&#9650;</span> Risks</span>
+      <span class="nav-item"><span class="icon">&#9634;</span> Deliverables</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SC</div>
+        <div><div>Sarah Chen</div><span class="role">Lead Engineer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Lifecycle</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">model @ commit 8f2c1ae</span>
+        <span>Jemba9 Internal</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="breadcrumb">
+        <span>J9Avionics</span><span class="separator">/</span>
+        <span>Workspace</span><span class="separator">/</span>
+        <span class="current">Phase Gate</span>
+      </div>
+
+      <!-- Lifecycle ribbon -->
+      <div class="lifecycle-bar">
+        <div class="lifecycle-phase completed"><span class="ph-num">1</span><span class="ph-name">Initiate</span></div>
+        <div class="lifecycle-phase completed"><span class="ph-num">2</span><span class="ph-name">Requirements</span></div>
+        <div class="lifecycle-phase completed"><span class="ph-num">3</span><span class="ph-name">Architecture</span></div>
+        <div class="lifecycle-phase completed"><span class="ph-num">4</span><span class="ph-name">Prelim Design</span></div>
+        <div class="lifecycle-phase current"><span class="ph-num">5</span><span class="ph-name">Detailed Design</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">6</span><span class="ph-name">Prod &amp; Verif Infra</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">7</span><span class="ph-name">Realize</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">8</span><span class="ph-name">Verify &amp; Validate</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">9</span><span class="ph-name">Proto Feedback</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">10</span><span class="ph-name">Deliver</span></div>
+      </div>
+
+      <div class="tabs" data-tab-group>
+        <button class="tab active" data-tab="gate">Gate Evaluation <span class="sysml-pin" data-pin="1">1</span></button>
+        <button class="tab" data-tab="diff">Revision Diff <span class="sysml-pin" data-pin="3">3</span></button>
+        <button class="tab" data-tab="baselines">Baselines <span class="sysml-pin" data-pin="4">4</span></button>
+      </div>
+
+      <!-- Gate -->
+      <div data-tab-panel="gate" class="tab-panel active">
+        <div class="page-header">
+          <div>
+            <h1>Phase 5 &rarr; Phase 6 &mdash; Detailed Design Gate</h1>
+            <div class="subtitle">Guarded transition evaluated against the model. 3 of 5 criteria met.</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-outline btn-sm" data-demo-action="Requested">Request override</button>
+            <button class="btn btn-primary" data-modal-open="gate-modal">Advance phase &rarr;</button>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <h3>Gate criteria</h3>
+              <span class="badge badge-fail">2 blocking</span>
+            </div>
+            <div class="card-body">
+              <ul class="checklist">
+                <li>
+                  <span class="check-icon met">&#10003;</span>
+                  <div>
+                    <strong>BOM baseline established</strong>
+                    <div class="text-muted">Rev C tagged as <span class="mono">baseline/phase5-entry</span> at commit 8f2c1ae.</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-icon met">&#10003;</span>
+                  <div>
+                    <strong>Thermal analysis complete</strong>
+                    <div class="text-muted">run-0039 &middot; all junction temperatures within Class B limits.</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-icon met">&#10003;</span>
+                  <div>
+                    <strong>Mission profile finalised</strong>
+                    <div class="text-muted">LEO 550 km / 53&deg;, 5 years, TID 30 krad, RDM 2.0.</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-icon unmet">&times;</span>
+                  <div>
+                    <strong style="color:var(--color-danger);">All EEE requirements verified</strong>
+                    <div class="text-muted">EEE-001, EEE-003, EEE-004 evaluate to <span class="mono">false</span> at this commit. EEE-005 inconclusive.</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="check-icon unmet">&times;</span>
+                  <div>
+                    <strong style="color:var(--color-danger);">No open severity-2 findings</strong>
+                    <div class="text-muted">F-001 open, 19 usages affected.</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="card mb-16">
+              <div class="card-header"><h3>The transition, as modelled <span class="sysml-pin" data-pin="1">1</span></h3></div>
+              <div class="card-body">
+                <pre class="code" style="font-size:11.5px;"><span class="d">state def</span> <span class="n">ProgramLifecycle</span> {
+
+    <span class="k">state</span> DetailedDesign;
+    <span class="k">state</span> ProductionInfrastructure;
+
+    <span class="k">transition</span> DetailedDesign
+        <span class="k">then</span> ProductionInfrastructure
+        <span class="k">accept</span> AdvancePhaseRequest
+        <span class="k">if</span>  bomBaselineTagged
+        <span class="k">and</span> thermalAnalysisComplete
+        <span class="k">and</span> missionProfileFinalised
+        <span class="k">and</span> allEeeRequirementsVerified   <span class="bad">// false</span>
+        <span class="k">and</span> openSeverity2Findings == 0;  <span class="bad">// false</span>
+}</pre>
+                <div class="sysml-note" style="margin-bottom:0;">
+                  The guard is not application logic that happens to check some rows &mdash; it is part of the model, so a customer can read the gate their programme is being held at and tailor it in their own tailoring document. <span class="sysml-pin" data-pin="2">2</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Readiness</h3></div>
+              <div class="card-body">
+                <div class="flex-between mb-16">
+                  <span style="font-size:13px;">Phase 5 completion</span>
+                  <strong>62%</strong>
+                </div>
+                <div class="progress"><div class="progress-fill" style="width:62%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diff -->
+      <div data-tab-panel="diff" class="tab-panel">
+        <div class="page-header">
+          <div>
+            <h1>Rev C &rarr; Rev D</h1>
+            <div class="subtitle">Model diff between <span class="mono">baseline/phase5-entry</span> and branch <span class="mono">rev-d</span></div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-outline btn-sm" data-demo-action="Exported">Export diff</button>
+            <button class="btn btn-sysml btn-sm" data-demo-action="Evaluating…">Re-evaluate on rev-d</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">Usages changed</div></div>
+          <div class="stat-card"><div class="stat-value success">+2</div><div class="stat-label">Added</div></div>
+          <div class="stat-card"><div class="stat-value danger">&minus;1</div><div class="stat-label">Removed</div></div>
+          <div class="stat-card"><div class="stat-value warning">4</div><div class="stat-label">Requirements at risk <span class="sysml-pin" data-pin="3">3</span></div></div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <h3>Structural diff</h3>
+              <span class="text-muted">textual notation</span>
+            </div>
+            <div class="card-body" style="padding:10px 6px;">
+              <div class="diff-line diff-ctx"><span class="sign"></span><span>part powerStage : Assembly {</span></div>
+              <div class="diff-line diff-del"><span class="sign">&minus;</span><span>&nbsp;&nbsp;part C24 : CeramicCapacitor { ratedVoltage = 50 [V]; }</span></div>
+              <div class="diff-line diff-add"><span class="sign">+</span><span>&nbsp;&nbsp;part C24 : CeramicCapacitor { ratedVoltage = 100 [V]; }</span></div>
+              <div class="diff-line diff-ctx"><span class="sign"></span><span>&nbsp;&nbsp;&hellip; 18 sibling usages retyped</span></div>
+              <div class="diff-line diff-del"><span class="sign">&minus;</span><span>&nbsp;&nbsp;part R44 : CurrentSenseResistor { ratedPower = 1.0 [W]; }</span></div>
+              <div class="diff-line diff-add"><span class="sign">+</span><span>&nbsp;&nbsp;part R44 : CurrentSenseResistor { ratedPower = 2.0 [W]; }</span></div>
+              <div class="diff-line diff-add"><span class="sign">+</span><span>&nbsp;&nbsp;part C91 : CeramicCapacitor { ratedVoltage = 100 [V]; }</span></div>
+              <div class="diff-line diff-add"><span class="sign">+</span><span>&nbsp;&nbsp;part C92 : CeramicCapacitor { ratedVoltage = 100 [V]; }</span></div>
+              <div class="diff-line diff-del"><span class="sign">&minus;</span><span>&nbsp;&nbsp;part D7 : Photodiode { &#8230; }&nbsp;&nbsp;// deleted, sensor moved off-board</span></div>
+              <div class="diff-line diff-ctx"><span class="sign"></span><span>}</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Impact on requirements</h3>
+              <span class="badge badge-sysml">traversal, not a guess</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Req</th><th>Rev C</th><th>Rev D</th><th>Cause</th></tr></thead>
+                <tbody>
+                  <tr><td class="mono">EEE-001</td><td><span class="badge badge-fail">fail</span></td><td><span class="badge badge-pass">pass</span></td><td class="text-muted">derived</td></tr>
+                  <tr><td class="mono">EEE-003</td><td><span class="badge badge-fail">fail</span></td><td><span class="badge badge-pass">pass</span></td><td class="text-muted">100 V parts clear the 75% limit</td></tr>
+                  <tr><td class="mono">EEE-004</td><td><span class="badge badge-fail">fail</span></td><td><span class="badge badge-pass">pass</span></td><td class="text-muted">2 W sense resistors</td></tr>
+                  <tr style="background:#fffbeb;"><td class="mono">EEE-005</td><td><span class="badge badge-waiver">inconclusive</span></td><td><span class="badge badge-waiver">inconclusive</span></td><td class="text-muted">2 new usages need TID data</td></tr>
+                  <tr style="background:#fffbeb;"><td class="mono">EEE-002</td><td><span class="badge badge-pass">pass</span></td><td><span class="badge badge-review">re-check</span></td><td class="text-muted">new MPNs, finish unverified</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="sysml-note">
+          <strong>The waiver question the diff surfaces.</strong> D7 was deleted in Rev D, so waiver <span class="mono">w-001</span> now applies to nothing. Because the waiver is metadata on the part rather than a row keyed to a finding, it disappears with the part instead of lingering as an approved exception for a component that is no longer on the board. <span class="sysml-pin" data-pin="3">3</span>
+        </div>
+      </div>
+
+      <!-- Baselines -->
+      <div data-tab-panel="baselines" class="tab-panel">
+        <div class="page-header">
+          <div>
+            <h1>Configuration baselines</h1>
+            <div class="subtitle">Every gate passage tags an immutable commit. Every analysis cites one.</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-outline btn-sm" data-demo-action="Creating…">+ Tag baseline</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Tag</th><th>Commit</th><th>Created</th><th>By</th><th>Occasion</th><th>Referenced by</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="mono">baseline/phase5-entry</td><td class="mono">8f2c1ae</td>
+                  <td>2026-03-08</td><td>S. Chen</td><td>Phase 4 gate passed</td>
+                  <td class="text-muted">run-0042, EEE Plan v3, customer release CR-118</td>
+                </tr>
+                <tr>
+                  <td class="mono">baseline/phase4-entry</td><td class="mono">3d7b902</td>
+                  <td>2026-01-22</td><td>M. Berry</td><td>Phase 3 gate passed</td>
+                  <td class="text-muted">run-0031, PDR package</td>
+                </tr>
+                <tr>
+                  <td class="mono">baseline/req-freeze</td><td class="mono">a41e6c8</td>
+                  <td>2025-12-14</td><td>S. Chen</td><td>Requirements baselined</td>
+                  <td class="text-muted">SRR package, customer interview record</td>
+                </tr>
+                <tr>
+                  <td class="mono">branch/rev-d</td><td class="mono">c02f5b1</td>
+                  <td>2026-04-02</td><td>S. Chen</td><td>Rev D in work</td>
+                  <td class="text-muted">&mdash; not baselined</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sysml-note">
+          <strong>This is the screen that does not exist today.</strong> TALARIA has no configuration baseline capability &mdash; <span class="mono">board.revision</span> is a varchar and entity rows mutate in place. The API's commit and tag model supplies it without a bespoke versioning scheme. <span class="sysml-pin" data-pin="4">4</span>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>state def</code> with guarded <code>transition</code></div>
+              <div class="sysml-entry-text">The ten-phase lifecycle is a state machine, and gate criteria are transition guards. Expressing it in the model means the guard evaluates against the same data the rest of the assurance argument uses &mdash; the gate cannot say "verified" while the requirements page says otherwise.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>lifecycle_phase.gateCriteria</code> is a jsonb array of labelled checkboxes, and the evaluation lives in the lifecycle route. Perfectly functional, but opaque to the customer and not connected to requirement status.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Tailorable process, without a code change</div>
+              <div class="sysml-entry-text">Aerospace customers tailor their gates. When the transition is a model element, a customer's tailoring is a model edit reviewed like any other, rather than a feature request against the platform.</div>
+              <div class="sysml-today"><strong>Today:</strong> phases and criteria are seeded per project, so tailoring is possible &mdash; but it is data entry against a fixed schema, not an expressible process model.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>variation</code> / branches &mdash; revision impact as a diff</div>
+              <div class="sysml-entry-text">With Rev D as a branch off a tagged Rev C, "what does this revision break?" is a diff plus a re-evaluation, not an engineering study. The answer names requirements, not files.</div>
+              <div class="sysml-today"><strong>Today:</strong> the mock shows per-line <code>qty_old</code>/<code>delta</code> integers and the real schema has <code>board.revision</code> as a varchar. Neither can compute requirement impact across revisions.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-4">
+            <div class="sysml-entry-num">4</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>Commit</code> and <code>Tag</code> from the API &amp; Services spec</div>
+              <div class="sysml-entry-text">Baselines come from the standard's versioning model rather than being built. A gate passage tags a commit; an analysis cites one; a customer release points at one. Provenance stops depending on nobody having edited a row since.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>agent_trace</code>, <code>evidence</code> and <code>approval</code> give a genuine audit chain with <code>createdBy</code> on every row &mdash; but the entities they describe are mutable, so a months-old approval cannot be replayed against what was actually approved.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Gate evaluated at commit <code>8f2c1ae</code>. <strong>3 of 5</strong> criteria met. Two guards are false, so the transition will not fire.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">Sarah Chen</div>
+        Does Rev D clear the gate?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Yes, on both blocking criteria. Re-evaluating the guard against branch <code>rev-d</code>: the 100&nbsp;V capacitors clear EEE-003, the 2&nbsp;W sense resistors clear EEE-004, and F-001 closes.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Two things Rev D introduces: <code>C91</code> and <code>C92</code> have no TID data yet, so EEE-005 stays inconclusive; and deleting <code>D7</code> orphans waiver <code>w-001</code>. Both are visible in the diff rather than found at the review.
+        <div class="rapda-actions">
+          <button class="btn btn-accent btn-sm" data-demo-action="Drafting…">Draft gate memo</button>
+        </div>
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about this gate…">
+    </div>
+  </aside>
+
+</div>
+
+<!-- Gate modal -->
+<div class="modal-overlay" id="gate-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Advance to Phase 6 &mdash; Production &amp; Verification Infrastructure</h3>
+      <button class="modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--surface-danger);color:var(--surface-danger-text);padding:12px 14px;border-radius:var(--radius);margin-bottom:16px;font-size:13px;">
+        <strong>Transition guard evaluates to false.</strong> 2 of 5 criteria are unmet at commit <span class="mono">8f2c1ae</span>. Advancing requires a documented override.
+      </div>
+      <pre class="code" style="font-size:11.5px;margin-bottom:16px;"><span class="k">if</span>  bomBaselineTagged            <span class="ok">// true</span>
+<span class="k">and</span> thermalAnalysisComplete      <span class="ok">// true</span>
+<span class="k">and</span> missionProfileFinalised      <span class="ok">// true</span>
+<span class="k">and</span> allEeeRequirementsVerified   <span class="bad">// false — EEE-001, 003, 004</span>
+<span class="k">and</span> openSeverity2Findings == 0   <span class="bad">// false — F-001</span></pre>
+      <div class="form-group">
+        <label>Override justification (required)</label>
+        <textarea placeholder="Why the programme should proceed despite the unmet criteria…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Approver</label>
+        <select><option>Mike Berry — Program Manager</option><option>Chad Fisher — Chief Engineer</option></select>
+      </div>
+      <div class="sysml-note" style="margin-bottom:0;">
+        The override is recorded as an annotation on the transition itself and tagged with the commit it was granted against &mdash; so the record shows what the model looked like when the exception was given, not just that one was.
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" data-modal-close>Cancel</button>
+      <button class="btn btn-outline" data-demo-action="Opening…">Resolve open items</button>
+      <button class="btn btn-danger" data-demo-action="Submitted">Request override</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

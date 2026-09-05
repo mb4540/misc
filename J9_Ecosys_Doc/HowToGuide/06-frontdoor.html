@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — The front door</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 6</p>
+    <h1>The front door</h1>
+    <p>Certificates in two regions, a WAF, CloudFront behaviors that cache what should be cached, and an
+    honest account of the <code>jemba9.com</code> DNS situation.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html" class="here">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>6.1 &mdash; Certificates: you need two</h1>
+
+<p>CloudFront only accepts a certificate from <code>us-east-1</code>. The ALB only accepts one from its own region.
+So the same domain gets validated twice, from two provider aliases in the same Terraform layer.</p>
+
+<p class="filename">Ecosystem/infra/terraform/60-frontdoor/providers.tf</p>
+<pre><code>provider "aws" {
+  region              = var.region              # us-west-2
+  allowed_account_ids = ["824999955649"]
+}
+
+# CloudFront and its WAF are global services whose control plane lives here.
+provider "aws" {
+  alias               = "useast1"
+  region              = "us-east-1"
+  allowed_account_ids = ["824999955649"]
+}</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/60-frontdoor/acm.tf</p>
+<pre><code># Only create certificates when a domain is actually configured. With
+# domain_name = "" (the dev default), CloudFront serves on its own
+# *.cloudfront.net hostname with the AWS-managed certificate and none of this
+# runs. That is a fully working system — see 6.5.
+locals {
+  use_domain = var.domain_name != ""
+  # prod: jemba9.com  ·  dev with a domain: dev.jemba9.com
+  fqdn = local.is_prod ? var.domain_name : "dev.${var.domain_name}"
+}
+
+resource "aws_acm_certificate" "cloudfront" {
+  count             = local.use_domain ? 1 : 0
+  provider          = aws.useast1
+  domain_name       = local.fqdn
+  validation_method = "DNS"
+
+  lifecycle { create_before_destroy = true }
+}
+
+resource "aws_acm_certificate" "alb" {
+  count             = local.use_domain ? 1 : 0
+  domain_name       = local.fqdn
+  validation_method = "DNS"
+
+  lifecycle { create_before_destroy = true }
+}
+
+# Both certificates validate against the same DNS records, so if the hosted zone
+# is reachable this is automatic. If it is not — see 6.5 — you will need to hand
+# the validation records to whoever controls the zone and wait.
+resource "aws_route53_record" "validation" {
+  for_each = local.use_domain &amp;&amp; var.hosted_zone_id != "" ? {
+    for dvo in aws_acm_certificate.cloudfront[0].domain_validation_options :
+    dvo.domain_name =&gt; {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  } : {}
+
+  zone_id         = var.hosted_zone_id
+  name            = each.value.name
+  type            = each.value.type
+  records         = [each.value.record]
+  ttl             = 60
+  allow_overwrite = true
+}</code></pre>
+
+<h2>6.2 &mdash; WAF</h2>
+
+<p>Three managed rule groups and one rate limit. Deliberately modest: the application already does progressive
+lockout on login and rate-limits event ingest to 300 per minute per app, so the WAF is an outer coarse net, not the
+primary control.</p>
+
+<p class="filename">Ecosystem/infra/terraform/60-frontdoor/waf.tf</p>
+<pre><code>resource "aws_wafv2_web_acl" "main" {
+  provider = aws.useast1          # CLOUDFRONT scope must live in us-east-1
+  count    = var.enable_waf ? 1 : 0
+
+  name  = "${local.prefix}-waf"
+  scope = "CLOUDFRONT"
+
+  default_action { allow {} }
+
+  # 1 — the AWS common set. Start in COUNT mode for a week, read the logs, then
+  # switch to block. Going straight to block on a Next.js app tends to break
+  # server-action POSTs and large form bodies.
+  rule {
+    name     = "common"
+    priority = 10
+    override_action { count {} }        # change to `none {}` once you have watched it
+    statement {
+      managed_rule_group_statement {
+        vendor_name = "AWS"
+        name        = "AWSManagedRulesCommonRuleSet"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "common"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "bad-inputs"
+    priority = 20
+    override_action { none {} }
+    statement {
+      managed_rule_group_statement {
+        vendor_name = "AWS"
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "bad-inputs"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "sqli"
+    priority = 30
+    override_action { none {} }
+    statement {
+      managed_rule_group_statement {
+        vendor_name = "AWS"
+        name        = "AWSManagedRulesSQLiRuleSet"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "sqli"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # 2 — a broad rate limit. 2000 requests per 5 minutes per IP is generous for a
+  # human and cheap insurance against a crawler.
+  rule {
+    name     = "rate-limit"
+    priority = 100
+    action { block {} }
+    statement {
+      rate_based_statement {
+        limit              = 2000
+        aggregate_key_type = "IP"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "rate-limit"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # 3 — a tighter limit on the auth surface specifically.
+  rule {
+    name     = "rate-limit-auth"
+    priority = 110
+    action { block {} }
+    statement {
+      rate_based_statement {
+        limit              = 200
+        aggregate_key_type = "IP"
+        scope_down_statement {
+          byte_match_statement {
+            positional_constraint = "STARTS_WITH"
+            search_string         = "/api/auth"
+            field_to_match { uri_path {} }
+            text_transformation {
+              priority = 0
+              type     = "LOWERCASE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "rate-limit-auth"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "${local.prefix}-waf"
+    sampled_requests_enabled   = true
+  }
+}</code></pre>
+
+<div class="callout"><span class="label">Do not block the common rule set on day one</span>
+
+<p><code>AWSManagedRulesCommonRuleSet</code> includes <code>SizeRestrictions_BODY</code> and several
+cross-site-scripting body rules that fire on legitimate Next.js server-action payloads and on the Data Room's
+Excel export requests. Run it in <code>count</code> mode, look at the sampled requests after a week of real use,
+add targeted rule exclusions, and then switch to <code>none</code> (which means "do not override; block as the rule
+group intends").</p>
+<p>If you block from the start you will spend your first week debugging 403s that look like application bugs.</p>
+</div>
+
+<h2>6.3 &mdash; CloudFront</h2>
+
+<p>One distribution per environment, one origin (the public ALB), and ordered cache behaviors. The behaviors exist
+to differentiate caching, not to route &mdash; routing is the ALB's job, as set up in chapter 5.</p>
+
+<p class="filename">Ecosystem/infra/terraform/60-frontdoor/cloudfront.tf</p>
+<pre><code># The shared secret that proves a request reached the ALB through CloudFront.
+resource "random_password" "origin_verify" {
+  length  = 48
+  special = false
+}
+
+resource "aws_ssm_parameter" "origin_verify" {
+  name   = "/j9/${local.env}/frontdoor/ORIGIN_VERIFY_SECRET"
+  type   = "SecureString"
+  key_id = data.terraform_remote_state.secrets.outputs.kms_key_arn
+  value  = random_password.origin_verify.result
+}
+
+# ------------------------------------------------------------------- policies
+# Dynamic app traffic: cache nothing, forward everything the app needs.
+resource "aws_cloudfront_cache_policy" "none" {
+  name        = "${local.prefix}-no-cache"
+  default_ttl = 0
+  min_ttl     = 0
+  max_ttl     = 0
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    enable_accept_encoding_brotli = true
+    enable_accept_encoding_gzip   = true
+    cookies_config  { cookie_behavior = "none" }
+    headers_config  { header_behavior = "none" }
+    query_strings_config { query_string_behavior = "none" }
+  }
+}
+
+resource "aws_cloudfront_origin_request_policy" "all" {
+  name = "${local.prefix}-forward-all"
+  cookies_config       { cookie_behavior       = "all" }
+  query_strings_config { query_string_behavior = "all" }
+  headers_config {
+    header_behavior = "allViewerAndWhitelistCloudFront"
+    headers { items = ["CloudFront-Viewer-Address"] }
+  }
+}
+
+# Hashed static assets: cache hard, forward nothing.
+resource "aws_cloudfront_cache_policy" "static" {
+  name        = "${local.prefix}-static"
+  default_ttl = 31536000
+  min_ttl     = 31536000
+  max_ttl     = 31536000
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    enable_accept_encoding_brotli = true
+    enable_accept_encoding_gzip   = true
+    cookies_config  { cookie_behavior = "none" }
+    headers_config  { header_behavior = "none" }
+    query_strings_config { query_string_behavior = "none" }
+  }
+}
+
+# ------------------------------------------------------------- distribution
+resource "aws_cloudfront_distribution" "main" {
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "Jemba9 ecosystem front door — ${local.env}"
+  price_class     = local.is_prod ? "PriceClass_100" : "PriceClass_100"
+  http_version    = "http2and3"
+  web_acl_id      = var.enable_waf ? aws_wafv2_web_acl.main[0].arn : null
+
+  aliases = local.use_domain ? [local.fqdn] : []
+
+  origin {
+    origin_id   = "alb"
+    domain_name = data.terraform_remote_state.compute.outputs.public_alb_dns_name
+
+    custom_origin_config {
+      origin_protocol_policy = "https-only"
+      http_port              = 80
+      https_port             = 443
+      origin_ssl_protocols   = ["TLSv1.2"]
+      origin_read_timeout    = 60
+      origin_keepalive_timeout = 30
+    }
+
+    # The other half of the ALB listener-rule condition from chapter 5.
+    custom_header {
+      name  = "X-Origin-Verify"
+      value = random_password.origin_verify.result
+    }
+  }
+
+  # ---- default: everything dynamic goes to the platform, uncached
+  default_cache_behavior {
+    target_origin_id       = "alb"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+
+    cache_policy_id          = aws_cloudfront_cache_policy.none.id
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.all.id
+  }
+
+  # ---- hashed build assets, cached for a year
+  # Next.js content-hashes these filenames, so a stale cache is impossible.
+  ordered_cache_behavior {
+    path_pattern           = "/_next/static/*"
+    target_origin_id       = "alb"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    cache_policy_id        = aws_cloudfront_cache_policy.static.id
+  }
+
+  # Each app serves its own assets under its base path.
+  ordered_cache_behavior {
+    path_pattern           = "/okr/_next/static/*"
+    target_origin_id       = "alb"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    cache_policy_id        = aws_cloudfront_cache_policy.static.id
+  }
+
+  ordered_cache_behavior {
+    path_pattern           = "/dataroom/_next/static/*"
+    target_origin_id       = "alb"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    cache_policy_id        = aws_cloudfront_cache_policy.static.id
+  }
+
+  # ---- health endpoints: never cached, so the poller sees the truth
+  ordered_cache_behavior {
+    path_pattern           = "*healthz"
+    target_origin_id       = "alb"
+    viewer_protocol_policy = "https-only"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = false
+    cache_policy_id        = aws_cloudfront_cache_policy.none.id
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = local.use_domain ? false : true
+    acm_certificate_arn            = local.use_domain ? aws_acm_certificate.cloudfront[0].arn : null
+    ssl_support_method             = local.use_domain ? "sni-only" : null
+    minimum_protocol_version       = local.use_domain ? "TLSv1.2_2021" : null
+  }
+
+  restrictions {
+    geo_restriction { restriction_type = "none" }
+  }
+
+  logging_config {
+    bucket          = aws_s3_bucket.cf_logs.bucket_domain_name
+    prefix          = "cloudfront/"
+    include_cookies = false
+  }
+
+  # Do NOT add a custom_error_response for 5xx. A broken app origin should return
+  # its own error on its own path; a distribution-wide error page would hide which
+  # unit of the building is down.
+}</code></pre>
+
+<div class="callout callout-note"><span class="label">Why no caching at all on dynamic paths</span>
+
+<p>Every dynamic response in this system is either a server-rendered page that depends on the viewer's session and
+their effective permissions, or an API response that does. Caching any of it risks serving one user's authorized
+view to another &mdash; the exact failure the whole authorization design exists to prevent.</p>
+<p>The performance you would gain is available more safely inside the application, through Next's own data cache
+and the platform's session-baked permission fast path. Leave the CDN as a TLS terminator, a compressor, and a
+static-asset cache.</p>
+</div>
+
+<h2>6.4 &mdash; What the origin-verify secret does and does not do</h2>
+
+<p>The ALB is internet-facing, so its DNS name resolves publicly. Two things stop a direct request:</p>
+
+<ol>
+<li>The security group only admits the CloudFront origin-facing prefix list. That is the real control.</li>
+<li>The listener rules require the <code>X-Origin-Verify</code> header. That is defence in depth, and it also
+catches the case where someone widens the security group for debugging and forgets to narrow it again.</li>
+</ol>
+
+<p>Rotating it is a two-step, zero-downtime operation, and you should do it once deliberately so you know it
+works:</p>
+
+<pre><code># 1. Add the new value to the listener rules alongside the old (the http_header
+#    condition accepts a list of values), apply.
+# 2. Change the CloudFront custom_header to the new value, apply, wait for the
+#    distribution to finish deploying.
+# 3. Remove the old value from the listener rules, apply.
+
+aws cloudfront get-distribution --id E1XXXXXXXXXX \
+  --query 'Distribution.Status'      # must read "Deployed" before step 3</code></pre>
+
+<div class="callout callout-stop"><span class="label">CloudFront VPC origins are the better long-term answer</span>
+
+<p>Everything above exists because CloudFront historically could not reach a private ALB. CloudFront now supports
+VPC origins, which let the distribution talk to an <em>internal</em> ALB directly &mdash; no public ALB, no prefix
+list, no shared header, nothing publicly resolvable at all.</p>
+<p>It is the cleaner architecture and worth adopting. It is not the pattern documented here because the
+prefix-list-plus-header approach works on every provider version and is what the repo's own
+<code>docs/deployment/aws.md</code> describes ("ECS Fargate services behind an internal ALB"). Check the current
+provider support for <code>aws_cloudfront_vpc_origin</code> and, if it is available to you, prefer it &mdash; and
+then delete this section from your copy of the guide.</p>
+</div>
+
+<h2 id="dns">6.5 &mdash; DNS: the one genuine blocker</h2>
+
+<p>From <code>Ecosystem/docs/deployment/dns.md</code>, and it is still true:</p>
+
+<blockquote><code>jemba9.com</code>'s authoritative DNS is a Route 53 hosted zone in a different AWS account, and
+the current live IP is Amazon-owned and outside this account. The entire platform can be built, deployed, and
+operated <strong>now</strong> at a CloudFront <code>*.cloudfront.net</code> URL; attaching the real hostname is
+the last mile.</blockquote>
+
+<p>That document was written when the target account was the wrong one. The situation needs re-confirming against
+account <code>824999955649</code>, and there are exactly two questions to answer:</p>
+
+<table>
+<tr><th>Question</th><th>If yes</th><th>If no</th></tr>
+<tr><td>Is the <code>jemba9.com</code> hosted zone in <code>824999955649</code>?</td>
+    <td>Nothing is blocked. Set <code>hosted_zone_id</code> in tfvars and the ALIAS records below apply
+    automatically.</td>
+    <td>Go to the next question.</td></tr>
+<tr><td>Can you get an ALIAS record added to whichever account holds the zone?</td>
+    <td>One record per environment, pointing at the CloudFront distribution. No migration, no downtime.</td>
+    <td>Re-delegate: get registrar access, create a new hosted zone in <code>824999955649</code>, copy the existing
+    records into it, then repoint the domain's name servers. Plan for a propagation window and do it out of
+    hours.</td></tr>
+</table>
+
+<pre><code># Find out where the zone actually lives.
+aws route53 list-hosted-zones-by-name --dns-name jemba9.com --profile j9
+# Empty result means the zone is not in 824999955649.
+
+# What the world currently thinks:
+dig +short NS jemba9.com
+dig +short A  jemba9.com
+whois jemba9.com | grep -iE 'registrar|name server'</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/60-frontdoor/dns.tf</p>
+<pre><code># Applies only when hosted_zone_id is set. Until then the distribution serves on
+# its own hostname and every part of the system works.
+resource "aws_route53_record" "apex" {
+  count   = var.hosted_zone_id != "" &amp;&amp; local.use_domain ? 1 : 0
+  zone_id = var.hosted_zone_id
+  name    = local.fqdn
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.main.domain_name
+    zone_id                = aws_cloudfront_distribution.main.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "apex_v6" {
+  count   = var.hosted_zone_id != "" &amp;&amp; local.use_domain ? 1 : 0
+  zone_id = var.hosted_zone_id
+  name    = local.fqdn
+  type    = "AAAA"
+
+  alias {
+    name                   = aws_cloudfront_distribution.main.domain_name
+    zone_id                = aws_cloudfront_distribution.main.hosted_zone_id
+    evaluate_target_health = false
+  }
+}</code></pre>
+
+<h3>Operating without the domain</h3>
+
+<p>Everything works. What you must do is make the CloudFront hostname the canonical URL in three places, exactly as
+<code>dns.md</code> prescribes:</p>
+
+<ol>
+<li><code>PLATFORM_SELF_URL</code> in the platform and worker task definitions.</li>
+<li>The Cognito app client's <code>callback_urls</code> and <code>logout_urls</code> &mdash; which is why the
+identity layer gets applied a second time after the front door exists.</li>
+<li><code>company.portal_url</code> in <code>company.config.yaml</code>, plus
+<code>NEXT_PUBLIC_PLATFORM_PORTAL_URL</code> for the Data Room's signed-out redirect.</li>
+</ol>
+
+<pre><code># The ordering, concretely, on a first build:
+cd 60-frontdoor &amp;&amp; terraform apply -var-file=../shared/dev.tfvars
+CF=$(terraform output -raw distribution_domain_name)    # dxxxxxxxxxxxxx.cloudfront.net
+
+cd ../30-identity
+terraform apply -var-file=../shared/dev.tfvars -var "front_door_url=https://$CF"
+
+cd ../50-compute
+terraform apply -var-file=../shared/dev.tfvars -var "front_door_url=https://$CF"
+# The task definitions change, so this rolls the platform and worker services.</code></pre>
+
+<div class="callout callout-ok"><span class="label">Front-door smoke test</span>
+
+<pre><code>CF=dxxxxxxxxxxxxx.cloudfront.net
+
+curl -si "https://$CF/healthz" | head -20
+# Expect: 200, and these headers from next.config.ts —
+#   strict-transport-security: max-age=63072000; includeSubDomains; preload
+#   content-security-policy: default-src 'self'; ...
+#   x-frame-options: DENY
+#   x-content-type-options: nosniff
+
+curl -si "https://$CF/okr/healthz"       | head -5
+curl -si "https://$CF/dataroom/healthz"  | head -5
+
+# HTTP must redirect, not serve:
+curl -sI "http://$CF/" | head -3         # expect 301 to https
+
+# A cached asset should report a hit on the second request:
+curl -sI "https://$CF/_next/static/chunks/main.js" | grep -i x-cache</code></pre>
+<p>If HSTS is missing, you are not reaching the app &mdash; you are seeing a CloudFront or ALB error page. If
+<code>x-cache</code> never says <code>Hit from cloudfront</code> on a static asset, your static behavior's path
+pattern does not match what Next is actually emitting; check the real asset URL in the browser's network tab.</p>
+</div>
+
+</section>
+
+<div class="pager"><a href="05-compute.html">&larr; 5. Compute</a><span class="spacer"></span><a href="07-cicd.html">7. CI/CD &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

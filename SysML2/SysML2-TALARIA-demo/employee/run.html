@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Derating Analysis Run — TALARIA Employee Console</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Employee Console &mdash; Analysis Run</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Press <strong style="color:#fff;">Start analysis</strong> to watch the pipeline execute</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-employee">Employee Console</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">TIA Power Board Rev C &middot; Phase 5</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <span class="nav-item"><span class="icon">&#9632;</span> Workspace</span>
+      <a class="nav-item" href="bom.html"><span class="icon">&#9776;</span> Product BOM</a>
+      <a class="nav-item active" href="run.html"><span class="icon">&#9881;</span> Analyses</a>
+      <a class="nav-item" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="requirements.html"><span class="icon">&#9636;</span> Requirements</a>
+      <a class="nav-item" href="phase-gate.html"><span class="icon">&#8599;</span> Phase Gate</a>
+      <div class="sidebar-section-label">Model</div>
+      <span class="nav-item">&#9671; Model Browser <span class="nav-badge-sysml">SysML</span></span>
+      <span class="nav-item">&#8644; Model Exchange <span class="nav-badge-sysml">SysML</span></span>
+      <div class="sidebar-section-label">Program</div>
+      <span class="nav-item"><span class="icon">&#9635;</span> Schedule</span>
+      <span class="nav-item"><span class="icon">&#9650;</span> Risks</span>
+      <span class="nav-item"><span class="icon">&#9634;</span> Deliverables</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SC</div>
+        <div><div>Sarah Chen</div><span class="role">Lead Engineer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Analysis Run</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">model @ commit 8f2c1ae</span>
+        <span>Jemba9 Internal</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="breadcrumb">
+        <span>J9Avionics</span><span class="separator">/</span>
+        <span>Analyses</span><span class="separator">/</span>
+        <span class="current">run-0042</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1>EEE Derating Analysis &mdash; run-0042</h1>
+          <div class="subtitle">NASA-EEE-INST-002 Rev C &middot; Class B &middot; worst-case mode &middot; initiated by Sarah Chen</div>
+        </div>
+        <div class="page-header-actions">
+          <span class="badge badge-neutral" data-run-status style="align-self:center;">Queued</span>
+          <button class="btn btn-accent" data-run-start>Start analysis</button>
+        </div>
+      </div>
+
+      <div class="card mb-24">
+        <div class="card-body" style="padding:14px 18px;">
+          <div class="progress"><div class="progress-fill" data-run-progress style="width:0%;transition:width .5s;"></div></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+
+        <!-- Pipeline -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Agent pipeline</h3>
+            <span class="text-muted">LangGraph &middot; checkpointed</span>
+          </div>
+          <div class="card-body" style="padding:6px 8px;">
+            <div class="pipeline">
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">1</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">load_run</div>
+                  <div class="pipeline-detail">Resolve the model at the pinned commit and load the part usage tree.</div>
+                  <div class="pipeline-meta">142 usages &middot; commit 8f2c1ae <span class="sysml-pin" data-pin="4">4</span></div>
+                </div>
+              </div>
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">2</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">plan</div>
+                  <div class="pipeline-detail">Determine which analyses the mission profile requires.</div>
+                  <div class="pipeline-meta">voltage &middot; current &middot; power &middot; temperature</div>
+                </div>
+              </div>
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">3</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">standards_librarian <span class="badge badge-sysml">constraint def</span></div>
+                  <div class="pipeline-detail">Select the applicable constraint definitions from the standards library and bind their parameters to the mission profile.</div>
+                  <div class="pipeline-meta">11 constraints resolved from EEE-INST-002 Rev C <span class="sysml-pin" data-pin="1">1</span></div>
+                </div>
+              </div>
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">4</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">derating_analyst <span class="badge badge-sysml">evaluate</span></div>
+                  <div class="pipeline-detail">Evaluate each bound constraint over every part usage. Deterministic arithmetic; no model inference in the verdict.</div>
+                  <div class="pipeline-meta">142 usages &times; 11 constraints = 1,562 evaluations <span class="sysml-pin" data-pin="2">2</span></div>
+                </div>
+              </div>
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">5</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">evidence_builder</div>
+                  <div class="pipeline-detail">Attach the source clause, the datasheet excerpt and the evaluated expression to each verdict.</div>
+                  <div class="pipeline-meta">document_section 3-2 &middot; 3-4 &middot; 7-1</div>
+                </div>
+              </div>
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">6</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">exception_reviewer</div>
+                  <div class="pipeline-detail">Check each failure against existing waivers and recommend a disposition.</div>
+                  <div class="pipeline-meta">1 existing waiver matched (w-001, D7)</div>
+                </div>
+              </div>
+
+              <div class="pipeline-step pending" data-step>
+                <div class="pipeline-dot">7</div>
+                <div class="pipeline-body">
+                  <div class="pipeline-title">employee_review <span class="badge badge-waiver">human gate</span></div>
+                  <div class="pipeline-detail">Pipeline interrupts. Nothing is committed to the model until a lead engineer approves.</div>
+                  <div class="pipeline-meta">interrupt() &middot; awaiting Sarah Chen <span class="sysml-pin" data-pin="4">4</span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div>
+          <div class="card mb-16">
+            <div class="card-header"><h3>Run configuration</h3></div>
+            <div class="card-body">
+              <div class="detail-grid">
+                <div class="detail-field"><div class="label">Standard</div><div class="value">EEE-INST-002 Rev C</div></div>
+                <div class="detail-field"><div class="label">Class</div><div class="value">Class B</div></div>
+                <div class="detail-field"><div class="label">Mode</div><div class="value">Worst case</div></div>
+                <div class="detail-field"><div class="label">Orbit</div><div class="value">LEO 550 km / 53&deg;</div></div>
+                <div class="detail-field"><div class="label">TID &middot; RDM</div><div class="value mono">30 [krad] &middot; 2.0&times;</div></div>
+                <div class="detail-field"><div class="label">Thermal</div><div class="value mono">&minus;40 &hellip; 85 [&deg;C]</div></div>
+              </div>
+              <div class="sysml-note" style="margin-bottom:0;">
+                <strong>The mission profile binds the constraints.</strong> TID and RDM are not copied into eleven separate rules &mdash; each constraint takes them as parameters, so changing the orbit re-evaluates everything. <span class="sysml-pin" data-pin="3">3</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" data-run-result style="display:none;">
+            <div class="card-header">
+              <h3>Result</h3>
+              <span class="badge badge-waiver">awaiting review</span>
+            </div>
+            <div class="card-body">
+              <div class="stats-grid" style="grid-template-columns:1fr 1fr;margin-bottom:16px;">
+                <div class="stat-card" style="box-shadow:none;">
+                  <div class="stat-value success">1,559</div>
+                  <div class="stat-label">Pass</div>
+                </div>
+                <div class="stat-card" style="box-shadow:none;">
+                  <div class="stat-value danger">3</div>
+                  <div class="stat-label">Fail</div>
+                </div>
+              </div>
+              <a href="findings.html" class="btn btn-accent btn-sm">Review 3 findings &rarr;</a>
+              <button class="btn btn-outline btn-sm" data-demo-action="Committed">Commit to model</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Constraint detail -->
+      <div class="card mt-16">
+        <div class="card-header">
+          <h3>Constraint resolved by the Standards Librarian <span class="sysml-pin" data-pin="1">1</span></h3>
+          <button class="btn btn-outline btn-sm" data-toggle="cmp" data-label-show="Compare with today" data-label-hide="Hide comparison">Compare with today</button>
+        </div>
+        <div class="card-body">
+          <pre class="code"><span class="d">requirement def</span> <span class="n">CeramicCapacitorVoltageDerating</span> {
+    <span class="k">doc</span> <span class="s">/* Ceramic capacitors shall be derated to 75% of rated voltage at
+             maximum operating temperature.
+             NASA-EEE-INST-002 Rev C, Table 3-2, Class B. */</span>
+
+    <span class="k">subject</span> cap : CeramicCapacitor;
+
+    <span class="k">attribute</span> deratingFactor : Real <span class="k">default</span> 0.75;
+    <span class="k">attribute</span> :&gt;&gt; sourceDocument = <span class="s">"EEE-INST-002"</span>;
+    <span class="k">attribute</span> :&gt;&gt; sourceSection  = <span class="s">"3-2"</span>;      <span class="c">// provenance rides with the rule</span>
+
+    <span class="k">require constraint</span> {
+        cap.appliedVoltage &lt;= cap.ratedVoltage * deratingFactor
+    }
+}</pre>
+
+          <div id="cmp" style="display:none;margin-top:16px;">
+            <div class="text-muted mb-16" style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;">The same rule as TALARIA stores it today</div>
+            <pre class="code"><span class="c">// derating_rule row &mdash; a factor, and nothing that says what to do with it</span>
+{ standard: <span class="s">"EEE-INST-002"</span>, version: <span class="s">"Rev C"</span>,
+  componentType: <span class="s">"Capacitor, Ceramic"</span>, parameter: <span class="s">"voltage"</span>,
+  deratingFactor: 0.75, environment: <span class="s">"Class B"</span>,
+  documentId: <span class="s">"&lt;uuid&gt;"</span>, sectionCode: <span class="s">"3-2"</span>, isActive: <span class="k">true</span> }
+
+<span class="c">// nodes/derating-analyst.ts &mdash; the meaning, in TypeScript</span>
+<span class="k">export function</span> <span class="n">computeMargin</span>(deratedLimit: number, actualValue: number): number {
+  <span class="k">if</span> (deratedLimit === 0) <span class="k">return</span> -100.0;
+  <span class="k">return</span> ((deratedLimit - actualValue) / deratedLimit) * 100.0;
+}</pre>
+            <div class="sysml-note">
+              Correct and tested &mdash; and completely opaque to any tool that is not TALARIA. The ingestion pipeline, the staging table, the confidence score and the human promotion gate all stay exactly as they are. What changes is the shape of the artefact they produce.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>constraint def</code> / <code>requirement def</code> &mdash; the standards library</div>
+              <div class="sysml-entry-text">A derating rule becomes a parameterised Boolean expression with its source clause attached. The Standards Librarian's job changes from "find the right factor" to "select and bind the right constraint" &mdash; and the resulting artefact is readable by anything that speaks the standard.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>derating_rule</code> already holds the factor with provenance back to <code>document_section</code>, fed by a staging table with an LLM confidence score and a human promotion gate. That pipeline is the expensive part and it is already built. The rule it produces just is not self-describing.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Evaluation over every usage</div>
+              <div class="sysml-entry-text">One constraint written against the definition evaluates across all 142 usages automatically. The arithmetic stays deterministic &mdash; the language model selects and binds, it does not decide pass or fail.</div>
+              <div class="sysml-today"><strong>Today:</strong> the same separation already holds. <code>computeMargin()</code> and <code>determineStatus()</code> are plain unit-tested functions; the LLM only resolves which rule applies. This is the reason the migration is tractable at all.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Mission profile as bound parameters</div>
+              <div class="sysml-entry-text">TID, RDM, thermal range and class are inputs to the constraints rather than values duplicated into each rule. Change the orbit and every dependent verdict is stale by construction, which is exactly what you want an assurance tool to know.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>mission_profile</code> exists and is passed to the run, but the coupling between a profile change and the affected findings is not modelled &mdash; it is re-derived by re-running.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-4">
+            <div class="sysml-entry-num">4</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>analysis case</code> pinned to a commit</div>
+              <div class="sysml-entry-text">The run declares its subject, its inputs and its return type, and executes against an immutable snapshot of the model. Re-running it later on the same commit gives the same answer &mdash; which is what makes a result citable months afterwards.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>derating_run</code> captures an <code>inputSnapshot</code> jsonb blob and the agent pipeline is checkpointed with real human-in-the-loop <code>interrupt()</code> gates. What is missing is immutability of the underlying entity rows, which mutate in place.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Ready to run. I will evaluate <strong>11 constraints</strong> from EEE-INST-002 Rev C over 142 part usages, bound to the LEO 550&nbsp;km Class&nbsp;B mission profile.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        The model is pinned at <code>8f2c1ae</code>. If the BOM changes mid-run the result stays valid against the snapshot it was computed on.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">Sarah Chen</div>
+        Why 11 and not the full table?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        The library holds 47 constraints for Class&nbsp;B. Only 11 have subjects that match part definitions present on this board. The other 36 have nothing to bind to &mdash; I can list them if you want the coverage argument for the review package.
+        <div class="rapda-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Building…">Show unbound rules</button>
+        </div>
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about this run…">
+    </div>
+  </aside>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

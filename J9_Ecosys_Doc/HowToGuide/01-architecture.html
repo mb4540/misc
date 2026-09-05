@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — What you are hosting</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 1</p>
+    <h1>What you are hosting</h1>
+    <p>Three deployables, six binding contracts, and the specific ways each one constrains the
+    infrastructure you are about to build.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html" class="here">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>1.1 &mdash; The building</h1>
+
+<p>The ecosystem's own metaphor, from <code>Ecosystem/docs/architecture/j9-ecosystem-architecture.md</code>,
+is a building. One front door where everyone signs in. A lobby that shows you which units you may enter.
+Units, which are the applications. And a key system that decides which doors open for whom.</p>
+
+<p>The rule that follows from it, and the reason the infrastructure looks the way it does:</p>
+
+<blockquote>Authentication is decided in exactly one place (Cognito), authorization in exactly one place
+(the central authorization service), and apps own only their business logic.</blockquote>
+
+<p>So the OKR app has no login page. The Data Room has no user table. Both of them, on every protected read and
+every mutation, make a server-side call to the platform asking "may this identity do this thing?" and honour the
+answer. Which means the platform is not merely the first service you deploy &mdash; it is a hard runtime
+dependency of every other service in the building.</p>
+
+<h2>1.2 &mdash; The three deployables</h2>
+
+<h3>The platform &mdash; <code>Ecosystem/</code></h3>
+<p>Next.js 16 App Router, TypeScript strict, Prisma 6 against PostgreSQL 16, BullMQ on Redis 7, Tailwind 4.
+It serves the custom-branded login page, the portal launcher at <code>/</code>, the Admin app at
+<code>/admin</code>, the app registry, the audit viewer, the dashboards, and the two API surfaces every app
+depends on: <code>GET /api/session</code> and the <code>can()</code> decision endpoint. It also owns
+<code>POST /api/events</code>, which apps call to emit usage metrics.</p>
+<p>It ships <strong>two</strong> processes from one image: <code>npm start</code> for the web app and
+<code>npm run worker</code> for the BullMQ worker. The worker runs the grant-expiry sweep (every 15 minutes per
+<code>company.config.yaml</code>), polls each registered app's <code>/healthz</code>, rolls up the event stream
+into daily summaries, and enforces the 730-day retention policy.</p>
+
+<h3>OKR &mdash; <code>Applications/OKR/</code></h3>
+<p>Next.js 16 with <code>basePath: "/okr"</code>, dev port 3001. Prisma 6 against its own PostgreSQL database
+using an <code>okr</code> schema. It declares 17 permissions and 6 metrics in <code>okr.manifest.json</code>,
+and it has its own Redis dependency for BullMQ &mdash; the nudge ladder, cycle gates, digests, and score
+sweeps described in <code>CLAUDE.md</code>.</p>
+<p>Status in <code>Applications/README.md</code>: <span class="badge badge-amber">Migrating</span>. The build is
+sequenced through numbered prompts under <code>prompts/</code>; treat the app as still in active construction
+and expect the schema to move. That is fine for infrastructure purposes &mdash; you are provisioning a database
+and a service, not freezing a schema.</p>
+
+<h3>Data Room &mdash; <code>Applications/dataroom/</code></h3>
+<p>Next.js 16 with <code>basePath: "/dataroom"</code>, dev port 8080. A React SPA mounted client-side, served by
+Next, calling same-origin BFF routes under <code>app/api/*</code>. It uses the raw <code>pg</code> driver rather
+than Prisma, and migrates with <code>node scripts/db-migrate.mjs</code> over plain SQL files in
+<code>db/migrations/</code>. It writes Excel exports with <code>exceljs</code> and sends mail through Resend.</p>
+<p>Status: <span class="badge badge-amber">Migrating, not yet cut over</span>. Per <code>HANDOFF.md</code>, the
+enforcement-point refactor is done &mdash; local auth stripped, <code>can()</code> delegation in place, RLS on
+every tenant table, events emitted, honest healthz &mdash; but Cognito provisioning, the real database swap, and
+the Supabase data copy are all still outstanding, and they need the platform owner, not you.</p>
+
+<div class="callout callout-note"><span class="label">Two things about the Data Room that will bite you</span>
+
+<p>Its <code>package.json</code> is still named <code>vite_react_shadcn_ts</code> and still carries
+<code>vite</code>, <code>@vitejs/plugin-react-swc</code>, and <code>lovable-tagger</code> as devDependencies.
+Harmless, but it means <code>npm ci</code> installs a build toolchain the app no longer uses.</p>
+<p>Its two workflow files under <code>.github/workflows/</code> deploy a static Vite bundle to a
+<code>cloudcowboy-*</code> S3 bucket in the wrong account, injecting Supabase environment variables that the app
+no longer reads. <strong>Delete both files before you connect this repo to Actions.</strong> If they run, they
+will fail loudly &mdash; but they will fail while assuming a role in someone else's account, which is worse than
+a plain failure.</p>
+</div>
+
+<h2>1.3 &mdash; What each service needs at runtime</h2>
+
+<table>
+<tr><th>&nbsp;</th><th>platform</th><th>worker</th><th>okr</th><th>dataroom</th></tr>
+<tr><td>Container port</td><td><code>3000</code></td><td>none</td><td><code>3001</code></td><td><code>8080</code></td></tr>
+<tr><td>Base path</td><td><code>/</code></td><td>&mdash;</td><td><code>/okr</code></td><td><code>/dataroom</code></td></tr>
+<tr><td>Health endpoint</td><td><code>/healthz</code></td><td>none &mdash; use an ECS-only check</td>
+    <td><code>/okr/healthz</code></td><td><code>/dataroom/healthz</code></td></tr>
+<tr><td>Own database</td><td><code>j9_platform</code></td><td>same as platform</td>
+    <td><code>okr</code></td><td><code>dataroom</code></td></tr>
+<tr><td>ORM / migration tool</td><td>Prisma 6</td><td>Prisma 6</td><td>Prisma 6</td>
+    <td>raw <code>pg</code> + SQL files</td></tr>
+<tr><td>Redis</td><td>yes &mdash; sessions, revocation</td><td>yes &mdash; queues</td>
+    <td>yes &mdash; BullMQ jobs</td><td>no</td></tr>
+<tr><td>Needs to reach the platform</td><td>&mdash;</td><td>yes &mdash; polls app healthz</td>
+    <td>yes &mdash; hard dependency</td><td>yes &mdash; hard dependency</td></tr>
+<tr><td>Secret count</td><td>several &mdash; DB, Redis, Cognito</td><td>same as platform</td>
+    <td>DB, Redis, <code>J9_APP_API_KEY</code></td>
+    <td>DB, <code>J9_APP_API_KEY</code>, Resend key</td></tr>
+<tr><td>Outbound internet</td><td>Cognito, SES</td><td>no</td><td>no</td>
+    <td>yes &mdash; Resend API for mail</td></tr>
+</table>
+
+<p>Note the last row. Only the Data Room genuinely needs egress to a third party, and the platform needs to reach
+Cognito and SES. Everything else can be served by VPC endpoints. That matters for the NAT gateway decision in
+<a href="03-network-data.html">chapter 3</a>, because NAT is one of the two or three largest line items in a
+small AWS bill.</p>
+
+<h2>1.4 &mdash; The six contracts that constrain your infrastructure</h2>
+
+<p>These are application-level rules, but each one forces an infrastructure decision. If you do not honour them,
+you will get a system that appears to work and is silently wrong.</p>
+
+<h3>1. Fail closed</h3>
+<p>From <code>Applications/dataroom/CLAUDE.md</code>: "Any non-allow &mdash; platform unreachable, timeout,
+malformed response &mdash; is DENIED. Never add a permissive fallback."</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 340" role="img" aria-label="How a request is authenticated and authorized">
+  <defs>
+    <marker id="arrow_authz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_authz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_authz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="30" y="30" width="150" height="50" rx="7" fill="#ffffff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="105.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Browser</text>
+  <text x="105.0" y="67.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">session cookie</text>
+  <rect x="230" y="30" width="190" height="50" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="325.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">App task</text>
+  <text x="325.0" y="67.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">okr or dataroom</text>
+  <rect x="470" y="30" width="190" height="50" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="565.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Platform task</text>
+  <text x="565.0" y="67.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">the only authority</text>
+  <rect x="710" y="30" width="160" height="50" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="790.0" y="52.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">RDS</text>
+  <text x="790.0" y="67.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">grants + audit</text>
+  <line x1="180" y1="46" x2="226" y2="46" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_authz)"/>
+  <text x="203" y="38" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="800" fill="#1f2430" text-anchor="middle">1</text>
+  <line x1="420" y1="46" x2="466" y2="46" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_authz)"/>
+  <text x="443" y="38" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="800" fill="#EB5616" text-anchor="middle">2</text>
+  <line x1="660" y1="46" x2="706" y2="46" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_authz)"/>
+  <text x="683" y="38" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="800" fill="#1f2430" text-anchor="middle">3</text>
+  <circle cx="46" cy="126" r="11" fill="#1f2430"/>
+  <text x="46" y="130" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">1</text>
+  <text x="70" y="130" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="400" fill="#1f2430" text-anchor="start">The browser sends a request to /okr/... . Nothing about identity is decided here.</text>
+  <circle cx="46" cy="160" r="11" fill="#EB5616"/>
+  <text x="46" y="164" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">2</text>
+  <text x="70" y="164" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="400" fill="#1f2430" text-anchor="start">The app task calls GET /api/session and can() on the platform, server-side, with its app API key.</text>
+  <circle cx="46" cy="194" r="11" fill="#15803d"/>
+  <text x="46" y="198" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">3</text>
+  <text x="70" y="198" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="400" fill="#1f2430" text-anchor="start">The platform reads grants from RDS as the least-privilege role j9_app, under row-level security.</text>
+  <circle cx="46" cy="228" r="11" fill="#15803d"/>
+  <text x="46" y="232" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">4</text>
+  <text x="70" y="232" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="400" fill="#1f2430" text-anchor="start">allow &rarr; the app runs the query inside a transaction that SET LOCALs the org context.</text>
+  <circle cx="46" cy="262" r="11" fill="#b91c1c"/>
+  <text x="46" y="266" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">5</text>
+  <text x="70" y="266" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700" fill="#b91c1c" text-anchor="start">anything else — timeout, 500, unreachable platform — is DENY. Fail closed, always.</text>
+  <rect x="30" y="292" width="840" height="34" rx="7" fill="#fef4f4" stroke="#b91c1c" stroke-width="1.5"/>
+  <text x="450.0" y="313.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#b91c1c" text-anchor="middle">Infrastructure consequence: the app tasks must always be able to reach the platform task, or the whole building denies.</text>
+</svg>
+<figcaption>The authorization path. Step 5 is the one with infrastructure consequences.</figcaption>
+</figure>
+
+<p><strong>What this means for you:</strong> the app tasks must be able to reach the platform task with low
+latency and high reliability, or users see a functioning UI where every action is denied. Concretely: put the
+app-to-platform call on the internal ALB DNS name, not out through CloudFront and back; give the platform
+service at least two tasks in prod; set the ALB deregistration delay low enough that deploys do not strand
+in-flight <code>can()</code> calls; and alarm on platform 5xx separately from app 5xx, because a platform blip
+presents as a mass authorization failure rather than an outage.</p>
+
+<h3>2. Row-level security, keyed on a transaction-local setting</h3>
+<p>From <code>Ecosystem/docs/architecture/rls.md</code>. Every org-scoped table has RLS enabled and forced, with
+a policy comparing <code>org_id</code> to <code>current_setting('app.current_org_id', true)</code>. When the
+setting is unset, <code>current_setting</code> returns NULL, <code>org_id = NULL</code> is never true, and the
+query matches no rows. Forgetting the context shows you nothing rather than everything.</p>
+<p><strong>What this means for you:</strong> the runtime database role must be neither a superuser nor the table
+owner, because superusers bypass RLS unconditionally. Each database therefore needs two roles &mdash; an owner
+that migrations run as, and a <code>NOSUPERUSER NOBYPASSRLS</code> role the application connects as. Two
+connection strings per database, two secrets, two different consumers.</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 330" role="img" aria-label="One RDS instance, three databases, two roles each">
+  <defs>
+    <marker id="arrow_db_layout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_db_layout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_db_layout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="20" y="12" width="860" height="244" rx="10" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.4" stroke-dasharray="none"/>
+  <text x="32" y="29" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#1d4ed8" text-anchor="start">ONE RDS POSTGRESQL 16 INSTANCE PER ENVIRONMENT</text>
+  <rect x="46" y="46" width="240" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="166.0" y="63.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">j9_platform</text>
+  <text x="166.0" y="78.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">the platform</text>
+  <rect x="46" y="100" width="240" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="166.0" y="120.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">owner: j9</text>
+  <text x="166.0" y="135.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">migrations only, from CI</text>
+  <rect x="46" y="160" width="240" height="46" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="166.0" y="180.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">runtime: j9_app</text>
+  <text x="166.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">NOSUPERUSER, NOBYPASSRLS</text>
+  <text x="166" y="226" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">prisma migrate deploy</text>
+  <rect x="330" y="46" width="240" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="450.0" y="63.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">okr</text>
+  <text x="450.0" y="78.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Applications/OKR</text>
+  <rect x="330" y="100" width="240" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="450.0" y="120.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">owner: okr</text>
+  <text x="450.0" y="135.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">migrations only, from CI</text>
+  <rect x="330" y="160" width="240" height="46" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="450.0" y="180.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">runtime: okr_app</text>
+  <text x="450.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">NOSUPERUSER, NOBYPASSRLS</text>
+  <text x="450" y="226" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">prisma migrate deploy</text>
+  <rect x="614" y="46" width="240" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="734.0" y="63.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">dataroom</text>
+  <text x="734.0" y="78.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Applications/dataroom</text>
+  <rect x="614" y="100" width="240" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="734.0" y="120.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">owner: dataroom</text>
+  <text x="734.0" y="135.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">migrations only, from CI</text>
+  <rect x="614" y="160" width="240" height="46" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="734.0" y="180.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">runtime: dataroom_app</text>
+  <text x="734.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">NOSUPERUSER, NOBYPASSRLS</text>
+  <text x="734" y="226" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">node scripts/db-migrate.mjs</text>
+  <rect x="20" y="272" width="860" height="46" rx="7" fill="#f8f9fb" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="450.0" y="299.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Row-level security keys off a per-transaction GUC. Unset context matches no rows — which is why the runtime role must never be the owner or a superuser.</text>
+</svg>
+<figcaption>Three databases on one instance, each with an owner and a runtime role. The
+<code>dataroom</code> app additionally keeps its tables in a named <code>dataroom</code> schema and revokes
+the app role from <code>public</code>.</figcaption>
+</figure>
+
+<h3>3. Standard PostgreSQL only</h3>
+<p>NFR-3. No vendor extensions, no <code>uuid-ossp</code>, no <code>pgcrypto</code> &mdash; UUIDs are generated
+client-side by Prisma. The point is portability: moving between Lakebase, RDS, and Aurora is a connection-string
+change plus a data copy.</p>
+<p><strong>What this means for you:</strong> you can provision a plain <code>aws_db_instance</code> running
+<code>postgres 16</code> with no custom parameter group beyond logging and TLS settings, and you must not
+introduce anything that would break the guarantee &mdash; no RDS Proxy-specific behaviour that the app depends
+on, no Aurora-only features, no <code>rds.force_ssl</code> off.</p>
+
+<h3>4. Path-based routing under one hostname</h3>
+<p>Each app sets <code>basePath</code> in <code>next.config.ts</code>, so every route, asset, and API endpoint
+already lives under its prefix. One cookie domain means one session across the whole building.</p>
+<p><strong>What this means for you:</strong> a single CloudFront distribution and a single ALB per environment,
+with path rules selecting the target group. It also means <strong>health checks must include the base path</strong>
+&mdash; a target group checking <code>/healthz</code> against the OKR service will get a 404 and mark every task
+unhealthy in a loop. The correct paths are <code>/okr/healthz</code> and <code>/dataroom/healthz</code>. This is
+the single most common way a first deployment of this system fails.</p>
+
+<h3>5. One secret per app: the app API key</h3>
+<p><code>J9_APP_API_KEY</code>, a <code>j9_...</code> value issued on the app's detail page in Admin &rarr; Apps
+after its manifest is registered. Server-side only, never in the browser bundle.</p>
+<p><strong>What this means for you:</strong> a chicken-and-egg ordering problem. The app cannot authorize anything
+until it has a key; the key cannot be issued until the platform is running and an admin has registered the
+manifest. So the bootstrap order is: platform up &rarr; migrate and seed &rarr; register manifests &rarr; issue
+keys &rarr; write keys into SSM &rarr; deploy the app services. Chapter 8 sequences this.</p>
+
+<h3>6. Honest health endpoints</h3>
+<p>A <code>/healthz</code> returns 200 only when the app's database is actually reachable, and the platform's
+health worker treats a response slower than 2000&nbsp;ms as degraded.</p>
+<p><strong>What this means for you:</strong> the ALB health check will legitimately fail when RDS is down, which
+is correct but means a database problem cascades into targets being deregistered. Set the health check thresholds
+generously &mdash; a 30-second interval with a threshold of 3 &mdash; so a brief database hiccup does not empty
+your target groups.</p>
+
+<h2>1.5 &mdash; Security posture you are inheriting</h2>
+
+<p><code>Ecosystem/docs/notes/security-baseline.md</code> already sets the application-layer posture. Your job is
+not to re-decide it but to not undermine it:</p>
+
+<table>
+<tr><th>Already handled in code</th><th>Your responsibility in AWS</th></tr>
+<tr><td>Security headers including HSTS, set in <code>next.config.ts</code></td>
+    <td>Serve only over HTTPS so HSTS is honoured; redirect HTTP to HTTPS at CloudFront</td></tr>
+<tr><td>Session cookies <code>httpOnly</code>, <code>SameSite=Lax</code>, <code>Secure</code> in production</td>
+    <td>Do not terminate TLS anywhere that would make the app think it is on HTTP; forward the
+    <code>X-Forwarded-Proto</code> header</td></tr>
+<tr><td>Progressive lockout on login, 300 events/min/app ingest limit</td>
+    <td>A WAF rate-based rule as the outer layer, tuned looser than the app's own limits</td></tr>
+<tr><td>Append-only audit log and event stream, enforced by database triggers</td>
+    <td>Backups and PITR long enough to satisfy the 730-day retention policy; never restore over a live
+    audit table</td></tr>
+<tr><td>Nothing secret in the repo; <code>.env*</code> and <code>*.tfstate</code> gitignored</td>
+    <td>SSM SecureString and Secrets Manager, encrypted with a customer-managed KMS key; state bucket
+    encrypted and versioned with public access blocked</td></tr>
+<tr><td>Least-privilege database role per app</td>
+    <td>Least-privilege task role per service &mdash; each service reads only its own SSM prefix</td></tr>
+</table>
+
+<div class="callout"><span class="label">One open application-level item</span>
+
+<p>The Content-Security-Policy still uses <code>'unsafe-inline'</code> for scripts and styles, because the Next
+App Router injects an inline bootstrap. The baseline document tracks upgrading to a nonce plus
+<code>'strict-dynamic'</code> before public launch, owned by the platform team. It is not an infrastructure task,
+but it is the thing to point at if someone asks whether the front door is launch-ready.</p>
+</div>
+
+<h2>1.6 &mdash; What is genuinely not ready</h2>
+
+<p>Be honest with whoever asked you to do this. None of the following is your infrastructure work, and all of it
+sits between "dev environment green" and "customers using prod":</p>
+
+<ol>
+<li><strong>No Dockerfiles exist.</strong> There is not a single Dockerfile in the repository. Chapter 5 gives you
+three. Two of them also need <code>output: "standalone"</code> added to <code>next.config.ts</code> &mdash; the
+platform deliberately keeps a full-dependency image, because its worker runs TypeScript source through
+<code>tsx</code>. Raise both as pull requests rather than applying them silently.</li>
+<li><strong>Terraform covers only Cognito.</strong> <code>Ecosystem/infra/terraform/</code> has one
+<code>main.tf</code> that provisions a user pool and a client, with a local state backend and a commented-out S3
+backend stub. Everything else &mdash; network, data, secrets, compute, CDN, CI/CD &mdash; is described in
+<code>docs/deployment/aws.md</code> as modules to be written. This guide writes them.</li>
+<li><strong>The Data Room cutover needs the platform owner.</strong> Five specific inputs are listed in
+<code>HANDOFF.md</code> &sect;5: the app API key, the real database connection, whether investors get one shared
+org or one org each, whether the CRM stays in the app, and the investor invite list with expiries.</li>
+<li><strong>DNS for <code>jemba9.com</code> is unresolved.</strong> The zone is not in the account you are
+building in. Chapter 6 covers both unblock paths. You do not need it to finish.</li>
+<li><strong>The OKR app is mid-build.</strong> Provision for it, deploy it, but do not be surprised when its
+schema changes underneath you.</li>
+</ol>
+
+</section>
+
+<div class="pager"><a href="index.html">&larr; Start Here</a><span class="spacer"></span><a href="02-account-foundation.html">2. Account Foundation &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

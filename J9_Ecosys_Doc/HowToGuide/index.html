@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — Standing up dev and prod for the Jemba9 ecosystem</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Jemba9 Ecosystem &mdash; AWS Hosting Primer</p>
+    <h1>Standing up dev and prod for the Jemba9 ecosystem</h1>
+    <p>A working primer for a developer who has just been handed the <span class="accent">Jemba9_Ecosystem</span>
+    repository and asked to make it run in AWS.</p>
+    <p>Covers the platform, the <span class="accent">OKR</span> app, and the <span class="accent">Data Room</span>
+    app &mdash; one AWS account, two environments, Terraform throughout.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html" class="here">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>Read this page first</h1>
+
+<p>You are going to build two complete, isolated environments &mdash; <code>dev</code> and <code>prod</code> &mdash;
+inside a single AWS account, and deploy four long-running services into each of them. Everything is Terraform,
+everything deploys through GitHub Actions, and no human ever holds an AWS access key.</p>
+
+<p>This guide is written to be executed top to bottom. The Terraform and Dockerfiles are complete enough to copy,
+but every one of them has at least one value you must confirm before <code>apply</code>. Those are called out
+where they appear.</p>
+
+<div class="callout callout-stop"><span class="label">Correction to the repository docs</span>
+
+<p>Several files in the repo &mdash; <code>Ecosystem/docs/deployment/aws.md</code>,
+<code>Ecosystem/company.config.yaml</code>, <code>Ecosystem/infra/terraform/README.md</code>,
+<code>Applications/dataroom/HANDOFF.md</code>, and both stale workflows under
+<code>Applications/dataroom/.github/workflows/</code> &mdash; name AWS account
+<code>573631993254</code> and roles and buckets prefixed <code>CloudCowboy</code>.</p>
+<p><strong>That account belongs to a different company and must not be used for Jemba9 at all.</strong>
+Everything in this guide targets the Jemba9 account <code>824999955649</code>, reached through the
+IAM Identity Center portal at <code>https://onej9.awsapps.com/start</code>. Correcting those references is
+the first task on the <a href="08-runbook.html#cleanup">cleanup list</a>.</p>
+</div>
+
+<h2>The shape of it</h2>
+
+<figure class="diagram">
+
+<svg viewBox="0 0 900 560" role="img" aria-label="Request topology from browser to data stores">
+  <defs>
+    <marker id="arrow_topology" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_topology" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_topology" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="360" y="14" width="180" height="40" rx="7" fill="#ffffff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="450.0" y="31.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Browser</text>
+  <text x="450.0" y="46.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">one session cookie</text>
+  <line x1="450" y1="54" x2="450" y2="78" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <rect x="330" y="78" width="240" height="42" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="450.0" y="96.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Route 53</text>
+  <text x="450.0" y="111.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">jemba9.com &rarr; ALIAS</text>
+  <line x1="450" y1="120" x2="450" y2="144" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <rect x="300" y="144" width="300" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="450.0" y="164.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">CloudFront + WAFv2</text>
+  <text x="450.0" y="179.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">TLS via ACM (us-east-1) &middot; path behaviors</text>
+  <text x="614" y="160" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#EB5616" text-anchor="start">the front door</text>
+  <text x="614" y="174" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="start">one origin, many paths</text>
+  <line x1="450" y1="190" x2="450" y2="216" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_topology)"/>
+  <text x="462" y="207" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="start">X-Origin-Verify header</text>
+  <rect x="290" y="216" width="320" height="44" rx="7" fill="#ffffff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="450.0" y="235.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Application Load Balancer</text>
+  <text x="450.0" y="250.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">public subnets &middot; locked to the CloudFront prefix list</text>
+  <text x="450" y="282" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="middle">listener rules on path</text>
+  <line x1="370" y1="292" x2="250" y2="322" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <line x1="450" y1="292" x2="450" y2="322" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <line x1="530" y1="292" x2="660" y2="322" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <rect x="40" y="312" width="820" height="108" rx="10" fill="#fbfcfd" stroke="#c9cdd6" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="52" y="329" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#c9cdd6" text-anchor="start">PRIVATE SUBNETS — ECS FARGATE</text>
+  <rect x="70" y="336" width="190" height="66" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="165.0" y="366.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">platform</text>
+  <text x="165.0" y="381.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">/ and /admin/*  &middot;  :3000</text>
+  <rect x="285" y="336" width="190" height="66" rx="7" fill="#ffffff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="380.0" y="366.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">okr</text>
+  <text x="380.0" y="381.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">/okr/*  &middot;  :3001</text>
+  <rect x="500" y="336" width="190" height="66" rx="7" fill="#ffffff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="595.0" y="366.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">dataroom</text>
+  <text x="595.0" y="381.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">/dataroom/*  &middot;  :8080</text>
+  <rect x="700" y="336" width="140" height="66" rx="7" fill="#f6f6f8" stroke="#6b7280" stroke-width="1.5"/>
+  <text x="770.0" y="366.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">worker</text>
+  <text x="770.0" y="381.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">BullMQ jobs</text>
+  <text x="770" y="396" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">no ALB target</text>
+  <line x1="165" y1="402" x2="165" y2="464" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <line x1="380" y1="402" x2="330" y2="464" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <line x1="595" y1="402" x2="520" y2="464" stroke="#1f2430" stroke-width="1.6" marker-end="url(#arrow_topology)"/>
+  <line x1="790" y1="402" x2="760" y2="464" stroke="#1f2430" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrow_topology)"/>
+  <rect x="40" y="458" width="820" height="88" rx="10" fill="#fbfcfd" stroke="#c9cdd6" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="52" y="475" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#c9cdd6" text-anchor="start">PRIVATE ISOLATED SUBNETS — DATA</text>
+  <rect x="70" y="482" width="200" height="54" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="170.0" y="506.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">RDS PostgreSQL 16</text>
+  <text x="170.0" y="521.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">j9_platform &middot; okr &middot; dataroom</text>
+  <rect x="295" y="482" width="190" height="54" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="390.0" y="506.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ElastiCache Redis 7</text>
+  <text x="390.0" y="521.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">sessions &middot; queues</text>
+  <rect x="510" y="482" width="160" height="54" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="590.0" y="506.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">S3</text>
+  <text x="590.0" y="521.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">objects, per-app prefix</text>
+  <rect x="695" y="482" width="145" height="54" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="767.5" y="506.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">SSM / Secrets</text>
+  <text x="767.5" y="521.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">read at task boot</text>
+</svg>
+
+<figcaption>One request path, four services, one environment. The dev environment is the same picture with
+smaller instance classes and a <code>*.cloudfront.net</code> hostname instead of <code>jemba9.com</code>.</figcaption>
+</figure>
+
+<p>Four things run continuously in each environment:</p>
+
+<table>
+<tr><th>Service</th><th>Source</th><th>Serves</th><th>Port</th></tr>
+<tr><td><strong>platform</strong></td><td><code>Ecosystem/</code></td>
+    <td>login, the portal launcher, the Admin app, and the central <code>can()</code> authorization service</td>
+    <td><code>3000</code></td></tr>
+<tr><td><strong>worker</strong></td><td><code>Ecosystem/</code>, same image</td>
+    <td>BullMQ jobs: grant-expiry sweep, health polling, event rollups, retention</td>
+    <td>&mdash;</td></tr>
+<tr><td><strong>okr</strong></td><td><code>Applications/OKR/</code></td>
+    <td>the OKR + CFR app under <code>/okr</code></td><td><code>3001</code></td></tr>
+<tr><td><strong>dataroom</strong></td><td><code>Applications/dataroom/</code></td>
+    <td>the investor Data Room under <code>/dataroom</code></td><td><code>8080</code></td></tr>
+</table>
+
+<p>Each app is an <em>independent project</em> with its own build, its own database, and its own deploy. They talk
+to the platform only over the network. That independence is the whole design, and it is what makes the
+infrastructure straightforward: three near-identical Fargate services behind one load balancer.</p>
+
+<h2>Ground rules this guide follows</h2>
+
+<div class="cards">
+  <div class="card"><h3>One account, two environments</h3>
+    <p>Account <code>824999955649</code> holds both. Separation is by Terraform workspace, name prefix, and
+    a separate VPC per environment &mdash; not by account.</p></div>
+  <div class="card"><h3>Region <code>us-west-2</code></h3>
+    <p>Matches <code>company.config.yaml</code>, which application code already reads. ACM certificates for
+    CloudFront must additionally live in <code>us-east-1</code>.</p></div>
+  <div class="card"><h3>ECS Fargate, not Amplify</h3>
+    <p>Decided in <code>docs/adr/0002-compute.md</code>. The BullMQ worker is a second long-running process;
+    Amplify and App Runner both fit it badly.</p></div>
+  <div class="card"><h3>RDS PostgreSQL 16</h3>
+    <p>The repo says Lakebase today, RDS as the target. Because the schema is standard PostgreSQL only, that
+    move is a connection string plus a data copy.</p></div>
+  <div class="card"><h3>No access keys, ever</h3>
+    <p>Humans use IAM Identity Center SSO. CI assumes a role through GitHub OIDC. There is no
+    <code>aws_access_key_id</code> anywhere in this design.</p></div>
+  <div class="card"><h3>Fail closed</h3>
+    <p>The apps deny everything when the platform is unreachable. That is deliberate, and it means network
+    reachability between services is a correctness concern, not just an availability one.</p></div>
+</div>
+
+<h2>Reading order</h2>
+
+<nav class="toc">
+<h2>The eight chapters</h2>
+<ol>
+<li><a href="01-architecture.html">What you are hosting</a> &mdash;
+  <span class="desc">the three deployables, what each needs at runtime, and the six application contracts
+  that dictate infrastructure choices. Read this even if you want to skip ahead.</span></li>
+<li><a href="02-account-foundation.html">Account foundation</a> &mdash;
+  <span class="desc">SSO access, guardrails, the naming scheme, the Terraform layer layout, and the
+  bootstrap layer that creates the state backend.</span></li>
+<li><a href="03-network-data.html">Network and data</a> &mdash;
+  <span class="desc">VPC across two AZs, the security-group chain, RDS, Redis, S3, and the SQL that creates
+  three databases with an owner and a least-privilege runtime role each.</span></li>
+<li><a href="04-secrets-identity.html">Secrets and identity</a> &mdash;
+  <span class="desc">KMS, SSM parameter naming, Cognito per environment, the app API keys, and the full
+  environment-variable matrix for all four services.</span></li>
+<li><a href="05-compute.html">Compute</a> &mdash;
+  <span class="desc">the code change you must make first, three Dockerfiles, ECR, task definitions, services,
+  autoscaling, and the ALB with its path rules.</span></li>
+<li><a href="06-frontdoor.html">The front door</a> &mdash;
+  <span class="desc">ACM, WAF, CloudFront behaviors, the origin-verify secret, and the honest state of
+  <code>jemba9.com</code> DNS.</span></li>
+<li><a href="07-cicd.html">CI/CD</a> &mdash;
+  <span class="desc">the GitHub OIDC trust policy, the deploy workflow, running migrations as a one-off task,
+  and promoting an image digest from dev to prod.</span></li>
+<li><a href="08-runbook.html">Runbook</a> &mdash;
+  <span class="desc">local setup, the bootstrap checklist in order, smoke tests, a cost estimate,
+  troubleshooting, the repo cleanup list, and the decisions still needing an owner.</span></li>
+</ol>
+</nav>
+
+<h2>Before you start: what you need</h2>
+
+<h3>Access</h3>
+<ul>
+<li>An IAM Identity Center account assignment in <code>824999955649</code> through
+  <code>https://onej9.awsapps.com/start</code>, with a permission set that can create IAM roles, VPCs, RDS,
+  ECS, CloudFront, and WAF. In practice that is close to <code>AdministratorAccess</code> for the bootstrap and
+  a narrower <code>PowerUserAccess</code>-plus-IAM set afterwards.</li>
+<li>Write access to the GitHub repository holding <code>Jemba9_Ecosystem</code>, including the ability to create
+  environments and environment secrets. (The repo still references CodeCommit in places; CodeCommit stopped
+  accepting new customers in July 2024 and is not a target &mdash; see
+  <code>Ecosystem/docs/notes/deviation_codecommit.md</code>.)</li>
+<li>Knowledge of who controls the <code>jemba9.com</code> DNS zone and its registrar. This is a real, tracked
+  blocker; see <a href="06-frontdoor.html#dns">chapter 6</a>. You can build and run everything without it.</li>
+</ul>
+
+<h3>Local tools</h3>
+
+<pre><code># macOS, via Homebrew
+brew install awscli terraform docker node@20 postgresql@16 jq
+
+aws --version          # &gt;= 2.15
+terraform -version     # &gt;= 1.6  (this guide uses 1.9+ syntax in places)
+node -v                # &gt;= 20   (both apps and the platform require Node 20+)
+docker --version       # needed for local Postgres/Redis and for building images locally</code></pre>
+<h3>Repository</h3>
+<pre><code>git clone &lt;the-github-remote&gt; Jemba9_Ecosystem
+cd Jemba9_Ecosystem
+ls
+# .github  Applications  Ecosystem  Templates  documents  amplify.yml  README.md</code></pre>
+<div class="callout callout-note"><span class="label">amplify.yml is a leftover</span>
+
+<p><code>amplify.yml</code> at the repo root is an AWS Amplify Hosting build spec from an earlier attempt. It
+contradicts ADR 0002 (which chose Fargate) and it does something dangerous: it runs
+<code>npx prisma migrate deploy</code> inside the frontend build phase. Migrations belong in a separate, gated
+step. Delete the file, or leave it and never connect an Amplify app &mdash; but do not treat it as the plan.</p>
+</div>
+
+<h2>Time expectation</h2>
+
+<table>
+<tr><th>Phase</th><th>Effort</th><th>What blocks it</th></tr>
+<tr><td>Read chapters 1&ndash;2, get SSO working, bootstrap state backend</td><td>half a day</td>
+    <td>account access</td></tr>
+<tr><td>Network + data + secrets for <code>dev</code></td><td>one day</td>
+    <td>nothing, if you have admin</td></tr>
+<tr><td>Dockerfiles, ECR, first Fargate service reachable through the ALB</td><td>one to two days</td>
+    <td>adding <code>output: 'standalone'</code> to the two app Next configs; getting health checks right under a basePath</td></tr>
+<tr><td>All four services, CloudFront in front, dev fully green</td><td>one day</td>
+    <td>Cognito callback URLs need the CloudFront hostname, which needs CloudFront to exist first</td></tr>
+<tr><td>CI/CD wired, dev deploying on push</td><td>half a day</td><td>GitHub environment setup</td></tr>
+<tr><td><code>prod</code> workspace</td><td>half a day</td>
+    <td>almost nothing &mdash; it is the same code with a different tfvars file</td></tr>
+<tr><td>Real DNS on <code>jemba9.com</code></td><td>unknown</td>
+    <td><span class="badge badge-red">blocked</span> zone ownership; not on the critical path</td></tr>
+</table>
+
+<p>A competent developer who has done ECS before should have <code>dev</code> serving the portal at a
+<code>*.cloudfront.net</code> URL within a week. Everything after that is repetition.</p>
+
+</section>
+
+<div class="pager"><span class="spacer"></span><a href="01-architecture.html">1. What You Are Hosting &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem — Documentation Snapshot</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color:var(--text);
+    background:#ffffff;
+    line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+  #top{display:block;}
+
+  header.page-header{
+    background:var(--ink);
+    color:#f3f4f6;
+    padding:3rem 1.5rem 2.25rem;
+    text-align:left;
+  }
+  header.page-header .wrap{max-width:980px;margin:0 auto;}
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;
+    background:#ffffffee;
+    border-bottom:1px solid var(--line);
+    backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{max-width:980px;margin:0 auto;padding:.65rem 1.5rem;display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center;}
+  nav.topnav a{font-size:.85rem;font-weight:700;text-decoration:none;color:var(--ink);text-transform:uppercase;letter-spacing:.03em;}
+  nav.topnav a:hover{color:var(--orange);}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1.25rem 1.5rem;
+    margin:2.5rem 0;
+  }
+  nav.toc h2{margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.4rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.5rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.55rem;
+    border-bottom:3px solid var(--orange);
+    padding-bottom:.5rem;
+    margin:0 0 1rem;
+    color:var(--ink);
+  }
+  h2{font-size:1.2rem;color:var(--ink);margin-top:2.25rem;border-left:4px solid var(--orange);padding-left:.65rem;}
+  h3{font-size:1.02rem;color:#374151;margin-top:1.5rem;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.3rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;
+    padding:.12rem .35rem;font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.82rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;font-style:italic;border-radius:0 6px 6px 0;
+  }
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.9rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{background:var(--ink);color:#fff;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.02em;}
+  tr:nth-child(even) td{background:var(--panel);}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;
+    white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  .diagram{
+    margin:1.5rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  .diagram svg{max-width:100%;height:auto;}
+  .diagram figcaption{margin-top:.6rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .source-note{
+    font-size:.82rem;color:var(--muted);border-top:1px dashed var(--line);
+    padding-top:.6rem;margin-top:1.25rem;
+  }
+  .back-to-top{display:inline-block;margin-top:1.5rem;font-size:.82rem;font-weight:700;color:var(--orange-dark);text-decoration:none;}
+
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff7ed;border-radius:0 8px 8px 0;padding:1rem 1.15rem;margin:1.25rem 0;
+  }
+  .callout strong{color:var(--orange-dark);}
+
+  hr.divider{border:none;border-top:1px solid var(--line);margin:3.5rem 0;}
+  footer{text-align:center;color:#9ca3af;font-size:.82rem;padding:2.5rem 0 3.5rem;}
+  .gap-item{border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.25rem;margin:1.1rem 0;background:#fff;}
+  .gap-item h3{margin-top:0;display:flex;align-items:center;gap:.5rem;}
+</style>
+</head>
+<body>
+<a id="top"></a>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1>Jemba9 Ecosystem — <span class="accent">Documentation Snapshot</span></h1>
+    <p><strong>Generated:</strong> 2026-08-11 &nbsp;·&nbsp; <strong>Method:</strong> <code>Consulting/MySkills/.devin/workflows/document.md</code> applied as a point-in-time audit</p>
+    <p><strong>Source repo:</strong> <code>/Users/michaelberry/Documents/Jemba9/CasecadeProjects/Jemba9_Ecosystem</code> (<code>J9Eco</code>) — git remote <code>codecommit::us-east-2://Jemba9_Ecosystem</code>, branch <code>main</code></p>
+  </div>
+</header>
+
+<nav class="topnav">
+  <div class="wrap">
+    <a href="#readme">Overview</a>
+    <a href="#architecture-overview">Architecture</a>
+    <a href="#authentication-authorization">Auth &amp; Authz</a>
+    <a href="#deployment-pipeline">Deployment</a>
+    <a href="#gaps-and-risks">Gaps &amp; Risks</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#architecture-overview">Architecture overview</a> — <span class="desc">what the ecosystem is, the repo layout, the two-repo relationship, and how apps join</span></li>
+    <li><a href="#authentication-authorization">Authentication &amp; Authorization</a> — <span class="desc">focus area: Cognito vs. the central authz service, designed vs. implemented vs. actually running</span></li>
+    <li><a href="#deployment-pipeline">Deployment pipeline</a> — <span class="desc">focus area: git hosting, CI, the planned AWS path, and what has (and hasn't) actually been applied</span></li>
+    <li><a href="#gaps-and-risks">Gaps &amp; risks</a> — <span class="desc">the contradictions, blockers, and open decisions found while producing this doc</span></li>
+  </ol>
+</nav>
+
+<section id="readme">
+  <h1>Overview</h1>
+  <p>This snapshot exists <strong>outside</strong> the target repo (<code>misc/J9_Ecosys_Doc/</code>) rather than under <code>Ecosystem/docs/</code>, so it does not become a second source of truth the team has to keep in sync. Treat every claim below as traceable back to the cited file path in the repo — if the repo changes, re-run the audit rather than editing this copy by hand.</p>
+
+  <h2>One-paragraph summary</h2>
+  <p>The Jemba9 Ecosystem is a monorepo (<code>J9Eco</code>) containing a platform (<code>Ecosystem/</code>, Next.js 16) that provides single sign-on (AWS Cognito) and central, default-deny authorization for a family of business apps (<code>Applications/OKR</code>, <code>Applications/dataroom</code>, <code>Applications/boardlab</code>, future QMS). The platform's identity/authz/admin functionality (Sprints 00–10) is <strong>fully built and tested locally</strong> — but it runs today against a <strong>local mock OIDC issuer</strong>, not real Cognito, and <strong>no infrastructure has actually been provisioned or deployed to AWS</strong>: Terraform for Cognito is "apply-ready but not applied," there is no ECS/CloudFront/RDS Terraform at all yet (only an ADR recommending it), and the repo's CI workflows are GitHub Actions files sitting in a repo whose actual git remote is AWS CodeCommit — a mismatch the project's own deviation notes flag as unresolved.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Status legend: designed, implemented, actually running">
+      <defs>
+        <marker id="arrow0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+        </marker>
+      </defs>
+      <text x="350" y="28" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2430">How to read status claims in this snapshot</text>
+
+      <circle cx="90" cy="90" r="26" fill="#e5e7eb" stroke="#6b7280" stroke-width="2"/>
+      <text x="90" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#374151">1</text>
+      <text x="90" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Designed</text>
+      <text x="90" y="158" text-anchor="middle" font-size="11" fill="#6b7280">written in a doc</text>
+
+      <line x1="122" y1="90" x2="248" y2="90" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow0)"/>
+
+      <circle cx="280" cy="90" r="26" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="280" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">2</text>
+      <text x="280" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">Implemented</text>
+      <text x="280" y="158" text-anchor="middle" font-size="11" fill="#6b7280">code exists, tested</text>
+
+      <line x1="312" y1="90" x2="438" y2="90" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow0)"/>
+
+      <circle cx="470" cy="90" r="26" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+      <text x="470" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">3</text>
+      <text x="470" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">Running</text>
+      <text x="470" y="158" text-anchor="middle" font-size="11" fill="#6b7280">live against real AWS</text>
+
+      <text x="350" y="190" text-anchor="middle" font-size="12" fill="#b91c1c" font-weight="700">Most of this ecosystem today sits at step 1–2, not step 3.</text>
+    </svg>
+  </div>
+
+  <p class="source-note">Sources: <code>README.md</code>, <code>Ecosystem/README.md</code>.</p>
+  <a class="back-to-top" href="#top">↑ Back to top</a>
+</section>
+
+<hr class="divider">
+
+<section id="architecture-overview">
+  <h1>Architecture overview</h1>
+  <p class="source-note">Sources: <code>README.md</code>, <code>Ecosystem/README.md</code>, <code>Ecosystem/CLAUDE.md</code>, <code>Ecosystem/docs/architecture/j9-ecosystem-architecture.md</code>, <code>Ecosystem/docs/architecture/platform_identity_access.md</code>, <code>Applications/README.md</code></p>
+
+  <h2>The concept</h2>
+  <p>One front door at <code>jemba9.com</code>. AWS Cognito answers "who are you," a central authorization service answers "what may you do," a portal launcher shows each person only the apps they hold keys to, and every business app is a thin <strong>enforcement point</strong> — it never owns login or permission rules, only the <code>can()</code> decision the platform hands it.</p>
+
+  <blockquote>"authentication is decided in exactly one place (Cognito), authorization in exactly one place (the central authz service), and apps own only their business logic." — <code>j9-ecosystem-architecture.md</code> §1</blockquote>
+
+  <h2>Repo layout (two-part monorepo)</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="J9Eco repo layout diagram">
+      <rect x="10" y="10" width="740" height="270" rx="12" fill="#ffffff" stroke="#1f2430" stroke-width="2"/>
+      <text x="30" y="34" font-size="13.5" font-weight="700" fill="#1f2430">J9Eco &#8212; git: codecommit::us-east-2://Jemba9_Ecosystem</text>
+
+      <rect x="30" y="50" width="330" height="215" rx="8" fill="#fff7ed" stroke="#EB5616" stroke-width="2"/>
+      <text x="46" y="76" font-size="14" font-weight="700" fill="#c2410c">Ecosystem/</text>
+      <text x="46" y="94" font-size="11.5" fill="#4b5563">the platform &#8212; run all platform</text>
+      <text x="46" y="108" font-size="11.5" fill="#4b5563">commands from here</text>
+      <text x="46" y="132" font-size="11.5" fill="#374151">&#8226; src/ &#8212; Next.js 16 App Router</text>
+      <text x="46" y="150" font-size="11.5" fill="#374151">&#8226; prisma/ &#8212; schema + migrations</text>
+      <text x="46" y="168" font-size="11.5" fill="#374151">&#8226; infra/terraform/ &#8212; Cognito only, today</text>
+      <text x="46" y="186" font-size="11.5" fill="#374151">&#8226; packages/j9-app-sdk/ &#8212; vendored client</text>
+      <text x="46" y="204" font-size="11.5" fill="#374151">&#8226; docs/ &#8212; architecture, requirements, ADRs</text>
+      <text x="46" y="222" font-size="11.5" fill="#374151">&#8226; company.config.yaml &#8212; the only</text>
+      <text x="46" y="236" font-size="11.5" fill="#374151">&nbsp;&nbsp;company-specific file</text>
+
+      <rect x="390" y="50" width="340" height="215" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="406" y="76" font-size="14" font-weight="700" fill="#1d4ed8">Applications/</text>
+      <text x="406" y="94" font-size="11.5" fill="#4b5563">one folder per business app,</text>
+      <text x="406" y="108" font-size="11.5" fill="#4b5563">each an independent enforcement point</text>
+
+      <rect x="406" y="122" width="150" height="60" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="481" y="144" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">OKR</text>
+      <text x="481" y="160" text-anchor="middle" font-size="10.5" fill="#6b7280">migrating</text>
+
+      <rect x="566" y="122" width="150" height="60" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="641" y="144" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">dataroom</text>
+      <text x="641" y="160" text-anchor="middle" font-size="10.5" fill="#6b7280">migrating, not integrated</text>
+
+      <rect x="406" y="192" width="150" height="60" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="481" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">boardlab</text>
+      <text x="481" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">feature-complete</text>
+
+      <rect x="566" y="192" width="150" height="60" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="641" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">_template</text>
+      <text x="641" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">scaffold for new apps</text>
+    </svg>
+    <figcaption>Apps are physically separate from the platform: platform quality gates run only inside <code>Ecosystem/</code>; apps talk to the platform only over the network.</figcaption>
+  </figure>
+
+  <p>Apps are physically separate from the platform: the platform's quality gates run only inside <code>Ecosystem/</code>, and an app's build never touches the platform repo tree. Apps talk to the platform <strong>only over the network</strong> (session, authorization decisions, event ingest) — they never read platform database tables directly. This is a deliberate reversal of an earlier "apps in their own separate repos" design; see <code>Ecosystem/docs/notes/deviation_monorepo_apps.md</code>.</p>
+
+  <h2>Layers</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ecosystem layers diagram">
+      <defs>
+        <marker id="arrowL" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L5,10 L10,0 z" fill="#9ca3af"/>
+        </marker>
+      </defs>
+      <!-- Entry -->
+      <rect x="30" y="10" width="700" height="50" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+      <text x="50" y="32" font-size="13" font-weight="700" fill="#92400e">Entry</text>
+      <text x="50" y="49" font-size="11" fill="#78716c">jemba9.com &#8212; Route 53 &#8594; CloudFront front door (dev: CloudFront URL)</text>
+      <line x1="380" y1="62" x2="380" y2="76" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowL)"/>
+
+      <!-- Identity -->
+      <rect x="30" y="80" width="700" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="50" y="102" font-size="13" font-weight="700" fill="#1e3a8a">Identity</text>
+      <text x="50" y="119" font-size="11" fill="#334155">AWS Cognito &#8212; one user pool, OIDC code+PKCE, MFA</text>
+      <line x1="380" y1="132" x2="380" y2="146" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowL)"/>
+
+      <!-- Portal -->
+      <rect x="30" y="150" width="700" height="50" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="50" y="172" font-size="13" font-weight="700" fill="#4c1d95">Portal</text>
+      <text x="50" y="189" font-size="11" fill="#4b5563">Launcher at / &#8212; tiles from live app_access grants</text>
+      <line x1="380" y1="202" x2="380" y2="216" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowL)"/>
+
+      <!-- Apps -->
+      <rect x="30" y="220" width="700" height="50" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <text x="50" y="242" font-size="13" font-weight="700" fill="#14532d">Apps</text>
+      <text x="50" y="259" font-size="11" fill="#365314">/admin (in this repo) &#183; /qms &#183; /okr &#183; /dataroom (join later via contract)</text>
+      <line x1="380" y1="272" x2="380" y2="286" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowL)"/>
+
+      <!-- Shared -->
+      <rect x="30" y="290" width="700" height="50" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <text x="50" y="312" font-size="13" font-weight="700" fill="#7f1d1d">Shared</text>
+      <text x="50" y="329" font-size="11" fill="#7f1d1d">Central authz service &#183; platform events/telemetry &#183; audit log</text>
+      <line x1="380" y1="342" x2="380" y2="356" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowL)"/>
+
+      <!-- Data -->
+      <rect x="30" y="360" width="700" height="35" rx="6" fill="#e5e7eb" stroke="#374151" stroke-width="2"/>
+      <text x="50" y="382" font-size="13" font-weight="700" fill="#1f2937">Data &#160;&#160;<tspan font-size="11" font-weight="400" fill="#374151">Lakebase Postgres (standard-Postgres-only) &#183; S3 for objects</tspan></text>
+    </svg>
+    <figcaption>Path-based apps under one domain: one cookie domain, one session; CloudFront path behaviors route <code>/app/*</code> to each app's own origin.</figcaption>
+  </figure>
+
+  <h2>How an app joins (the App Contract)</h2>
+  <p>Any app joins with <strong>zero core platform code changes</strong>:</p>
+  <ol>
+    <li>Accept the platform session — resolve identity via <code>GET /api/session</code>.</li>
+    <li>Ship a <strong>permission manifest</strong> (JSON) declaring its permission keys, default roles, and optional custom metrics — imported by an admin at Admin → Apps → Register.</li>
+    <li>Delegate every authorization decision to <code>POST /api/authz/decision</code> (or the session-baked fast path) — never invent local permission logic.</li>
+    <li>Own its own data on standard PostgreSQL — never read platform tables.</li>
+    <li>Emit usage/audit events via <code>POST /api/events</code> and expose <code>/healthz</code>.</li>
+  </ol>
+  <p>Full spec: <code>Ecosystem/docs/architecture/app-manifest.md</code> (manifest shape, register/re-sync semantics) and <code>Ecosystem/docs/requirements/functional-requirements.md</code> FR-7 (the App Contract) / <code>app-onboarding-requirements.md</code> AR-1…AR-8 (the per-app checklist each <code>Applications/&lt;key&gt;/CLAUDE.md</code> restates).</p>
+
+  <div class="callout"><strong>Registered apps today: none in production.</strong> The Admin app itself is the only "app" seeded (<code>company.config.yaml</code> <code>apps.enabled: ["admin"]</code>). Board Lab, Data Room, and OKR are built or being built but have not yet gone through manifest registration against a live platform instance — see the Deployment and Auth/Authz sections below.</div>
+
+  <h2>Roadmap as originally scoped</h2>
+  <p>Sprints 00–10 (<code>Ecosystem/prompts/</code>) built: scaffold → schema → auth → authz → portal → admin (users, grants, registry, audit, dashboards) → hardening + deploy docs. All ten are marked done in <code>Ecosystem/docs/run_notes.md</code>. What comes next per that roadmap: migrate Data Room, QMS, and OKR onto the platform, each via a manifest registration plus an enforcement-point refactor in its own app folder.</p>
+
+  <a class="back-to-top" href="#top">↑ Back to top</a>
+</section>
+
+<hr class="divider">
+
+<section id="authentication-authorization">
+  <h1>Authentication &amp; Authorization <span class="badge badge-amber">focus area</span></h1>
+  <p class="source-note">
+    Sources: <code>Ecosystem/docs/architecture/platform_identity_access.md</code>,
+    <code>Ecosystem/docs/architecture/j9-ecosystem-architecture.md</code> §4–§5,
+    <code>Ecosystem/docs/requirements/functional-requirements.md</code> FR-1/FR-2/FR-7,
+    <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Ecosystem/docs/run_notes.md</code> (Sprints 02–03),
+    <code>Ecosystem/infra/terraform/README.md</code>,
+    <code>Ecosystem/company.config.yaml</code>,
+    <code>Applications/boardlab/CLAUDE.md</code> ("Non-negotiables AR-1…AR-8"), <code>Applications/*/CLAUDE.md</code>.
+  </p>
+
+  <div class="callout">The single most important thing to understand about this area: <strong>the design is fully specified and the platform-side implementation is fully built and tested — but none of it is running against real AWS Cognito, and no business app has actually wired itself up to it yet.</strong> Everything below separates "designed," "implemented," and "actually running" on purpose.</div>
+
+  <h2>1. The split: identity vs. authorization</h2>
+  <table>
+    <tr><th>Question</th><th>Who answers</th><th>Where</th></tr>
+    <tr><td>Who are you? (authentication)</td><td><strong>AWS Cognito</strong> — one user pool for the whole ecosystem</td><td><code>Ecosystem/infra/terraform/</code> (Cognito), <code>Ecosystem/src/lib/auth/</code></td></tr>
+    <tr><td>What may you do, everywhere? (authorization)</td><td><strong>Central authz service</strong> — one Postgres-backed catalog of permissions/roles/grants</td><td><code>Ecosystem/src/lib/authz/</code>, <code>Ecosystem/prisma/schema.prisma</code></td></tr>
+  </table>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Identity versus authorization flow diagram">
+      <defs>
+        <marker id="arrowA" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L5,10 L10,0 z" fill="#9ca3af"/>
+        </marker>
+      </defs>
+      <rect x="30" y="20" width="290" height="80" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="175" y="48" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1e3a8a">AWS Cognito</text>
+      <text x="175" y="66" text-anchor="middle" font-size="11" fill="#334155">Identity &#8212; "who are you?"</text>
+      <text x="175" y="84" text-anchor="middle" font-size="10.5" fill="#64748b">lean tokens: sub, email, name, MFA</text>
+
+      <rect x="380" y="20" width="290" height="80" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+      <text x="525" y="48" text-anchor="middle" font-size="13.5" font-weight="700" fill="#14532d">Central Authz Service</text>
+      <text x="525" y="66" text-anchor="middle" font-size="11" fill="#365314">Authorization &#8212; "what may you do?"</text>
+      <text x="525" y="84" text-anchor="middle" font-size="10.5" fill="#4d7c0f">roles &#8746; allows &#8722; denies, org-scoped</text>
+
+      <line x1="175" y1="100" x2="330" y2="150" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowA)"/>
+      <line x1="525" y1="100" x2="370" y2="150" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowA)"/>
+
+      <rect x="215" y="158" width="270" height="60" rx="8" fill="#fff7ed" stroke="#EB5616" stroke-width="2"/>
+      <text x="350" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c2410c">App enforcement point</text>
+      <text x="350" y="202" text-anchor="middle" font-size="10.5" fill="#9a3412">can(key) &#8212; session-baked, or live for sensitive keys</text>
+
+      <line x1="175" y1="100" x2="175" y2="234" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <rect x="60" y="234" width="230" height="34" rx="17" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"/>
+      <text x="175" y="256" text-anchor="middle" font-size="10.5" font-weight="700" fill="#15803d">mock OIDC issuer &#8212; actually running</text>
+
+      <line x1="525" y1="100" x2="525" y2="234" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <rect x="400" y="234" width="250" height="34" rx="17" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
+      <text x="525" y="256" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b45309">real Cognito &#8212; apply-ready, not applied</text>
+    </svg>
+    <figcaption>Tokens stay lean; permissions are computed server-side and delivered via session or live decision — never embedded in a JWT.</figcaption>
+  </figure>
+
+  <p>Cognito tokens are deliberately kept lean (<code>sub</code>, email, name, MFA flag) — <strong>no permission ever rides in a JWT.</strong> Permissions are computed server-side by the authz service and delivered to apps via a session-baked fast path (default) or a live decision call for sensitive actions. This split is locked platform policy (<code>platform_identity_access.md</code> — "Direction (locked)").</p>
+
+  <h2>2. Identity — designed vs. actual</h2>
+  <h3>Designed (production target) <span class="badge badge-gray">designed</span></h3>
+  <ul>
+    <li>One Cognito User Pool, OIDC Authorization Code + PKCE, custom J9-branded login page (not the Cognito Hosted UI, which can't meet the brand bar).</li>
+    <li>MFA (TOTP) required for all internal accounts and any admin-class account in any app.</li>
+    <li>Federation-ready: external corporate IdPs (Google, Entra, Okta, SAML/OIDC) can federate into Cognito later without app changes.</li>
+    <li>Every app maps the Cognito <code>sub</code> to its own thin local profile on first login (JIT provisioning) — no password/MFA-secret column anywhere outside Cognito.</li>
+  </ul>
+
+  <h3>Actually implemented and running today <span class="badge badge-blue">implemented</span> / <span class="badge badge-green">running (mock only)</span></h3>
+  <ul>
+    <li>A <strong>provider abstraction</strong> (<code>src/lib/auth/</code>) with two interchangeable backends: a real local <strong>mock OIDC issuer</strong> (RS256 keypair, JWKS, TOTP challenges) used for dev/CI, and a <strong>Cognito</strong> implementation (<code>provider/cognito.ts</code>) that is code-complete but only loads when <code>AUTH_PROVIDER=cognito</code> is set.</li>
+    <li><strong>The mock issuer is the working backend right now.</strong> Per <code>Ecosystem/docs/run_notes.md</code> (Sprint 02 deviations): <em>"Local mock OIDC issuer is the working backend; Cognito is apply-ready but not applied... left as an explicit user decision because it creates real, billable cloud infrastructure."</em></li>
+    <li>Terraform for the Cognito user pool + PKCE app client exists (<code>Ecosystem/infra/terraform/main.tf</code>) and is described in its own README as <strong>"apply-ready but not yet applied."</strong> <code>terraform apply</code> has never been run against AWS account <code>573631993254</code>.</li>
+    <li>Switching from mock to Cognito is designed to be <strong>env-only</strong> — no app code change, just <code>AUTH_PROVIDER=cognito</code> + the pool/client IDs from the Terraform outputs — but that switch has not happened.</li>
+  </ul>
+
+  <div class="callout"><strong>Practical implication:</strong> anyone testing or building against "the platform's auth" today is testing against the mock issuer, not AWS Cognito. That's fine for development, but treat any claim of "Cognito login works" as <strong>unverified in production</strong> until someone runs <code>terraform apply</code> and flips the env var.</div>
+
+  <h2>3. Authorization — designed vs. actual</h2>
+  <h3>Designed (production target, <code>platform_identity_access.md</code> §4) <span class="badge badge-gray">designed</span></h3>
+  <ul>
+    <li>One <code>platform</code> Postgres schema is the only permission store in the ecosystem — no app keeps its own permission table.</li>
+    <li>Core model: <code>organization</code>, <code>identity</code>, <code>app</code>, <code>permission</code>, <code>role</code>, <code>role_permission</code>, <code>app_access</code>, <code>role_grant</code>, <code>permission_grant</code>.</li>
+    <li><strong>Default deny</strong> everywhere. Effective permissions = union of role grants + additive permission grants − deny grants, always scoped by <code>org_id</code>.</li>
+    <li><strong>Append-only.</strong> Grants are revoked via <code>revoked_at</code>, never hard-deleted — full audit history survives.</li>
+    <li>Decision delivery is <strong>hybrid</strong>: session-baked (fast, short TTL) for normal actions; a live <code>POST /api/authz/decision</code> call for permissions marked <code>sensitive</code> (e.g. admin write actions, document export), so a just-revoked grant takes effect immediately rather than waiting out the session TTL.</li>
+  </ul>
+
+  <h3>Actually implemented and running today <span class="badge badge-green">running (local)</span></h3>
+  <p><em>(Sprint 03, <code>[sprint-03-authz]</code>, and hardened through Sprint 10)</em></p>
+  <ul>
+    <li><code>Ecosystem/src/lib/authz/</code>: <code>algebra.ts</code> (pure merge: roles ∪ allows − denies, deny wins), <code>effective.ts</code> (<code>getEffectivePermissions</code>, <code>can()</code>, <code>getEntitlements()</code>), <code>cache.ts</code> (60s in-process cache + Redis bake-version invalidation), <code>bake.ts</code> (<code>requirePermission(key)</code> — sensitive keys always go live), <code>grants.ts</code> (grant/revoke, audit + event on every write), <code>sweep.ts</code> (BullMQ job revoking expired grants every <code>grant_expiry_sweep_minutes</code>, 15 by default from <code>company.config.yaml</code>).</li>
+    <li>Decision endpoint <code>POST /api/authz/decision</code> — session or per-app API key (<code>Authorization: Bearer</code>) auth, backed by the 60s cache, benchmarked (<code>npm run bench:authz</code>) at p95 ≈ 0.001ms warm / ≈ 1.7ms cold.</li>
+    <li>Row-level security (RLS) on every tenant-scoped table (<code>app_access</code>, <code>role_grant</code>, <code>permission_grant</code>, <code>platform_event</code>), enforced against a <strong>non-superuser</strong> <code>j9_app</code> runtime role — the owner/superuser connection intentionally bypasses RLS and is used only for migrations/seed.</li>
+    <li>This part of the stack has real integration-test coverage: deny-wins, org scoping, expiry sweep idempotency, immediate revocation for sensitive keys, fail-closed on query error, RLS cross-org isolation.</li>
+  </ul>
+
+  <div class="callout"><strong>Practical implication:</strong> unlike identity, the authorization engine is not a stub — it's a real, tested, running subsystem against local Postgres/Redis. The gap here isn't "not built," it's "not yet exercised by any real business app" (see §4).</div>
+
+  <h2>4. The App Contract — what every business app must do, and where each stands</h2>
+  <p>Every app in <code>Applications/</code> is required (by its own <code>CLAUDE.md</code>, mirroring the platform's <code>app-onboarding-requirements.md</code> AR-1…AR-8) to:</p>
+  <ol>
+    <li>Have <strong>no auth of its own</strong> — identity comes from the platform via <code>GET /api/session</code>.</li>
+    <li><strong>Delegate every decision server-side</strong> via <code>can()</code> — UI hiding is courtesy only.</li>
+    <li><strong>Fail closed</strong> — any non-allow (unreachable, timeout, malformed) is denied.</li>
+    <li>Use <strong>standard PostgreSQL only</strong>, own its own schema, <code>org_id</code> + RLS on every tenant-scoped table.</li>
+    <li>Declare permissions as <strong>manifest data</strong>, not code.</li>
+    <li>Emit audit/usage events and expose <code>/healthz</code>.</li>
+    <li>Hold <strong>one secret</strong> — its <code>J9_APP_API_KEY</code> — server-side only.</li>
+  </ol>
+
+  <table>
+    <tr><th>App</th><th>Status</th><th>Auth/authz integration</th></tr>
+    <tr><td>Board Lab</td><td>Feature-complete; datasheet ingestion unwired</td><td>Its own <code>CLAUDE.md</code> documents the App Contract as binding, but Board Lab currently runs its own local session/authz plumbing for dev — it has not gone through manifest registration against a live platform instance.</td></tr>
+    <tr><td>Data Room</td><td>Migrating, <strong>"not yet integrated"</strong> per <code>Applications/README.md</code></td><td>No platform session/authz wiring yet.</td></tr>
+    <tr><td>OKR</td><td>Migrating</td><td>Currently on WorkOS + django-allauth (its own ADR-004); the identity doc explicitly supersedes that ADR and calls for a full rewrite onto Cognito + the central authz service — not yet done.</td></tr>
+    <tr><td>QMS</td><td>Planned</td><td>Not started; today has a homegrown scrypt/TOTP auth stack that the identity doc says must be fully removed and replaced.</td></tr>
+  </table>
+
+  <p>So the honest end-to-end state is: <strong>the platform can authenticate and authorize, but no business app currently asks it to.</strong> Each app still owns some form of its own auth/session logic in the interim.</p>
+
+  <h2>5. Security posture already verified (Sprint 10 baseline)</h2>
+  <p>From <code>Ecosystem/docs/notes/security-baseline.md</code> (reviewed 2026-07-14), already true of the platform code as it stands, independent of the Cognito-vs-mock question:</p>
+  <ul>
+    <li>CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, and HSTS are applied to all routes.</li>
+    <li>Sessions are opaque, httpOnly, <code>SameSite=Lax</code> (Secure in prod), stored server-side in Redis with real revocation (<code>revokeAllSessions</code>) — not a JWT the app trusts blindly.</li>
+    <li>Tokens are validated against JWKS (issuer/audience/expiry/signature) for both the mock and Cognito providers identically.</li>
+    <li>Progressive lockout on login/MFA; rate limiting on event ingest.</li>
+    <li>Zod validation at every external boundary.</li>
+    <li>Audit log and event stream reject UPDATE/DELETE at the database level via triggers; only the sanctioned retention sweep can prune events (never the audit log).</li>
+    <li><strong>Open item, owner "platform":</strong> CSP still uses <code>'unsafe-inline'</code> for scripts/styles because of Next App Router's inline bootstrap; a nonce + <code>strict-dynamic</code> upgrade is tracked but not done.</li>
+  </ul>
+
+  <h2>6. What would need to happen to make this real</h2>
+  <ol>
+    <li>Decide to spend the money: <code>terraform apply</code> the Cognito module in <code>Ecosystem/infra/terraform/</code> against account <code>573631993254</code>.</li>
+    <li>Set <code>AUTH_PROVIDER=cognito</code> + the pool/client IDs from the Terraform output — no app code change required.</li>
+    <li>Pick one app (Board Lab is closest, per its own status) and actually run it through manifest registration against a live platform instance, then refactor its local session checks into calls against <code>GET /api/session</code> / <code>can()</code>.</li>
+    <li>Resolve the DNS blocker (see the Deployment section) so Cognito callback URLs and the session cookie domain can point at <code>jemba9.com</code> instead of a CloudFront dev URL.</li>
+  </ol>
+
+  <a class="back-to-top" href="#top">↑ Back to top</a>
+</section>
+
+<hr class="divider">
+
+<section id="deployment-pipeline">
+  <h1>Deployment pipeline <span class="badge badge-amber">focus area</span></h1>
+  <p class="source-note">
+    Sources: <code>README.md</code>, <code>Ecosystem/docs/architecture/j9-ecosystem-architecture.md</code> §3/§10,
+    <code>Ecosystem/docs/deployment/{aws,dns,replication}.md</code>, <code>Ecosystem/docs/adr/0002-compute.md</code>,
+    <code>Ecosystem/docs/notes/deviation_codecommit.md</code>, <code>Ecosystem/company.config.yaml</code>,
+    <code>Ecosystem/infra/terraform/</code>, <code>.github/workflows/ci.yml</code>,
+    <code>Applications/dataroom/.github/workflows/</code>, <code>Applications/boardlab/CLAUDE.md</code>,
+    live <code>git remote -v</code> / <code>git log</code> on the repo.
+  </p>
+
+  <div class="callout"><strong>Headline finding:</strong> there is no production deployment today. Nothing has been provisioned in AWS beyond, at most, an unapplied Terraform plan for Cognito. What exists is (a) a working local/CI dev loop, (b) a written design for a future AWS deploy, and (c) a documented, self-acknowledged conflict between the git host the design assumes and the git host actually in use.</div>
+
+  <h2>1. Source control — what's actually in use</h2>
+  <pre><code>$ git remote -v
+origin  codecommit::us-east-2://Jemba9_Ecosystem   (fetch/push)</code></pre>
+  <p>The whole monorepo (<code>Ecosystem/</code> + <code>Applications/*</code>) lives in <strong>AWS CodeCommit</strong>, repo <code>Jemba9_Ecosystem</code>, account <code>824999955649</code> (the <code>onej9</code> SSO org), region <code>us-east-2</code>. Branches in active use: <code>main</code>, <code>feat/board-lab</code>, <code>feat/component-master</code>, <code>okr-app</code>, <code>audit/2026-08-07-hardening-and-perf</code>. Commits are tagged by sprint, e.g. <code>[sprint-10-hardening] …</code>. Pull requests, if used, go through <code>aws codecommit create-pull-request</code> or the console — there is no GitHub remote to open a <code>gh pr</code> against.</p>
+  <p>This is a <strong>documented deviation</strong> (<code>Ecosystem/docs/notes/deviation_codecommit.md</code>, owner-approved 2026-07-15, status "adopted"), because the locked platform decision it overrides explicitly says the opposite (see §3 below).</p>
+
+  <h2>2. CI — what actually runs</h2>
+  <ul>
+    <li><strong><code>Ecosystem/.github/workflows/ci.yml</code></strong> (repo-root <code>.github/</code>, i.e. <code>J9Eco/.github/workflows/ci.yml</code>): on every push/PR, two jobs — <code>build</code> (install → typecheck → lint → format:check → unit test → build) and <code>integration</code> (spins up a Postgres 16 service container, provisions the shadow DB + least-privilege <code>j9_app</code> role, migrates, seeds, runs integration tests). Node 20. <strong>No deploy job.</strong></li>
+    <li>The file's own header comment says: <em>"Deploy-to-AWS via GitHub Actions OIDC is added in Sprint 10."</em> It was not — Sprint 10's actual deliverables (<code>docs/run_notes.md</code>) were settings/hardening/security-headers/docs, not a deploy job; no deploy step exists in <code>ci.yml</code> today.</li>
+    <li><strong>This is a GitHub Actions file living in a repo whose remote is CodeCommit.</strong> GitHub Actions do not run against a CodeCommit-hosted repo without an explicit mirror/bridge, and no such mirror is configured anywhere in this repo. Sprint 00's run notes even flag this as a known caveat: <em>"GitHub only runs workflows from the repo root <code>.github/</code>. Today J9Ecosystem is a subfolder of the Jemba9 monorepo with no remote; the workflow is authored assuming this project becomes its own repo."</em> That assumption never resolved.</li>
+    <li><code>Applications/dataroom/.github/workflows/{deploy,deploy-staging}.yml</code> <strong>do</strong> exist and target GitHub Actions OIDC → AWS, but they deploy to an S3 bucket named <code>cloudcowboy-us-prod-site</code> / CloudFront distribution for a domain <code>cloudcowboy.us</code>, with Supabase env vars (<code>VITE_SUPABASE_URL</code>, etc.) baked in as build-time secrets. That is <strong>not a Jemba9 target</strong> — it reads like leftover boilerplate from a different project copied into the app folder, not a working Data Room pipeline.</li>
+    <li><code>Applications/boardlab/</code> has <strong>no</strong> <code>.github/workflows/</code>, no <code>deploy-constitution.md</code>, and no CI/CD config of any kind.</li>
+  </ul>
+
+  <h2>3. The locked design vs. the deviation (the core contradiction)</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Design versus reality conflict diagram for CI/CD host">
+      <rect x="20" y="30" width="280" height="90" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="160" y="55" text-anchor="middle" font-size="12" font-weight="800" fill="#1e3a8a" letter-spacing="1">DESIGN</text>
+      <text x="160" y="78" text-anchor="middle" font-size="12.5" fill="#1e3a8a">GitHub + GitHub Actions</text>
+      <text x="160" y="96" text-anchor="middle" font-size="11" fill="#334155">OIDC role-assumption into AWS</text>
+
+      <rect x="400" y="30" width="280" height="90" rx="8" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+      <text x="540" y="55" text-anchor="middle" font-size="12" font-weight="800" fill="#7c2d12" letter-spacing="1">REALITY</text>
+      <text x="540" y="78" text-anchor="middle" font-size="12.5" fill="#7c2d12">AWS CodeCommit</text>
+      <text x="540" y="96" text-anchor="middle" font-size="11" fill="#9a3412">adopted deviation, 2026-07-15</text>
+
+      <line x1="300" y1="75" x2="360" y2="75" stroke="#b91c1c" stroke-width="2.5" stroke-dasharray="2 5"/>
+      <path d="M330,60 L322,75 L338,75 Z" fill="#b91c1c"/>
+      <path d="M330,90 L322,75 L338,75 Z" fill="#b91c1c"/>
+
+      <polygon points="350,140 375,185 325,185" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>
+      <text x="350" y="176" text-anchor="middle" font-size="16" font-weight="900" fill="#b91c1c">!</text>
+      <text x="350" y="205" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">CI wiring not confirmed</text>
+      <text x="350" y="220" text-anchor="middle" font-size="10.5" fill="#6b7280">&#8220;Confirm the CI wiring before relying on it.&#8221;</text>
+    </svg>
+    <figcaption>company.config.yaml still declares <code>hosting.ci: "github-actions-oidc"</code> while the only git host in use is CodeCommit.</figcaption>
+  </figure>
+
+  <p>The architecture doc's decision table is explicit and still reads this way today:</p>
+  <blockquote>"Source control / CI | <strong>GitHub + GitHub Actions</strong> (OIDC role-assumption into AWS) | <strong>AWS CodeCommit stopped accepting new customers in July 2024</strong> — it is not a viable target." — <code>j9-ecosystem-architecture.md</code> §3</blockquote>
+  <blockquote>"Do not target AWS CodeCommit — it stopped accepting new customers in July 2024. CI/CD uses GitHub Actions with OIDC into AWS." — <code>docs/deployment/aws.md</code> (top of file, called out as a warning)</blockquote>
+  <p>But the actual git host adopted a month later (<code>deviation_codecommit.md</code>, 2026-07-15) <strong>is</strong> CodeCommit — reachable because the <em>repo</em> account (<code>824999955649</code>) has CodeCommit access, even though the original blocker (the platform's <em>deploy</em> account, <code>573631993254</code>, has zero CodeCommit repos and cannot create them) is still true and unrelated. The deviation note's own "Consequences / follow-ups" section admits this was never fully resolved:</p>
+  <blockquote>"Cross-account CI/CD. Code lives in CodeCommit in <code>824999955649</code>; the platform deploys into <code>573631993254</code>... A pipeline (CodePipeline/CodeBuild) must be granted cross-account access to the CodeCommit source, or a mirror set up. <strong>Confirm the CI wiring before relying on it.</strong>"</blockquote>
+  <p>Nobody has confirmed that wiring. <code>company.config.yaml</code> still declares <code>hosting.ci: "github-actions-oidc"</code>, and the deployment docs still describe a GitHub Actions pipeline, while the only git host actually in use is CodeCommit. This is the single biggest open question in the deployment story.</p>
+
+  <h2>4. The planned AWS deploy path (design only — nothing applied)</h2>
+  <p><code>Ecosystem/docs/deployment/aws.md</code>, <code>dns.md</code>, <code>replication.md</code>, and <code>docs/adr/0002-compute.md</code> lay out a coherent target design. None of it has been built in AWS yet beyond an unapplied Cognito Terraform plan.</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 760 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planned AWS topology diagram, not yet provisioned">
+      <defs>
+        <marker id="arrowT" viewBox="0 0 10 10" refX="5" refY="8" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L5,10 L10,0 z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+      <rect x="20" y="10" width="720" height="430" rx="12" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+
+      <rect x="290" y="30" width="180" height="42" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+      <text x="380" y="56" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">Route 53 (jemba9.com)</text>
+      <line x1="380" y1="72" x2="380" y2="94" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowT)"/>
+
+      <rect x="270" y="100" width="220" height="46" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="380" y="128" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">CloudFront (front door)</text>
+
+      <line x1="330" y1="146" x2="220" y2="184" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowT)"/>
+      <line x1="430" y1="146" x2="540" y2="184" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowT)"/>
+
+      <rect x="80" y="190" width="280" height="52" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <text x="220" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">Platform origin</text>
+      <text x="220" y="230" text-anchor="middle" font-size="10.5" fill="#365314">ECS Fargate + internal ALB (Ecosystem)</text>
+
+      <rect x="400" y="190" width="280" height="52" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <text x="540" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">App origins</text>
+      <text x="540" y="230" text-anchor="middle" font-size="10.5" fill="#365314">ECS Fargate, one per app (join later)</text>
+
+      <line x1="220" y1="242" x2="220" y2="284" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowT)"/>
+      <line x1="540" y1="242" x2="540" y2="284" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowT)"/>
+
+      <rect x="60" y="290" width="200" height="50" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="160" y="312" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4c1d95">RDS/Aurora Postgres</text>
+      <text x="160" y="328" text-anchor="middle" font-size="10" fill="#6d28d9">migrated from Lakebase</text>
+
+      <rect x="280" y="290" width="200" height="50" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="380" y="312" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4c1d95">ElastiCache Redis</text>
+      <text x="380" y="328" text-anchor="middle" font-size="10" fill="#6d28d9">sessions, caches</text>
+
+      <rect x="500" y="290" width="200" height="50" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="600" y="312" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4c1d95">S3</text>
+      <text x="600" y="328" text-anchor="middle" font-size="10" fill="#6d28d9">objects, per-app prefixes</text>
+
+      <line x1="220" y1="242" x2="640" y2="360" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3 4"/>
+      <rect x="540" y="360" width="160" height="42" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="2"/>
+      <text x="620" y="386" text-anchor="middle" font-size="10.5" font-weight="700" fill="#374151">SSM / Secrets Mgr</text>
+
+      <text x="380" y="425" text-anchor="middle" font-size="13" font-weight="800" fill="#b91c1c">&#9888; Design only &#8212; nothing provisioned in AWS yet</text>
+    </svg>
+    <figcaption>Target topology, account <code>573631993254</code>, region <code>us-west-2</code>. Only the Cognito Terraform module exists today; network/RDS/secrets/compute/CDN modules are all unwritten.</figcaption>
+  </figure>
+
+  <p><strong>Compute choice (ADR 0002, accepted):</strong> AWS <strong>ECS Fargate</strong> behind an internal ALB, chosen over App Runner and Amplify Hosting specifically because the platform ships two long-running processes — the Next.js app and a BullMQ <strong>worker</strong> (grant-expiry sweep, health polling, rollups, retention) — that Fargate runs as sibling services cleanly.</p>
+
+  <p><strong>Planned deploy job</strong> (never implemented): on push to <code>main</code>, after CI — <code>configure-aws-credentials</code> via OIDC (no long-lived keys) → build + push a Docker image to ECR (Next <code>output: 'standalone'</code>) → <code>prisma migrate deploy</code> against RDS from a one-off task → <code>aws ecs update-service --force-new-deployment</code> → smoke-test <code>/healthz</code> behind CloudFront.</p>
+
+  <p><strong>Terraform reality check:</strong> <code>Ecosystem/infra/terraform/</code> today contains <em>only</em> the Cognito module (<code>main.tf</code>, <code>variables.tf</code>, <code>outputs.tf</code>), documented in its own README as <strong>"apply-ready but not yet applied"</strong> — deliberately left as a human go/no-go because it provisions real, billable AWS resources. The <code>aws.md</code> plan calls for five more modules (network, data/RDS, secrets, compute/ECS, cdn/CloudFront) plus an S3+DynamoDB Terraform state backend migration (currently local, gitignored state) — <strong>none of these exist yet</strong>, only the plan to add them.</p>
+
+  <p><strong>DNS is a tracked, separate blocker</strong>: the <code>jemba9.com</code> Route 53 zone lives in a different AWS account than the deploy account. Until that's resolved (either get zone access to add an ALIAS record, or re-delegate the registrar to a new zone in <code>573631993254</code>), the platform can only ever be reached at a <code>*.cloudfront.net</code> URL — which is fine for interim operation but blocks public launch (<code>docs/deployment/dns.md</code>).</p>
+
+  <h2>5. Replication playbook (as designed, for a <em>new</em> deployment)</h2>
+  <p><code>docs/deployment/replication.md</code> describes standing up a fresh, differently-branded deployment "in under a day": copy the repo → fill <code>company.config.yaml</code> → <code>terraform apply</code> (Cognito + the not-yet-written network/RDS/CloudFront/secrets/CI modules) → migrate + seed → push to <code>main</code> so the (not-yet-written) GitHub Actions OIDC pipeline builds/deploys → smoke test → attach DNS. This is aspirational until the missing Terraform modules and the CodeCommit/GitHub CI question are resolved — it has never actually been executed end to end.</p>
+
+  <h2>6. Per-app deployment status</h2>
+  <table>
+    <tr><th>App</th><th>Deploy pipeline</th><th>Notes</th></tr>
+    <tr><td>Ecosystem (platform)</td><td>None applied. CI-only (<code>ci.yml</code>), no deploy job, unclear whether CI even runs given the CodeCommit remote.</td><td>See §2–§3.</td></tr>
+    <tr><td>Board Lab</td><td>None. No <code>.github/workflows/</code>, no <code>deploy-constitution.md</code>. Runs locally via <code>StartBoardLab.sh</code> → <code>docker compose</code> (Postgres) → <code>prisma migrate deploy</code> → <code>npm run seed</code> → <code>next dev -p 3002</code>.</td><td>Its own <code>CLAUDE.md</code> documents local dev commands only; production deploy is undefined.</td></tr>
+    <tr><td>Data Room</td><td>Has <code>.github/workflows/deploy.yml</code> / <code>deploy-staging.yml</code>, but they target an unrelated project (<code>cloudcowboy.us</code>, Supabase) — not usable as-is for Jemba9.</td><td>Treat as leftover template content, not a real pipeline.</td></tr>
+    <tr><td>OKR</td><td>Not investigated in depth here (out of scope of this pass) — no evidence of a working deploy pipeline was found.</td><td>&#8212;</td></tr>
+  </table>
+
+  <h2>7. Practical takeaway</h2>
+  <p>If you need to "commit and push to production" for any app in this ecosystem today, there is no such command — because there is no production environment to push to, and the CI/CD story that would eventually build one is internally contradictory (CodeCommit repo, GitHub-Actions-shaped design). The actionable next step is a decision, not a command: pick GitHub Actions (and either move the repo or bridge CodeCommit → GitHub) or commit to CodePipeline/CodeBuild against CodeCommit directly, then write the Terraform modules <code>aws.md</code> describes and apply them.</p>
+
+  <a class="back-to-top" href="#top">↑ Back to top</a>
+</section>
+
+<hr class="divider">
+
+<section id="gaps-and-risks">
+  <h1>Gaps, contradictions, and open decisions</h1>
+  <p>Consolidated from the Deployment and Auth/Authz sections above. Ordered roughly by how much a real decision is blocked on each.</p>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,3 22,20 2,20" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#b91c1c">!</text></svg> 1. CI/CD host mismatch — unresolved <span class="badge badge-red">high</span></h3>
+    <ul>
+      <li>The locked architecture decision and <code>docs/deployment/aws.md</code> both say: git host = GitHub, CI/CD = GitHub Actions with OIDC, <em>because</em> "AWS CodeCommit stopped accepting new customers in July 2024."</li>
+      <li>The repo's actual git remote is <strong>AWS CodeCommit</strong>, adopted via a dated, owner-approved deviation (<code>docs/notes/deviation_codecommit.md</code>) that itself says: <em>"Confirm the CI wiring before relying on it"</em> — and nobody has.</li>
+      <li><code>.github/workflows/ci.yml</code> exists and looks correct, but GitHub Actions does not execute against a CodeCommit-hosted repo without a mirror/bridge, and none is configured. It's unclear whether this CI has ever actually run in the last several sprints, or whether "gates pass" claims in <code>run_notes.md</code> were verified by running these commands locally rather than by CI.</li>
+      <li><code>company.config.yaml</code> still declares <code>hosting.ci: "github-actions-oidc"</code>.</li>
+      <li><strong>Needs a decision:</strong> either (a) move/mirror the repo to GitHub and keep the GitHub Actions design, or (b) commit to CodePipeline/CodeBuild reading from CodeCommit directly and rewrite the deployment docs to match, or (c) set up a CodeCommit→GitHub mirror so both the existing <code>ci.yml</code> and the CodeCommit git workflow keep working.</li>
+    </ul>
+  </div>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,3 22,20 2,20" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#b91c1c">!</text></svg> 2. No AWS infrastructure has actually been provisioned <span class="badge badge-red">high</span></h3>
+    <ul>
+      <li>Terraform exists only for Cognito, and its own README says "apply-ready but not yet applied."</li>
+      <li>The five additional modules <code>aws.md</code> calls for (network, RDS, secrets, ECS compute, CloudFront) do not exist in <code>infra/terraform/</code> at all — only the ADR recommending ECS Fargate (0002) has been written.</li>
+      <li>Terraform state is local and gitignored; the S3+DynamoDB backend is only a stub in <code>main.tf</code>, not migrated to.</li>
+      <li><strong>Consequence:</strong> there is no staging or production environment anywhere. Everything that has been "verified" (Sprints 00–10 acceptance criteria) was verified against local Docker Postgres/Redis + the mock OIDC issuer.</li>
+    </ul>
+  </div>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,3 22,20 2,20" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#b45309">!</text></svg> 3. Auth is running on a mock identity provider, not Cognito <span class="badge badge-amber">medium</span></h3>
+    <ul>
+      <li><code>AUTH_PROVIDER=cognito</code> has never been set outside of it being "apply-ready."</li>
+      <li>Anyone reasoning about "how login works in production" should read Sprint 02 acceptance criteria with that caveat in mind — the <em>design</em> and the <em>code path</em> for Cognito exist and are meant to be a pure env-var flip, but that flip is unverified against a real Cognito pool.</li>
+    </ul>
+  </div>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,3 22,20 2,20" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#b45309">!</text></svg> 4. No business app has completed the App Contract <span class="badge badge-amber">medium</span></h3>
+    <ul>
+      <li>Central authz is fully implemented and tested — but zero business apps (Board Lab, Data Room, OKR, QMS) have actually registered a manifest against a live platform instance or refactored their own session logic to call <code>GET /api/session</code> / <code>can()</code>.</li>
+      <li>Board Lab, Data Room, and OKR each still run some form of their own local/independent session or auth handling in the interim (Data Room explicitly flagged "not yet integrated" in <code>Applications/README.md</code>; OKR is still on WorkOS/django-allauth pending the Cognito rewrite the identity doc mandates).</li>
+      <li>This means "the platform enforces access for the ecosystem" is true of the Admin app only, not of any of the actual business apps yet.</li>
+    </ul>
+  </div>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,3 22,20 2,20" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#b45309">!</text></svg> 5. Data Room's existing deploy workflows look like leftover boilerplate <span class="badge badge-amber">medium</span></h3>
+    <ul>
+      <li><code>deploy.yml</code> / <code>deploy-staging.yml</code> target <code>cloudcowboy.us</code> (S3 + CloudFront) with Supabase secrets — unrelated to Jemba9's Cognito/Lakebase/ECS design.</li>
+      <li><strong>Risk:</strong> if someone runs these thinking they deploy the Jemba9 Data Room, they will push to the wrong AWS account/bucket/domain, or fail outright on missing secrets. Worth deleting or clearly marking as stale if not actively maintained.</li>
+    </ul>
+  </div>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8">i</text></svg> 6. DNS blocker <span class="badge badge-blue">low urgency</span></h3>
+    <ul>
+      <li><code>jemba9.com</code>'s Route 53 zone lives in a different AWS account than the deploy account (<code>573631993254</code>). Two unblock paths are documented (<code>docs/deployment/dns.md</code>): get zone access, or re-delegate the registrar to a new zone in the deploy account. Neither has been actioned.</li>
+      <li>Interim operation at a <code>*.cloudfront.net</code> URL is explicitly fine per that doc, so this only blocks the <em>vanity domain</em>, not functionality.</li>
+    </ul>
+  </div>
+
+  <div class="gap-item">
+    <h3><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8">i</text></svg> 7. CSP <code>'unsafe-inline'</code> <span class="badge badge-blue">low urgency, tracked</span></h3>
+    <ul>
+      <li><code>docs/notes/security-baseline.md</code> already tracks this as an open item owned by "platform" — a nonce + <code>strict-dynamic</code> upgrade before public launch. Flagged here only for completeness; not a new finding.</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>Suggested next step:</strong> given how much of the deployment story hinges on item 1, that's the decision worth forcing first — pick one CI/CD host and make the docs, <code>ci.yml</code>, and <code>company.config.yaml</code> agree with it before writing any of the missing Terraform modules. Everything else (applying Cognito, standing up ECS, onboarding the first real app) is downstream of knowing where "push to production" actually pushes to.
+  </div>
+
+  <a class="back-to-top" href="#top">↑ Back to top</a>
+</section>
+
+<footer>
+  Jemba9 Ecosystem documentation snapshot &#183; generated 2026-08-11 &#183; self-contained HTML, no external assets, no JavaScript.
+</footer>
+
+</div>
+</body>
+</html>

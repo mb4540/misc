@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schematic Copilot — Overview, Architecture &amp; Mockup</title>
+<style>
+  :root {
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --card:           #ffffff;
+
+    --blue:    #2a78d6;
+    --aqua:    #1baf7a;
+    --yellow:  #eda100;
+    --green:   #008300;
+    --violet:  #4a3aa7;
+    --red:     #e34948;
+    --magenta: #e87ba4;
+    --orange:  #eb6834;
+
+    --good:     #0ca30c;
+    --warning:  #fab219;
+    --serious:  #ec835a;
+    --critical: #d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --card:           #232322;
+
+      --blue:    #3987e5;
+      --aqua:    #199e70;
+      --yellow:  #c98500;
+      --green:   #008300;
+      --violet:  #9085e9;
+      --red:     #e66767;
+      --magenta: #d55181;
+      --orange:  #d95926;
+
+      --good:     #0ca30c;
+      --warning:  #fab219;
+      --serious:  #ec835a;
+      --critical: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --card:           #232322;
+      --blue:    #3987e5; --aqua: #199e70; --yellow: #c98500; --green:#008300;
+      --violet:  #9085e9; --red:  #e66767; --magenta:#d55181; --orange:#d95926;
+  }
+  :root[data-theme="light"] {
+      --surface-1:      #fcfcfb;
+      --page:           #f9f9f7;
+      --text-primary:   #0b0b0b;
+      --text-secondary: #52514e;
+      --text-muted:     #898781;
+      --gridline:       #e1e0d9;
+      --baseline:       #c3c2b7;
+      --border:         rgba(11,11,11,0.10);
+      --card:           #ffffff;
+      --blue:    #2a78d6; --aqua: #1baf7a; --yellow: #eda100; --green:#008300;
+      --violet:  #4a3aa7; --red:  #e34948; --magenta:#e87ba4; --orange:#eb6834;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--page);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  body { padding: 0 0 64px 0; }
+
+  header.top {
+    padding: 28px 32px 0 32px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  header.top h1 {
+    font-size: 1.5rem;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+  }
+  header.top p.sub {
+    color: var(--text-secondary);
+    margin: 0 0 20px 0;
+    font-size: 0.95rem;
+  }
+
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--gridline);
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  nav.tabs button {
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 12px 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-family: inherit;
+  }
+  nav.tabs button:hover { color: var(--text-primary); }
+  nav.tabs button.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 32px 0 32px;
+  }
+  section.panel { display: none; }
+  section.panel.active { display: block; }
+
+  h2 { font-size: 1.15rem; margin: 28px 0 10px 0; }
+  h2:first-child { margin-top: 0; }
+  h3 { font-size: 0.98rem; margin: 20px 0 8px 0; }
+  p { line-height: 1.55; color: var(--text-primary); font-size: 0.92rem; }
+  p.lede { font-size: 1.0rem; color: var(--text-secondary); max-width: 820px; }
+  ul { line-height: 1.6; font-size: 0.92rem; padding-left: 20px; }
+  li { margin-bottom: 4px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .stage-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 14px 0 6px 0;
+  }
+  .stage {
+    flex: 1 1 200px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .stage .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .stage h4 { margin: 0 0 4px 0; font-size: 0.88rem; }
+  .stage p { margin: 0; font-size: 0.82rem; color: var(--text-secondary); }
+
+  .callout {
+    border-left: 3px solid var(--critical);
+    background: var(--card);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .callout.good { border-left-color: var(--good); }
+  .callout h4 { margin: 0 0 6px 0; font-size: 0.9rem; }
+  .callout p { margin: 0; font-size: 0.88rem; }
+
+  table.std {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  table.std th, table.std td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--gridline);
+  }
+  table.std th { color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+
+  /* ---- Architecture tab ---- */
+  .diagram-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 14px 4px 4px 4px;
+    font-size: 0.82rem;
+  }
+  .legend .item { display: flex; align-items: center; gap: 7px; color: var(--text-secondary); }
+  .legend .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+
+  /* ---- Mockup tab ---- */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 620px;
+    background: var(--card);
+  }
+  .app-sidebar {
+    background: var(--surface-1);
+    border-right: 1px solid var(--border);
+    padding: 16px 12px;
+    font-size: 0.85rem;
+  }
+  .app-sidebar .brand { font-weight: 700; font-size: 0.92rem; padding: 4px 8px 16px 8px; }
+  .app-sidebar .nav-item {
+    padding: 9px 10px;
+    border-radius: 7px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-sidebar .nav-item:hover { background: var(--border); }
+  .app-sidebar .nav-item.active { background: var(--blue); color: #fff; }
+  .app-sidebar .nav-item .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+
+  .app-main { padding: 20px 22px; }
+  .app-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .app-topbar h3 { margin: 0; font-size: 1.02rem; }
+  .app-topbar .project { font-size: 0.78rem; color: var(--text-muted); }
+
+  .stat-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .stat-tile {
+    flex: 1 1 130px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 14px;
+  }
+  .stat-tile .val { font-size: 1.35rem; font-weight: 700; }
+  .stat-tile .lbl { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  .worklist { display: flex; flex-direction: column; gap: 8px; }
+  .work-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    transition: border-color 0.12s ease;
+  }
+  .work-item:hover { border-color: var(--blue); }
+  .work-item.selected { border-color: var(--blue); background: var(--surface-1); }
+  .work-item.resolved { opacity: 0.55; }
+  .work-item .badge {
+    flex: none;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    margin-top: 5px;
+  }
+  .work-item .body { flex: 1; }
+  .work-item .title { font-size: 0.87rem; font-weight: 600; }
+  .work-item .meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .work-item .status-pill {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 3px 8px;
+    border-radius: 20px;
+    flex: none;
+    white-space: nowrap;
+  }
+  .pill-critical { background: rgba(208,59,59,0.14); color: var(--critical); }
+  .pill-warning  { background: rgba(250,178,25,0.18); color: #9a6600; }
+  :root[data-theme="dark"] .pill-warning { color: var(--warning); }
+  @media (prefers-color-scheme: dark) { .pill-warning { color: var(--warning); } }
+  .pill-good     { background: rgba(12,163,12,0.14); color: var(--good); }
+
+  .detail-panel {
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    background: var(--surface-1);
+  }
+  .detail-panel h4 { margin: 0 0 4px 0; font-size: 0.95rem; }
+  .detail-panel .meta-row { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 10px; }
+  .detail-panel .ds-quote {
+    border-left: 3px solid var(--violet);
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    background: var(--card);
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0;
+  }
+  .detail-panel .ai-suggestion {
+    border-left: 3px solid var(--yellow);
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    background: var(--card);
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0;
+  }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  button.action {
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  button.action.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  button.action.ghost { background: transparent; }
+  button.action:disabled { opacity: 0.45; cursor: default; }
+
+  .copilot-panel {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .copilot-head {
+    padding: 10px 14px;
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .copilot-head .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+  .copilot-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; }
+  .msg { font-size: 0.83rem; line-height: 1.45; max-width: 85%; padding: 8px 12px; border-radius: 10px; }
+  .msg.user { align-self: flex-end; background: var(--blue); color: #fff; border-bottom-right-radius: 2px; }
+  .msg.ai { align-self: flex-start; background: var(--surface-1); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 14px 10px 14px; }
+  .chip {
+    font-size: 0.74rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    color: var(--text-secondary);
+  }
+  .chip:hover { border-color: var(--blue); color: var(--blue); }
+  .copilot-input {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .copilot-input input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-primary);
+  }
+  .typing { font-size: 0.78rem; color: var(--text-muted); font-style: italic; padding-left: 2px; }
+
+  /* ---- multi-view switching ---- */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---- Schematic Viewer ---- */
+  .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .toolbar button.tool {
+    font-family: inherit; font-size: 0.78rem; font-weight: 600;
+    padding: 6px 12px; border-radius: 7px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text-secondary); cursor: pointer;
+  }
+  .toolbar button.tool:hover { border-color: var(--blue); color: var(--blue); }
+  .toolbar button.tool.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .toolbar .spacer { flex: 1; }
+  .toolbar .zoom-lvl { font-size: 0.78rem; color: var(--text-muted); min-width: 40px; text-align: center; }
+
+  .sch-layout { display: grid; grid-template-columns: 1fr 260px; gap: 14px; align-items: start; }
+  @media (max-width: 900px) { .sch-layout { grid-template-columns: 1fr; } }
+
+  .schematic-canvas {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    height: 420px;
+    background-image:
+      linear-gradient(var(--gridline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-color: var(--surface-1);
+    overflow: hidden;
+  }
+  .sch-symbol {
+    position: absolute;
+    border: 1.5px solid var(--text-muted);
+    border-radius: 6px;
+    background: var(--card);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 6px 4px;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .sch-symbol:hover { border-color: var(--blue); }
+  .sch-symbol.selected { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(42,120,214,0.25); }
+  .sch-symbol .pin-label { font-size: 0.6rem; color: var(--text-muted); font-weight: 400; }
+  .sch-wire { position: absolute; background: var(--baseline); }
+  .sch-flag {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--card);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 800; color: #fff;
+  }
+  .sch-flag.critical { background: var(--critical); }
+  .sch-flag.warning { background: var(--warning); color: #241a00; }
+
+  .inspector {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    background: var(--surface-1);
+    min-height: 420px;
+  }
+  .inspector h4 { margin: 0 0 4px 0; font-size: 0.92rem; }
+  .inspector .meta-row { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 12px; }
+  .inspector dl { margin: 0; font-size: 0.82rem; }
+  .inspector dt { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 10px; }
+  .inspector dd { margin: 2px 0 0 0; color: var(--text-primary); }
+
+  /* ---- Datasheet Library ---- */
+  .ds-toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .ds-toolbar input[type="text"] {
+    font-family: inherit; font-size: 0.85rem; padding: 8px 12px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text-primary);
+    min-width: 220px;
+  }
+  .ds-toolbar .sync-status { margin-left: auto; font-size: 0.76rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .ds-toolbar .sync-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+
+  .ds-layout { display: grid; grid-template-columns: 1fr 300px; gap: 14px; align-items: start; }
+  @media (max-width: 900px) { .ds-layout { grid-template-columns: 1fr; } }
+
+  .ds-list { display: flex; flex-direction: column; gap: 8px; }
+  .ds-card {
+    display: flex; align-items: flex-start; gap: 12px;
+    border: 1px solid var(--border); border-radius: 9px; padding: 12px 14px; cursor: pointer;
+  }
+  .ds-card:hover { border-color: var(--blue); }
+  .ds-card.selected { border-color: var(--blue); background: var(--surface-1); }
+  .ds-card .icon { font-size: 1.1rem; flex: none; }
+  .ds-card .title { font-size: 0.87rem; font-weight: 600; }
+  .ds-card .meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .ds-card .excerpt { font-size: 0.78rem; color: var(--text-secondary); margin-top: 6px; }
+  .ds-card .indexed { margin-left: auto; flex: none; font-size: 0.68rem; font-weight: 700; color: var(--good); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .ds-card .indexed .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); }
+
+  /* ---- Audit Log ---- */
+  .audit-filters { display: flex; gap: 6px; margin-bottom: 14px; }
+  .audit-filters .chip.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .audit-row { display: flex; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--gridline); font-size: 0.83rem; align-items: flex-start; }
+  .audit-row .ts { flex: none; width: 130px; color: var(--text-muted); font-size: 0.76rem; }
+  .audit-row .actor { flex: none; width: 150px; font-weight: 600; }
+  .audit-row .desc { flex: 1; color: var(--text-secondary); }
+  .audit-row .tag { flex: none; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+  .tag-agent { background: rgba(237,161,0,0.16); color: #8a6100; }
+  .tag-engineer { background: rgba(42,120,214,0.14); color: var(--blue); }
+  .tag-system { background: rgba(137,135,129,0.18); color: var(--text-muted); }
+
+  /* ---- Project Settings ---- */
+  .settings-grid { display: flex; flex-direction: column; gap: 14px; }
+  .settings-section h3 { margin: 0 0 12px 0; font-size: 0.92rem; }
+  .field-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gridline); gap: 16px; }
+  .field-row:last-child { border-bottom: none; }
+  .field-row .label { font-size: 0.85rem; }
+  .field-row .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .field-row input[type="text"], .field-row select {
+    font-family: inherit; font-size: 0.85rem; padding: 7px 10px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text-primary);
+  }
+  .pill-toggle-row { display: flex; gap: 6px; }
+  .pill-toggle {
+    font-size: 0.78rem; font-weight: 600; padding: 6px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text-secondary); cursor: pointer;
+  }
+  .pill-toggle.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .switch { width: 36px; height: 20px; border-radius: 20px; background: var(--gridline); position: relative; cursor: pointer; flex: none; }
+  .switch .knob { width: 16px; height: 16px; border-radius: 50%; background: #fff; position: absolute; top: 2px; left: 2px; transition: left 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+  .switch.on { background: var(--blue); }
+  .switch.on .knob { left: 18px; }
+  .team-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gridline); font-size: 0.85rem; }
+  .team-row:last-child { border-bottom: none; }
+  .team-row .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex: none; }
+  .team-row .name { flex: 1; }
+  .role-badge { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; background: var(--surface-1); color: var(--text-muted); }
+  .danger-zone { border: 1px solid rgba(208,59,59,0.35); border-radius: 10px; padding: 14px 16px; }
+  .danger-zone h3 { color: var(--critical); margin: 0 0 12px 0; font-size: 0.92rem; }
+  button.action.danger { border-color: var(--critical); color: var(--critical); background: transparent; }
+
+  footer.note {
+    max-width: 1180px;
+    margin: 30px auto 0 auto;
+    padding: 0 32px;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Schematic Copilot</h1>
+  <p class="sub">An agentic AI assistant for aerospace PCB schematic development — overview, proposed architecture, and interactive concept mockup.</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="architecture">Architecture</button>
+  <button class="tab-btn" data-tab="mockup">Interactive Mockup</button>
+</nav>
+
+<main>
+
+  <!-- ======================= TAB 1: OVERVIEW ======================= -->
+  <section class="panel active" id="panel-overview">
+
+    <h2>The problem</h2>
+    <p class="lede">Aerospace schematic capture leans on two tightly coupled but separately maintained artifacts — the schematic itself and the datasheets of every part in it. Today, tying the two together is a manual, memory-dependent process, and manual cross-checking is where work items get missed.</p>
+
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card">
+        <h3 style="margin-top:0;">Schematic</h3>
+        <p>The logical circuit diagram — components, pins, and nets — created in schematic-capture tools (Altium, Cadence OrCAD/Allegro, KiCad). It expresses design <em>intent</em>: power flow, signal paths, protection circuitry, before any physical layout exists.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">Datasheet</h3>
+        <p>The manufacturer's reference for a specific part — pinout, absolute maximum ratings, recommended operating conditions, timing/switching characteristics, and application notes (required decoupling caps, pull-ups, termination, layout guidance).</p>
+      </div>
+    </div>
+
+    <h2>Where they meet in the development process</h2>
+    <div class="stage-row">
+      <div class="stage"><span class="num">1</span><h4>Part Research &amp; Selection</h4><p>Datasheets compared against requirements and qualification level (temp range, MIL-SPEC, rad-hardened variants).</p></div>
+      <div class="stage"><span class="num">2</span><h4>Schematic Capture &amp; Simulation</h4><p>Each symbol wired per the datasheet's recommended application circuit — correct pinout, bypass caps, pull-ups, termination.</p></div>
+      <div class="stage"><span class="num">3</span><h4>Board Layout</h4><p>Datasheet layout guidance (trace length, proximity, thermal pads) carried into placement and routing.</p></div>
+      <div class="stage"><span class="num">4</span><h4>Verification &amp; Validation</h4><p>Design-rule and electrical checks confirm the schematic doesn't violate any component's datasheet limits.</p></div>
+    </div>
+
+    <div class="callout">
+      <h4>Why work items get missed</h4>
+      <p>Every one of those handoffs today depends on an engineer remembering to re-open a datasheet PDF, re-check a value, and manually log a follow-up. On a board with hundreds of parts, that's hundreds of manual cross-checks with no forcing function — nothing stops a missing decoupling cap or an unterminated net from silently surviving to review.</p>
+    </div>
+
+    <h2>Qualification &amp; traceability</h2>
+    <p>In aerospace specifically, formal design reviews expect documented traceability from each schematic net/component choice back to its datasheet specification and the system requirement it satisfies:</p>
+    <table class="std">
+      <tr><th>Standard</th><th>Relevance</th></tr>
+      <tr><td>DO-254</td><td>Design assurance for airborne electronic hardware — requires traceable, reviewable design evidence.</td></tr>
+      <tr><td>AS9100</td><td>Aerospace quality management — process discipline and objective evidence for every design decision.</td></tr>
+      <tr><td>IPC-2221 / MIL-STD</td><td>Documentation, manufacturing, and testing standards referenced during schematic/layout review.</td></tr>
+    </table>
+
+    <h2>The proposed direction</h2>
+    <div class="callout good">
+      <h4>An agentic assistant, not another manual checklist</h4>
+      <p>Rather than a static checklist an engineer has to remember to run, an AI agent watches the schematic as it's built, cross-references each component against its datasheet automatically, and surfaces flagged work items in a live queue — so nothing depends on an engineer remembering a manual step. See the <strong>Architecture</strong> and <strong>Interactive Mockup</strong> tabs for the proposed shape of this.</p>
+    </div>
+
+  </section>
+
+  <!-- ======================= TAB 2: ARCHITECTURE ======================= -->
+  <section class="panel" id="panel-architecture">
+
+    <h2>Proposed simple architecture</h2>
+    <p class="lede">A thin web front end, a stateless API layer, an LLM-based agent orchestrator, and a Databricks Lakebase Postgres database for transactional state — sitting alongside the existing Databricks lakehouse used for SAG data.</p>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 1000 610" role="img" aria-labelledby="arch-title arch-desc" xmlns="http://www.w3.org/2000/svg">
+        <title id="arch-title">Schematic Copilot proposed architecture</title>
+        <desc id="arch-desc">Engineer uses a React frontend authenticated via Cognito, talking to an ECS backend API, which hands schematic work to an AI agent orchestrator. The agent reads and writes work items in Databricks Lakebase, retrieves datasheet content from a Unity Catalog vector index, and pulls live schematic data from an EDA tool connector.</desc>
+
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)"></path>
+          </marker>
+        </defs>
+
+        <style>
+          .box { stroke: var(--border); stroke-width: 1; }
+          .box-label { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: #ffffff; font-size: 12.5px; font-weight: 600; }
+          .box-sub { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: #ffffff; font-size: 10px; opacity: 0.88; }
+          .conn { stroke: var(--text-muted); stroke-width: 1.4; fill: none; marker-end: url(#arrow); }
+          .conn-dashed { stroke-dasharray: 4 3; }
+          .conn-label { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--text-muted); font-size: 10px; }
+        </style>
+
+        <!-- connectors (drawn first, under boxes) -->
+        <path class="conn" d="M500,66 L500,104"></path>
+        <path class="conn conn-dashed" d="M650,134 L700,134"></path>
+        <text class="conn-label" x="655" y="128">auth</text>
+
+        <path class="conn" d="M500,164 L500,204"></path>
+
+        <path class="conn" d="M500,264 L500,314"></path>
+
+        <path class="conn conn-dashed" d="M400,264 C260,300 190,340 175,434"></path>
+        <text class="conn-label" x="200" y="330">work-item CRUD</text>
+
+        <path class="conn" d="M420,378 C300,405 220,415 185,434"></path>
+        <text class="conn-label" x="330" y="418">agent read/write</text>
+
+        <path class="conn" d="M500,378 L500,434"></path>
+        <text class="conn-label" x="508" y="410">RAG retrieval</text>
+
+        <path class="conn" d="M580,378 C700,405 770,415 810,434"></path>
+        <text class="conn-label" x="660" y="418">schematic read</text>
+
+        <!-- Engineer -->
+        <rect class="box" x="390" y="14" width="220" height="52" rx="10" fill="var(--text-muted)"></rect>
+        <text class="box-label" x="500" y="45" text-anchor="middle">Engineer (Browser)</text>
+
+        <!-- Frontend -->
+        <rect class="box" x="350" y="104" width="300" height="60" rx="10" fill="var(--blue)"></rect>
+        <text class="box-label" x="500" y="128" text-anchor="middle">Frontend — React SPA</text>
+        <text class="box-sub" x="500" y="144" text-anchor="middle">S3 + CloudFront</text>
+
+        <!-- Cognito -->
+        <rect class="box" x="700" y="104" width="230" height="60" rx="10" fill="var(--green)"></rect>
+        <text class="box-label" x="815" y="128" text-anchor="middle">Auth</text>
+        <text class="box-sub" x="815" y="144" text-anchor="middle">Amazon Cognito</text>
+
+        <!-- Backend API -->
+        <rect class="box" x="350" y="204" width="300" height="60" rx="10" fill="var(--aqua)"></rect>
+        <text class="box-label" x="500" y="228" text-anchor="middle">Backend API</text>
+        <text class="box-sub" x="500" y="244" text-anchor="middle">ECS Fargate service</text>
+
+        <!-- AI Agent -->
+        <rect class="box" x="330" y="314" width="340" height="64" rx="10" fill="var(--yellow)"></rect>
+        <text class="box-label" x="500" y="340" text-anchor="middle" fill="#241a00">AI Agent Orchestrator</text>
+        <text class="box-sub" x="500" y="356" text-anchor="middle" fill="#241a00">via Databricks AI Gateway</text>
+
+        <!-- Lakebase -->
+        <rect class="box" x="40" y="434" width="280" height="86" rx="10" fill="var(--violet)"></rect>
+        <text class="box-label" x="180" y="460" text-anchor="middle">Databricks Lakebase</text>
+        <text class="box-sub" x="180" y="476" text-anchor="middle">Postgres OLTP</text>
+        <text class="box-sub" x="180" y="491" text-anchor="middle">work items · schematic metadata · audit log</text>
+
+        <!-- Datasheet KB -->
+        <rect class="box" x="360" y="434" width="280" height="86" rx="10" fill="var(--violet)"></rect>
+        <text class="box-label" x="500" y="460" text-anchor="middle">Datasheet Knowledge Base</text>
+        <text class="box-sub" x="500" y="476" text-anchor="middle">Unity Catalog volumes</text>
+        <text class="box-sub" x="500" y="491" text-anchor="middle">+ vector search (RAG)</text>
+
+        <!-- EDA connector -->
+        <rect class="box" x="680" y="434" width="280" height="86" rx="10" fill="var(--orange)"></rect>
+        <text class="box-label" x="820" y="460" text-anchor="middle">EDA Tool Connector</text>
+        <text class="box-sub" x="820" y="476" text-anchor="middle">Altium / OrCAD</text>
+        <text class="box-sub" x="820" y="491" text-anchor="middle">import / export bridge</text>
+
+        <!-- caption -->
+        <text class="conn-label" x="500" y="560" text-anchor="middle" style="font-size:11px;">
+          Engineer actions in the SPA flow through the API into the agent, which reconciles live schematic data against datasheets and writes flagged work items to Lakebase.
+        </text>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <div class="item"><span class="swatch" style="background:var(--blue)"></span>Frontend / UI</div>
+      <div class="item"><span class="swatch" style="background:var(--aqua)"></span>Backend / API</div>
+      <div class="item"><span class="swatch" style="background:var(--yellow)"></span>AI / Agent layer</div>
+      <div class="item"><span class="swatch" style="background:var(--violet)"></span>Data layer (Databricks)</div>
+      <div class="item"><span class="swatch" style="background:var(--green)"></span>Auth / Security</div>
+      <div class="item"><span class="swatch" style="background:var(--orange)"></span>External integration</div>
+    </div>
+
+    <h2>Why Lakebase for this</h2>
+    <div class="grid-3" style="margin-top:6px;">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:0.88rem;">Low-latency OLTP</h3>
+        <p style="font-size:0.82rem;">Lakebase is a fully managed Postgres database purpose-built for transactional, low-latency reads/writes — a fit for a live work-item queue that engineers refresh constantly, unlike a SQL warehouse tuned for analytics.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:0.88rem;">Native Unity Catalog integration</h3>
+        <p style="font-size:0.82rem;">Sits on the same Databricks platform already in use for SAG, so schematic/work-item tables can sync with lakehouse data without a separate ETL pipeline to stand up.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:0.88rem;">Built as an agent state store</h3>
+        <p style="font-size:0.82rem;">Databricks positions Lakebase explicitly as a state store for AI agents — a direct match for an orchestrator that needs to persist findings, decisions, and conversation state per schematic.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ======================= TAB 3: MOCKUP ======================= -->
+  <section class="panel" id="panel-mockup">
+
+    <h2>Clickable concept mockup</h2>
+    <p class="lede">Click a work item to see the AI agent's reasoning against the datasheet, accept or dismiss its suggestion, and try the copilot chat. This is a static concept demo — no data leaves this page.</p>
+
+    <div class="app-shell">
+      <div class="app-sidebar">
+        <div class="brand">⚡ Schematic Copilot</div>
+        <div class="nav-item active" data-view="workqueue"><span class="dot"></span>Work Queue</div>
+        <div class="nav-item" data-view="schematic"><span class="dot"></span>Schematic Viewer</div>
+        <div class="nav-item" data-view="datasheet"><span class="dot"></span>Datasheet Library</div>
+        <div class="nav-item" data-view="audit"><span class="dot"></span>Audit Log</div>
+        <div class="nav-item" data-view="settings"><span class="dot"></span>Project Settings</div>
+      </div>
+
+      <div class="app-main">
+
+        <!-- ---- Work Queue ---- -->
+        <div class="view active" id="view-workqueue">
+          <div class="app-topbar">
+            <div>
+              <h3>Work Queue</h3>
+              <div class="project">Project: PDU-7 Power Distribution Board · Rev C</div>
+            </div>
+          </div>
+
+          <div class="stat-row" id="statRow"></div>
+
+          <div class="worklist" id="worklist"></div>
+
+          <div class="detail-panel" id="detailPanel" style="display:none;"></div>
+
+          <div class="copilot-panel">
+            <div class="copilot-head"><span class="dot"></span>Ask the Copilot</div>
+            <div class="copilot-body" id="copilotBody">
+              <div class="msg ai">Hi — I'm watching PDU-7 as you edit it. Ask me about any net, part, or datasheet requirement.</div>
+            </div>
+            <div class="chip-row">
+              <div class="chip" data-q="Why is U4 flagged?">Why is U4 flagged?</div>
+              <div class="chip" data-q="What's still open on this board?">What's still open?</div>
+              <div class="chip" data-q="Check RESET_N pull-up">Check RESET_N pull-up</div>
+            </div>
+            <div class="copilot-input">
+              <input type="text" id="copilotInput" placeholder="Ask about a component, net, or datasheet…">
+              <button class="action primary" id="copilotSend">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Schematic Viewer ---- -->
+        <div class="view" id="view-schematic">
+          <div class="app-topbar">
+            <div>
+              <h3>Schematic Viewer</h3>
+              <div class="project">Project: PDU-7 Power Distribution Board · Rev C · Sheet 2 of 4</div>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button class="tool" id="toolSelect">Select</button>
+            <button class="tool" id="toolZoomOut">− Zoom</button>
+            <div class="zoom-lvl" id="zoomLvl">100%</div>
+            <button class="tool" id="toolZoomIn">+ Zoom</button>
+            <button class="tool" id="toolFit">Fit to sheet</button>
+            <div class="spacer"></div>
+            <button class="tool on" id="toolFlags">AI Flags: On</button>
+          </div>
+
+          <div class="sch-layout">
+            <div class="schematic-canvas" id="schCanvas">
+              <div class="sch-symbol" style="left:70px; top:60px; width:110px;" data-part="U4">U4<div class="pin-label">TPS7A47</div></div>
+              <div class="sch-symbol" style="left:280px; top:60px; width:110px;" data-part="C7">C7?<div class="pin-label">2.2µF (suggested)</div></div>
+              <div class="sch-symbol" style="left:70px; top:230px; width:110px;" data-part="U7">U7<div class="pin-label">Supervisor</div></div>
+              <div class="sch-symbol" style="left:280px; top:230px; width:110px;" data-part="R12">R12?<div class="pin-label">47kΩ (suggested)</div></div>
+              <div class="sch-symbol" style="left:500px; top:60px; width:110px;" data-part="Q2">Q2<div class="pin-label">MOSFET</div></div>
+              <div class="sch-symbol" style="left:500px; top:230px; width:110px;" data-part="J3">J3<div class="pin-label">Connector</div></div>
+
+              <div class="sch-wire" style="left:180px; top:90px; width:100px; height:2px;"></div>
+              <div class="sch-wire" style="left:180px; top:260px; width:100px; height:2px;"></div>
+
+              <div class="sch-flag critical" style="left:172px; top:52px;" data-target="U4" title="U4: Critical">!</div>
+              <div class="sch-flag critical" style="left:172px; top:222px;" data-target="U7" title="U7: Critical">!</div>
+              <div class="sch-flag warning" style="left:602px; top:52px;" data-target="Q2" title="Q2: Review">?</div>
+              <div class="sch-flag warning" style="left:602px; top:222px;" data-target="J3" title="J3: Review">?</div>
+            </div>
+
+            <div class="inspector" id="schInspector">
+              <h4>No component selected</h4>
+              <div class="meta-row">Click a symbol or flag on the canvas</div>
+              <p style="font-size:0.82rem;color:var(--text-secondary);">The inspector shows the AI agent's live findings for whatever's selected — datasheet citation, net, and suggested fix — without leaving the schematic.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Datasheet Library ---- -->
+        <div class="view" id="view-datasheet">
+          <div class="app-topbar">
+            <div>
+              <h3>Datasheet Library</h3>
+              <div class="project">Project: PDU-7 Power Distribution Board · Rev C</div>
+            </div>
+          </div>
+
+          <div class="ds-toolbar">
+            <input type="text" placeholder="Search part number, manufacturer, or keyword…">
+            <div class="chip on">All</div>
+            <div class="chip">Regulators</div>
+            <div class="chip">Connectors</div>
+            <div class="chip">Discrete</div>
+            <div class="chip">ICs</div>
+            <div class="sync-status"><span class="dot"></span>128 datasheets indexed · synced 6 min ago</div>
+          </div>
+
+          <div class="ds-layout">
+            <div class="ds-list" id="dsList"></div>
+            <div class="inspector" id="dsInspector">
+              <h4>No datasheet selected</h4>
+              <div class="meta-row">Click a datasheet to preview its AI-extracted specs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Audit Log ---- -->
+        <div class="view" id="view-audit">
+          <div class="app-topbar">
+            <div>
+              <h3>Audit Log</h3>
+              <div class="project">Project: PDU-7 Power Distribution Board · Rev C · traceability record for DO-254 / AS9100 review</div>
+            </div>
+          </div>
+
+          <div class="audit-filters">
+            <div class="chip on" data-filter="all">All</div>
+            <div class="chip" data-filter="agent">Agent</div>
+            <div class="chip" data-filter="engineer">Engineer</div>
+            <div class="chip" data-filter="system">System</div>
+          </div>
+
+          <div id="auditList"></div>
+        </div>
+
+        <!-- ---- Project Settings ---- -->
+        <div class="view" id="view-settings">
+          <div class="app-topbar">
+            <div>
+              <h3>Project Settings</h3>
+              <div class="project">Project: PDU-7 Power Distribution Board · Rev C</div>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="card settings-section">
+              <h3>Project details</h3>
+              <div class="field-row"><div class="label">Project name</div><input type="text" value="PDU-7 Power Distribution Board"></div>
+              <div class="field-row"><div class="label">Board revision</div><input type="text" value="Rev C"></div>
+              <div class="field-row"><div class="label">EDA tool</div>
+                <select>
+                  <option>Altium Designer</option>
+                  <option>Cadence OrCAD</option>
+                  <option>KiCad</option>
+                </select>
+              </div>
+              <div class="field-row"><div class="label">Lakebase connection</div><div style="font-size:0.82rem;color:var(--good);">● Connected — sag-dev workspace</div></div>
+            </div>
+
+            <div class="card settings-section">
+              <h3>AI agent behavior</h3>
+              <div class="field-row">
+                <div><div class="label">Flagging sensitivity</div><div class="hint">How aggressively the agent raises work items</div></div>
+                <div class="pill-toggle-row" id="sensitivityRow">
+                  <div class="pill-toggle" data-val="strict">Strict</div>
+                  <div class="pill-toggle active" data-val="balanced">Balanced</div>
+                  <div class="pill-toggle" data-val="lenient">Lenient</div>
+                </div>
+              </div>
+              <div class="field-row">
+                <div><div class="label">Auto-flag on save</div><div class="hint">Re-scan the schematic every time it's saved</div></div>
+                <div class="switch on" id="toggleAutoflag"><div class="knob"></div></div>
+              </div>
+              <div class="field-row">
+                <div><div class="label">Require reviewer sign-off on critical items</div><div class="hint">Blocks auto-resolve for Critical severity</div></div>
+                <div class="switch on" id="toggleSignoff"><div class="knob"></div></div>
+              </div>
+            </div>
+
+            <div class="card settings-section">
+              <h3>Notifications</h3>
+              <div class="field-row"><div class="label">Daily email digest</div><div class="switch on" id="toggleEmail"><div class="knob"></div></div></div>
+              <div class="field-row"><div class="label">Slack alerts for critical flags</div><div class="switch on" id="toggleSlack"><div class="knob"></div></div></div>
+              <div class="field-row"><div class="label">Push notifications</div><div class="switch" id="togglePush"><div class="knob"></div></div></div>
+            </div>
+
+            <div class="card settings-section">
+              <h3>Team &amp; access</h3>
+              <div class="team-row"><div class="avatar">MB</div><div class="name">M. Berry</div><div class="role-badge">Owner</div></div>
+              <div class="team-row"><div class="avatar">CF</div><div class="name">C. Fisher</div><div class="role-badge">Reviewer</div></div>
+              <div class="team-row"><div class="avatar">+</div><div class="name" style="color:var(--text-muted);">Invite a teammate…</div></div>
+            </div>
+
+            <div class="danger-zone">
+              <h3>Danger zone</h3>
+              <div class="field-row"><div class="label">Archive this project</div><button class="action danger">Archive</button></div>
+              <div class="field-row"><div class="label">Disconnect Lakebase connection</div><button class="action danger">Disconnect</button></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="note">Concept mockup — data shown is illustrative, not connected to a live schematic or datasheet source.</footer>
+
+<script>
+  // ---------- tab switching ----------
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- mockup data ----------
+  const workItems = [
+    {
+      id: 1,
+      title: 'U4 missing output decoupling capacitor',
+      component: 'U4 — TPS7A47 LDO Regulator',
+      net: '3V3_REG',
+      severity: 'critical',
+      status: 'open',
+      quote: '"TPS7A47 datasheet §8.2: a 2.2 µF ceramic capacitor is recommended from OUT to GND, placed within 5 mm of the device, to ensure loop stability."',
+      suggestion: 'Add a 2.2 µF X7R ceramic capacitor between OUT (pin 3) and GND on net 3V3_REG, placed under 5 mm from U4 per the datasheet layout note.'
+    },
+    {
+      id: 2,
+      title: 'RESET_N net has no pull-up resistor',
+      component: 'U7 — Supervisor IC',
+      net: 'RESET_N',
+      severity: 'critical',
+      status: 'open',
+      quote: '"Datasheet: RESET_N is an open-drain output and requires an external pull-up resistor (10 kΩ–100 kΩ) to VDD."',
+      suggestion: 'Add a 47 kΩ pull-up resistor from RESET_N to 3V3_REG — mid-range value balances noise immunity and rise time for this bus.'
+    },
+    {
+      id: 3,
+      title: 'Q2 thermal derating not confirmed',
+      component: 'Q2 — Power MOSFET',
+      net: 'VBUS_SW',
+      severity: 'warning',
+      status: 'open',
+      quote: '"Datasheet: RDS(on) increases ~35% at 125°C junction temperature versus the 25°C rated value."',
+      suggestion: 'Re-check continuous current budget against the derated RDS(on) at expected operating temperature before sign-off — no schematic change yet, needs an engineering judgment call.'
+    },
+    {
+      id: 4,
+      title: 'J3 connector pin mapping mismatch vs. ICD',
+      component: 'J3 — 9-pin header',
+      net: 'multiple',
+      severity: 'warning',
+      status: 'open',
+      quote: '"Interface Control Document Rev B lists pin 4 as SPARE; schematic net list shows pin 4 tied to TEMP_SENSE."',
+      suggestion: 'Confirm with the systems team whether the ICD or the schematic is authoritative before this goes to layout — flagged for review, not auto-correctable.'
+    },
+    {
+      id: 5,
+      title: 'Power sequencing verified against datasheet',
+      component: 'U2 — Sequencer IC',
+      net: 'PWR_EN chain',
+      severity: 'good',
+      status: 'resolved',
+      quote: '"Datasheet: EN2 must assert no earlier than 2 ms after EN1 to avoid inrush on the shared rail."',
+      suggestion: 'Schematic timing (RC delay on EN2) already satisfies the 2 ms minimum with margin. No action needed — closed by agent, confirmed by reviewer.'
+    }
+  ];
+
+  let selectedId = null;
+
+  const sevColor = { critical: 'var(--critical)', warning: 'var(--warning)', good: 'var(--good)' };
+  const sevPillClass = { critical: 'pill-critical', warning: 'pill-warning', good: 'pill-good' };
+  const sevLabel = { critical: 'Critical', warning: 'Review', good: 'Resolved' };
+
+  function renderStats() {
+    const open = workItems.filter(w => w.status === 'open').length;
+    const critical = workItems.filter(w => w.severity === 'critical' && w.status === 'open').length;
+    const resolved = workItems.filter(w => w.status === 'resolved').length;
+    const statRow = document.getElementById('statRow');
+    statRow.innerHTML = `
+      <div class="stat-tile"><div class="val">${workItems.length}</div><div class="lbl">Total flagged</div></div>
+      <div class="stat-tile"><div class="val" style="color:var(--critical)">${critical}</div><div class="lbl">● Critical open</div></div>
+      <div class="stat-tile"><div class="val" style="color:#9a6600">${open - critical}</div><div class="lbl">● Needs review</div></div>
+      <div class="stat-tile"><div class="val" style="color:var(--good)">${resolved}</div><div class="lbl">● Resolved</div></div>
+    `;
+  }
+
+  function renderList() {
+    const list = document.getElementById('worklist');
+    list.innerHTML = '';
+    workItems.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'work-item' + (item.id === selectedId ? ' selected' : '') + (item.status === 'resolved' ? ' resolved' : '');
+      el.innerHTML = `
+        <div class="badge" style="background:${sevColor[item.severity]}"></div>
+        <div class="body">
+          <div class="title">${item.title}</div>
+          <div class="meta">${item.component} · net ${item.net}</div>
+        </div>
+        <div class="status-pill ${sevPillClass[item.severity]}">${item.status === 'resolved' ? 'Resolved' : sevLabel[item.severity]}</div>
+      `;
+      el.addEventListener('click', () => { selectedId = item.id; renderList(); renderDetail(); });
+      list.appendChild(el);
+    });
+  }
+
+  function renderDetail() {
+    const panel = document.getElementById('detailPanel');
+    const item = workItems.find(w => w.id === selectedId);
+    if (!item) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+    panel.innerHTML = `
+      <h4>${item.title}</h4>
+      <div class="meta-row">${item.component} · net ${item.net} · flagged by AI agent during schematic capture</div>
+      <div class="ds-quote">${item.quote}</div>
+      <div class="ai-suggestion"><strong>Agent suggestion:</strong> ${item.suggestion}</div>
+      <div class="btn-row">
+        <button class="action primary" id="acceptBtn" ${item.status === 'resolved' ? 'disabled' : ''}>Accept &amp; apply</button>
+        <button class="action" id="dismissBtn" ${item.status === 'resolved' ? 'disabled' : ''}>Dismiss</button>
+        <button class="action ghost" id="closeBtn">Close</button>
+      </div>
+    `;
+    const accept = document.getElementById('acceptBtn');
+    const dismiss = document.getElementById('dismissBtn');
+    const close = document.getElementById('closeBtn');
+    if (accept) accept.addEventListener('click', () => { item.status = 'resolved'; item.severity = 'good'; renderStats(); renderList(); renderDetail(); });
+    if (dismiss) dismiss.addEventListener('click', () => { selectedId = null; renderList(); renderDetail(); });
+    if (close) close.addEventListener('click', () => { selectedId = null; renderList(); renderDetail(); });
+  }
+
+  renderStats();
+  renderList();
+
+  // ---------- copilot chat (canned demo) ----------
+  const copilotBody = document.getElementById('copilotBody');
+  const copilotInput = document.getElementById('copilotInput');
+  const copilotSend = document.getElementById('copilotSend');
+
+  const cannedAnswers = {
+    "why is u4 flagged?": "U4 (TPS7A47) is flagged because its datasheet application circuit calls for a 2.2 µF output decoupling capacitor within 5 mm of the OUT pin, and net 3V3_REG currently has none. That's a Critical item in the Work Queue.",
+    "what's still open on this board?": "Two Critical items (U4 missing decoupling cap, RESET_N missing pull-up) and two items needing human review (Q2 thermal derating, J3 pin mapping vs. the ICD). One item is already resolved and confirmed.",
+    "check reset_n pull-up": "RESET_N is open-drain per U7's datasheet and needs a 10 kΩ–100 kΩ pull-up to VDD — none is present in the current schematic. I've suggested a 47 kΩ pull-up to 3V3_REG; you can accept it from the Work Queue."
+  };
+
+  function addMsg(text, who) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + who;
+    div.textContent = text;
+    copilotBody.appendChild(div);
+    copilotBody.scrollTop = copilotBody.scrollHeight;
+  }
+
+  function askCopilot(question) {
+    if (!question || !question.trim()) return;
+    addMsg(question, 'user');
+    copilotInput.value = '';
+    const typing = document.createElement('div');
+    typing.className = 'typing';
+    typing.textContent = 'Copilot is checking the schematic and datasheets…';
+    copilotBody.appendChild(typing);
+    copilotBody.scrollTop = copilotBody.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      const key = question.trim().toLowerCase();
+      const answer = cannedAnswers[key] || "I don't have a canned answer for that in this demo — in the live system I'd search the datasheet library and current net list, then reply with citations back to the Work Queue.";
+      addMsg(answer, 'ai');
+    }, 700);
+  }
+
+  copilotSend.addEventListener('click', () => askCopilot(copilotInput.value));
+  copilotInput.addEventListener('keydown', e => { if (e.key === 'Enter') askCopilot(copilotInput.value); });
+  document.querySelectorAll('#view-workqueue .chip').forEach(chip => {
+    chip.addEventListener('click', () => askCopilot(chip.dataset.q));
+  });
+
+  // ---------- sidebar view switching ----------
+  document.querySelectorAll('.app-sidebar .nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.app-sidebar .nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      document.querySelectorAll('.app-main > .view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + item.dataset.view).classList.add('active');
+    });
+  });
+
+  // ---------- Schematic Viewer ----------
+  const partInfo = {
+    U4:  { name: 'U4 — TPS7A47 LDO Regulator', net: '3V3_REG', sev: 'critical', citation: workItems[0].quote, suggestion: workItems[0].suggestion },
+    C7:  { name: 'C7 — Output Capacitor (agent-proposed)', net: '3V3_REG', sev: 'suggested', citation: 'Not yet placed — proposed by the agent to satisfy the TPS7A47 output decoupling requirement.', suggestion: workItems[0].suggestion },
+    U7:  { name: 'U7 — Supervisor IC', net: 'RESET_N', sev: 'critical', citation: workItems[1].quote, suggestion: workItems[1].suggestion },
+    R12: { name: 'R12 — Pull-up resistor (agent-proposed)', net: 'RESET_N', sev: 'suggested', citation: 'Not yet placed — proposed by the agent to satisfy the RESET_N pull-up requirement.', suggestion: workItems[1].suggestion },
+    Q2:  { name: 'Q2 — Power MOSFET', net: 'VBUS_SW', sev: 'warning', citation: workItems[2].quote, suggestion: workItems[2].suggestion },
+    J3:  { name: 'J3 — 9-pin header', net: 'multiple', sev: 'warning', citation: workItems[3].quote, suggestion: workItems[3].suggestion },
+  };
+  const sevWord = { critical: 'Critical', warning: 'Needs review', suggested: 'Agent-proposed' };
+
+  function selectPart(code) {
+    const info = partInfo[code];
+    if (!info) return;
+    document.querySelectorAll('.sch-symbol').forEach(s => s.classList.toggle('selected', s.dataset.part === code));
+    document.getElementById('schInspector').innerHTML = `
+      <h4>${info.name}</h4>
+      <div class="meta-row">Net: ${info.net} · ${sevWord[info.sev]}</div>
+      <dl>
+        <dt>Datasheet citation</dt><dd>${info.citation}</dd>
+        <dt>Agent suggestion</dt><dd>${info.suggestion}</dd>
+      </dl>
+    `;
+  }
+  document.querySelectorAll('.sch-symbol').forEach(el => el.addEventListener('click', () => selectPart(el.dataset.part)));
+  document.querySelectorAll('.sch-flag').forEach(el => el.addEventListener('click', () => selectPart(el.dataset.target)));
+
+  let schZoom = 100;
+  document.getElementById('toolZoomIn').addEventListener('click', () => { schZoom = Math.min(200, schZoom + 10); document.getElementById('zoomLvl').textContent = schZoom + '%'; });
+  document.getElementById('toolZoomOut').addEventListener('click', () => { schZoom = Math.max(50, schZoom - 10); document.getElementById('zoomLvl').textContent = schZoom + '%'; });
+  document.getElementById('toolFit').addEventListener('click', () => { schZoom = 100; document.getElementById('zoomLvl').textContent = '100%'; });
+  document.getElementById('toolFlags').addEventListener('click', function () {
+    this.classList.toggle('on');
+    const on = this.classList.contains('on');
+    this.textContent = 'AI Flags: ' + (on ? 'On' : 'Off');
+    document.querySelectorAll('.sch-flag').forEach(f => f.style.display = on ? 'flex' : 'none');
+  });
+
+  // ---------- Datasheet Library ----------
+  const datasheets = [
+    { part: 'TPS7A47', mfr: 'Texas Instruments', cat: 'Regulators', excerpt: 'Output decoupling: 2.2 µF ceramic required within 5 mm of the OUT pin.', used: 'U4', workItem: 1 },
+    { part: 'MAX16135', mfr: 'Analog Devices', cat: 'ICs', excerpt: 'RESET_N is open-drain — external 10–100 kΩ pull-up required.', used: 'U7', workItem: 2 },
+    { part: 'CSD19532Q5B', mfr: 'Texas Instruments', cat: 'Discrete', excerpt: 'RDS(on) increases ~35% at 125°C junction temperature vs. the 25°C rated value.', used: 'Q2', workItem: 3 },
+    { part: 'Molex 43045-0912', mfr: 'Molex', cat: 'Connectors', excerpt: '9-position header, 3.0 mm pitch — see pin assignment table §4.', used: 'J3', workItem: 4 },
+    { part: 'LTC2954', mfr: 'Analog Devices', cat: 'ICs', excerpt: 'EN2 must assert ≥2 ms after EN1 to avoid inrush on the shared rail.', used: 'U2', workItem: 5 },
+    { part: 'AS5600', mfr: 'ams OSRAM', cat: 'ICs', excerpt: 'Not yet referenced on this project.', used: '—', workItem: null },
+  ];
+  function renderDsList() {
+    const list = document.getElementById('dsList');
+    list.innerHTML = '';
+    datasheets.forEach((d, i) => {
+      const el = document.createElement('div');
+      el.className = 'ds-card';
+      el.innerHTML = `
+        <div class="icon">📄</div>
+        <div class="body" style="flex:1;">
+          <div class="title">${d.part}</div>
+          <div class="meta">${d.mfr} · ${d.cat} · used on ${d.used}</div>
+          <div class="excerpt">${d.excerpt}</div>
+        </div>
+        <div class="indexed"><span class="dot"></span>Indexed</div>
+      `;
+      el.addEventListener('click', () => selectDatasheet(i));
+      list.appendChild(el);
+    });
+  }
+  function selectDatasheet(i) {
+    document.querySelectorAll('.ds-card').forEach((c, idx) => c.classList.toggle('selected', idx === i));
+    const d = datasheets[i];
+    const linked = d.workItem ? workItems.find(w => w.id === d.workItem) : null;
+    document.getElementById('dsInspector').innerHTML = `
+      <h4>${d.part}</h4>
+      <div class="meta-row">${d.mfr} · ${d.cat}</div>
+      <dl>
+        <dt>Key extracted spec</dt><dd>${d.excerpt}</dd>
+        <dt>Used in this project</dt><dd>${d.used}</dd>
+        <dt>Linked work item</dt><dd>${linked ? linked.title : 'None open'}</dd>
+      </dl>
+    `;
+  }
+  renderDsList();
+
+  // ---------- Audit Log ----------
+  const auditEntries = [
+    { ts: 'Jul 14, 3:41 PM', actor: '🤖 Schematic Copilot', type: 'agent', desc: 'Flagged U4 — missing output decoupling capacitor (TPS7A47 §8.2).' },
+    { ts: 'Jul 14, 3:41 PM', actor: '🤖 Schematic Copilot', type: 'agent', desc: 'Flagged U7 — RESET_N net missing external pull-up resistor.' },
+    { ts: 'Jul 14, 3:52 PM', actor: '👤 M. Berry', type: 'engineer', desc: 'Reviewed Q2 thermal derating flag — added comment, left open for follow-up.' },
+    { ts: 'Jul 14, 4:03 PM', actor: '🤖 Schematic Copilot', type: 'agent', desc: 'Cross-checked J3 pin mapping against ICD Rev B — mismatch found on pin 4.' },
+    { ts: 'Jul 14, 4:10 PM', actor: '👤 M. Berry', type: 'engineer', desc: 'Accepted agent suggestion for U2 power sequencing — marked resolved.' },
+    { ts: 'Jul 14, 4:11 PM', actor: '⚙️ System', type: 'system', desc: 'Synced 128 datasheets from Unity Catalog volume "component-datasheets".' },
+    { ts: 'Jul 14, 4:22 PM', actor: '🤖 Schematic Copilot', type: 'agent', desc: 'Re-scanned schematic after save — no new issues detected on sheet 2.' },
+    { ts: 'Jul 14, 4:30 PM', actor: '👤 M. Berry', type: 'engineer', desc: 'Exported work-queue snapshot for design review package.' },
+  ];
+  function renderAudit(filter) {
+    const list = document.getElementById('auditList');
+    list.innerHTML = '';
+    auditEntries.filter(e => filter === 'all' || e.type === filter).forEach(e => {
+      const tagClass = e.type === 'agent' ? 'tag-agent' : e.type === 'engineer' ? 'tag-engineer' : 'tag-system';
+      const row = document.createElement('div');
+      row.className = 'audit-row';
+      row.innerHTML = `
+        <div class="ts">${e.ts}</div>
+        <div class="actor">${e.actor}</div>
+        <div class="desc">${e.desc}</div>
+        <div class="tag ${tagClass}">${e.type}</div>
+      `;
+      list.appendChild(row);
+    });
+  }
+  document.querySelectorAll('.audit-filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.audit-filters .chip').forEach(c => c.classList.remove('on'));
+      chip.classList.add('on');
+      renderAudit(chip.dataset.filter);
+    });
+  });
+  renderAudit('all');
+
+  // ---------- Project Settings ----------
+  document.querySelectorAll('#sensitivityRow .pill-toggle').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('#sensitivityRow .pill-toggle').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.settings-section .switch').forEach(sw => {
+    sw.addEventListener('click', () => sw.classList.toggle('on'));
+  });
+</script>
+
+</body>
+</html>

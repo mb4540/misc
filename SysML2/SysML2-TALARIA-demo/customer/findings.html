@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings — TALARIA Customer Portal</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Customer Portal &mdash; Findings</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Try <strong style="color:#fff;">Show the rule</strong> on the first finding</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-customer">Customer Portal</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">ProtoPD Customer Corp</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <a class="nav-item" href="overview.html"><span class="icon">&#9632;</span> Overview</a>
+      <a class="nav-item active" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">2</span></a>
+      <a class="nav-item" href="deliverables.html"><span class="icon">&#9634;</span> Deliverables</a>
+      <span class="nav-item"><span class="icon">&#9745;</span> Tasks <span class="nav-badge">1</span></span>
+      <div class="sidebar-section-label">Model</div>
+      <a class="nav-item" href="model-exchange.html"><span class="icon">&#8644;</span> Model Exchange <span class="nav-badge-sysml">SysML</span></a>
+      <div class="sidebar-section-label">Account</div>
+      <span class="nav-item"><span class="icon">&#9787;</span> Team</span>
+      <span class="nav-item"><span class="icon">&#9998;</span> Feedback</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">JW</div>
+        <div><div>James Wilson</div><span class="role">Customer Admin</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Findings</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">baseline/phase5-entry &middot; 8f2c1ae</span>
+        <span>ProtoPD Customer Corp</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="breadcrumb">
+        <span>J9Avionics</span><span class="separator">/</span>
+        <span class="current">Findings</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1>Assurance Findings</h1>
+          <div class="subtitle">2 open &middot; 1 waived &middot; from derating run-0042 against baseline <span class="mono">phase5-entry</span></div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Downloading…">Download evidence pack</button>
+        </div>
+      </div>
+
+      <!-- Finding 1 -->
+      <div class="card mb-16">
+        <div class="card-header" style="background:#fffafa;">
+          <h3><span class="badge badge-fail">OPEN</span> Capacitor voltage derating &mdash; 19 placements</h3>
+          <span class="badge badge-waiver">exception requested</span>
+        </div>
+        <div class="card-body">
+
+          <p class="mb-16">Nineteen 10&micro;F ceramic capacitors on the 5&nbsp;V bypass network see an applied voltage above the Class&nbsp;B derating limit during the hot-swap inrush window.</p>
+
+          <div class="two-col" style="grid-template-columns:1fr 1fr;">
+            <div>
+              <div class="detail-grid" style="grid-template-columns:1fr 1fr;">
+                <div class="detail-field"><div class="label">Rated</div><div class="value mono">50 V</div></div>
+                <div class="detail-field"><div class="label">Allowed (75%)</div><div class="value mono">37.5 V</div></div>
+                <div class="detail-field"><div class="label">Applied</div><div class="value mono" style="color:var(--color-danger);">48 V</div></div>
+                <div class="detail-field"><div class="label">Margin</div><div class="value mono" style="color:var(--color-danger);">&minus;28.0%</div></div>
+              </div>
+              <div class="margin-bar-container mt-16" style="max-width:340px;">
+                <div class="margin-bar">
+                  <div class="margin-bar-fill margin-bar-fill--fail" style="width:96%;"></div>
+                  <div class="margin-bar-marker" style="left:75%;"></div>
+                </div>
+                <span class="margin-bar-label margin-bar-label--fail">&minus;28.0%</span>
+              </div>
+              <div class="text-muted" style="margin-top:6px;">The dark marker is the Class B limit. The bar is applied voltage against the part's rating.</div>
+            </div>
+
+            <div>
+              <div class="detail-field mb-16"><div class="label">Requirement affected</div><div class="value mono">EEE-003 &rarr; EEE-001</div></div>
+              <div class="detail-field mb-16"><div class="label">Standards clause</div><div class="value">NASA-EEE-INST-002 Rev&nbsp;C, Table&nbsp;3-2 <span class="sysml-pin" data-pin="2">2</span></div></div>
+              <div class="detail-field"><div class="label">Placements</div><div class="value mono" style="font-size:12px;">C24, C47, C52, C53, C54, C55 &hellip; <span class="sysml-pin" data-pin="3">3</span></div></div>
+            </div>
+          </div>
+
+          <div class="mt-16">
+            <button class="btn btn-outline btn-sm" data-toggle="rule1" data-label-show="Show the rule that was applied" data-label-hide="Hide the rule">Show the rule that was applied <span class="sysml-pin" data-pin="1">1</span></button>
+            <div id="rule1" style="display:none;margin-top:14px;">
+              <div class="sysml-note" style="margin-top:0;">
+                <strong>Plain reading:</strong> a ceramic capacitor's applied voltage must be at or below 75% of its rated voltage. At 48&nbsp;V against a 50&nbsp;V part, the allowed figure is 37.5&nbsp;V, so this fails by 10.5&nbsp;V.
+              </div>
+              <pre class="code" style="font-size:11.5px;"><span class="c">// The exact rule TALARIA evaluated, from the standards library.</span>
+<span class="c">// Source: NASA-EEE-INST-002 Rev C, Table 3-2, Class B</span>
+
+<span class="k">require constraint</span> {
+    cap.appliedVoltage &lt;= cap.ratedVoltage * 0.75
+}
+
+<span class="c">// bound to placement C24:</span>
+<span class="c">//   48 [V] &lt;= 50 [V] × 0.75  →  48 &lt;= 37.5  →</span> <span class="bad">false</span></pre>
+              <div class="text-muted">You are seeing the same expression the analysis evaluated &mdash; not a description of it written afterwards.</div>
+            </div>
+          </div>
+
+          <div class="card mt-16" style="box-shadow:none;background:#fffbeb;border-color:#fde68a;">
+            <div class="card-body">
+              <div class="flex-between mb-16">
+                <strong>Exception requested by Jemba9 &mdash; awaiting your acknowledgement</strong>
+                <span class="badge badge-waiver">pending</span>
+              </div>
+              <p style="font-size:13px;" class="mb-16">Applied voltage of 48&nbsp;V occurs only during a 200&nbsp;ms hot-swap inrush window. Steady-state applied voltage is 5.1&nbsp;V, well inside the Class&nbsp;B limit. Accelerated life testing on the same MPN shows no measurable degradation at 96% of rated for 10<sup>6</sup> cycles.</p>
+              <p style="font-size:13px;" class="mb-16"><strong>Alternative:</strong> Rev&nbsp;D substitutes a 100&nbsp;V part in the same footprint, which clears the limit outright. Lead time 9 weeks.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-success btn-sm" data-demo-action="Acknowledged">Accept exception</button>
+                <button class="btn btn-outline btn-sm" data-demo-action="Sent">Prefer Rev D substitution</button>
+                <button class="btn btn-outline btn-sm" data-demo-action="Opening…">Ask a question</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding 2 -->
+      <div class="card mb-16">
+        <div class="card-header" style="background:#fffafa;">
+          <h3><span class="badge badge-fail">OPEN</span> Resistor power derating &mdash; 2 placements</h3>
+          <span class="badge badge-neutral">severity 3</span>
+        </div>
+        <div class="card-body">
+          <p class="mb-16">Two current-sense resistors dissipate above the Class&nbsp;B power derating limit at maximum load.</p>
+          <div class="detail-grid mb-16">
+            <div class="detail-field"><div class="label">Rated</div><div class="value mono">1.00 W</div></div>
+            <div class="detail-field"><div class="label">Allowed (70%)</div><div class="value mono">0.70 W</div></div>
+            <div class="detail-field"><div class="label">Applied</div><div class="value mono" style="color:var(--color-danger);">0.78 W</div></div>
+            <div class="detail-field"><div class="label">Placements</div><div class="value mono">R44, R45</div></div>
+            <div class="detail-field"><div class="label">Requirement</div><div class="value mono">EEE-004</div></div>
+            <div class="detail-field"><div class="label">Clause</div><div class="value">Table 3-4</div></div>
+          </div>
+          <div class="margin-bar-container" style="max-width:340px;">
+            <div class="margin-bar">
+              <div class="margin-bar-fill margin-bar-fill--fail" style="width:78%;"></div>
+              <div class="margin-bar-marker" style="left:70%;"></div>
+            </div>
+            <span class="margin-bar-label margin-bar-label--fail">&minus;11.4%</span>
+          </div>
+          <div class="sysml-note">
+            Applied power here is <em>computed</em>, not quoted: <span class="mono">I&sup2;R</span> using the peak current resolved through the board's connections. If the upstream current limit changes, this figure changes with it. <span class="sysml-pin" data-pin="4">4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding 3 -->
+      <div class="card mb-16">
+        <div class="card-header" style="background:#f0fdf4;">
+          <h3><span class="badge badge-approved">RESOLVED</span> Photodiode &mdash; no applicable derating rule</h3>
+          <span class="badge badge-approved">waiver w-001 approved</span>
+        </div>
+        <div class="card-body">
+          <p class="mb-16">The Thorlabs FDS100 photodiode has no matching rule in EEE-INST-002. An alternative analysis per JPL-approved methodology shows the device operating below 10% of absolute maximum ratings. Waiver approved by Jemba9 component engineering on 2026-02-19.</p>
+          <div class="sysml-note" style="margin-bottom:0;">
+            <strong>The gap is recorded, not hidden.</strong> The waiver is attached to the part itself, so any export of this board carries both the fact that no rule applied and the reasoning that closed it. <span class="sysml-pin" data-pin="5">5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coverage -->
+      <div class="card">
+        <div class="card-header">
+          <h3>What was checked</h3>
+          <span class="badge badge-sysml">including what did not apply</span>
+        </div>
+        <div class="card-body">
+          <div class="stats-grid" style="margin-bottom:16px;">
+            <div class="stat-card" style="box-shadow:none;"><div class="stat-value">1,562</div><div class="stat-label">Checks run</div></div>
+            <div class="stat-card" style="box-shadow:none;"><div class="stat-value success">1,559</div><div class="stat-label">Passed</div></div>
+            <div class="stat-card" style="box-shadow:none;"><div class="stat-value danger">3</div><div class="stat-label">Failed</div></div>
+            <div class="stat-card" style="box-shadow:none;"><div class="stat-value warning">1</div><div class="stat-label">No rule applied</div></div>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);">Eleven of the 47 Class&nbsp;B constraints in the standards library have a subject that matches a part type on this board. The remaining 36 have nothing to bind to &mdash; the full list is in the evidence pack, so "not applicable" is a stated result rather than a silence.</p>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">The customer can see the actual rule</div>
+              <div class="sysml-entry-text">Because the rule is a formal expression rather than a factor plus interpreting code, it can be shown to the customer verbatim. "Here is what we checked" becomes a literal statement instead of a paraphrase of what the software did.</div>
+              <div class="sysml-today"><strong>Today:</strong> the customer sees the numbers and the standard reference. Showing the rule itself would mean showing a TypeScript function, which is not a meaningful disclosure.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Provenance travels with the constraint</div>
+              <div class="sysml-entry-text">The clause reference is an attribute of the rule, so every verdict cites its source automatically rather than relying on the report generator to look it up.</div>
+              <div class="sysml-today"><strong>Today:</strong> this one is largely in place. <code>derating_rule</code> carries <code>documentId</code> and <code>sectionCode</code> into <code>document_section</code>, and the ingestion pipeline maintains it through a human review gate.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Named placements, not a count</div>
+              <div class="sysml-entry-text">Each affected capacitor is a distinct part usage, so the customer sees which placements are involved and can act on a subset. Accepting an exception for six and replacing thirteen is expressible.</div>
+              <div class="sysml-today"><strong>Today:</strong> the designator string is expanded at analysis time and the finding reports a group. Partial disposition has nowhere to be recorded.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-4">
+            <div class="sysml-entry-num">4</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Derived stresses, not asserted numbers</div>
+              <div class="sysml-entry-text">With ports and connections modelled, applied power is computed from the design rather than entered alongside it. The customer's obvious question &mdash; "how did you arrive at 0.78&nbsp;W?" &mdash; has a traceable answer.</div>
+              <div class="sysml-today"><strong>Today:</strong> there is no connectivity model. <code>actualPower</code> is a number with no modelled origin, and this is the largest genuine gap in the current schema.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-5">
+            <div class="sysml-entry-num">5</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Waivers as part of the delivered model</div>
+              <div class="sysml-entry-text">An approved exception is metadata on the part it excuses, so it survives export. The customer's own insurer or authority reads the same artefact and sees the same disclosure.</div>
+              <div class="sysml-today"><strong>Today:</strong> the <code>waiver</code> table is well-modelled and complete, but it stays in the database. What leaves is a PDF describing it.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Two open findings against baseline <code>phase5-entry</code>, plus one resolved by an approved waiver.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">James Wilson</div>
+        Is the 48&nbsp;V a real risk or a paperwork problem?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Mostly paperwork, with a caveat. Steady-state is 5.1&nbsp;V &mdash; comfortably inside the limit. The 48&nbsp;V is a 200&nbsp;ms inrush transient. EEE-INST-002 Table&nbsp;3-2 does not distinguish transient from steady-state, so the constraint fails as written. The engineering argument for the exception is sound; the standard just has no clause for it.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">James Wilson</div>
+        What does accepting it cost me at the insurance review?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        It appears in the evidence pack as an accepted exception with its justification and the accelerated life data attached. Insurers generally treat a documented transient exception with test backing far more favourably than an undocumented pass &mdash; but that is their judgement, not mine.
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about these findings…">
+    </div>
+  </aside>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

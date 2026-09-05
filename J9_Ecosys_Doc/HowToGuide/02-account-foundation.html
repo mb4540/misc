@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — Account foundation</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 2</p>
+    <h1>Account foundation</h1>
+    <p>Getting into the right account, putting guardrails up before anything expensive exists, and laying
+    out Terraform so that dev and prod cannot accidentally become each other.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html" class="here">2 · Account</a>
+      <a href="03-network-data.html">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>2.1 &mdash; The account</h1>
+
+<table>
+<tr><th>Fact</th><th>Value</th></tr>
+<tr><td>AWS account</td><td><code>824999955649</code> &mdash; Jemba9</td></tr>
+<tr><td>Access portal</td><td><code>https://onej9.awsapps.com/start</code> (IAM Identity Center)</td></tr>
+<tr><td>Primary region</td><td><code>us-west-2</code></td></tr>
+<tr><td>Secondary region</td><td><code>us-east-1</code> &mdash; <em>only</em> for the CloudFront ACM certificate
+    and the CloudFront-scoped WAF web ACL. Nothing else goes there.</td></tr>
+<tr><td>Environments</td><td><code>dev</code> and <code>prod</code>, both in this account</td></tr>
+<tr><td>Isolation mechanism</td><td>Terraform workspace &rarr; name prefix &rarr; separate VPC, database,
+    cache, Cognito pool, and CloudFront distribution</td></tr>
+</table>
+
+<div class="callout callout-stop"><span class="label">Do not use 573631993254</span>
+
+<p>That account number appears in <code>Ecosystem/docs/deployment/aws.md</code>,
+<code>Ecosystem/company.config.yaml</code> (<code>identity.aws_account</code>),
+<code>Ecosystem/infra/terraform/README.md</code>, <code>Applications/dataroom/HANDOFF.md</code>, and both
+workflow files under <code>Applications/dataroom/.github/workflows/</code>. It belongs to another company.
+Fix or delete every one of those references &mdash; the
+<a href="08-runbook.html#cleanup">cleanup table in chapter 8</a> lists them with line context.</p>
+<p>The most dangerous of them are the two workflows, because they contain
+<code>role-to-assume: arn:aws:iam::573631993254:role/CloudCowboyWebDeploy</code>. Delete those files.</p>
+</div>
+
+<h2>2.2 &mdash; Getting a shell that can do anything</h2>
+
+<p>You never create an IAM user and you never hold an access key. Configure an SSO profile once:</p>
+
+<p class="filename">~/.aws/config</p>
+<pre><code>[sso-session onej9]
+sso_start_url = https://onej9.awsapps.com/start
+sso_region = us-west-2
+sso_registration_scopes = sso:account:access
+
+[profile j9]
+sso_session = onej9
+sso_account_id = 824999955649
+sso_role_name = AdministratorAccess
+region = us-west-2
+output = json
+
+# A narrower day-to-day profile once the foundation exists.
+[profile j9-ro]
+sso_session = onej9
+sso_account_id = 824999955649
+sso_role_name = ReadOnlyAccess
+region = us-west-2
+output = json</code></pre>
+
+<pre><code>aws sso login --profile j9
+aws sts get-caller-identity --profile j9
+# Confirm the Account field reads 824999955649 before you run a single terraform apply.
+
+export AWS_PROFILE=j9
+export AWS_REGION=us-west-2</code></pre>
+
+<div class="callout callout-note"><span class="label">Set a shell guard</span>
+
+<p>Because dev and prod share an account, a mistyped workspace is the realistic failure mode, not a mistyped
+account. Add this to your shell profile so your prompt always tells you which workspace is selected:</p>
+<pre><code>j9ws() { terraform workspace show 2&gt;/dev/null; }
+export PS1='[$(j9ws)] '$PS1</code></pre>
+<p>It looks trivial. It is the cheapest protection you will get against running a destroy against the wrong
+environment.</p>
+</div>
+
+<h2>2.3 &mdash; Naming, so that nothing is ambiguous</h2>
+
+<p>Every resource in both environments carries the same prefix pattern. There are no unprefixed resources.</p>
+
+<pre><code>j9-&lt;env&gt;-&lt;resource&gt;            general form
+j9-dev-vpc      j9-prod-vpc
+j9-dev-alb      j9-prod-alb
+j9-dev-pg       j9-prod-pg
+j9-dev-redis    j9-prod-redis
+j9-dev-users    j9-prod-users          (Cognito user pools)
+j9-dev-cluster  j9-prod-cluster        (ECS)
+j9-dev-platform j9-prod-platform       (ECS services; also -worker, -okr, -dataroom)
+
+j9/&lt;env&gt;/&lt;scope&gt;/&lt;name&gt;        SSM parameter paths
+j9/dev/platform/DATABASE_URL
+j9/prod/okr/J9_APP_API_KEY
+
+j9/&lt;service&gt;                   ECR repositories — NOT per environment
+j9/platform  j9/okr  j9/dataroom</code></pre>
+
+<p>ECR repositories are deliberately shared between environments. That is what makes promotion honest: prod runs
+the exact image digest that passed in dev, not a rebuild of the same commit. See
+<a href="07-cicd.html">chapter 7</a>.</p>
+
+<p>Every resource also gets these tags, applied through the provider's <code>default_tags</code> so you cannot
+forget:</p>
+
+<pre><code>Project     = "jemba9-ecosystem"
+Environment = "dev" | "prod"
+ManagedBy   = "terraform"
+Layer       = "network" | "data" | "identity" | "secrets" | "compute" | "frontdoor"</code></pre>
+
+<h2>2.4 &mdash; How the two environments sit in one account</h2>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 420" role="img" aria-label="One AWS account holding two isolated environments">
+  <defs>
+    <marker id="arrow_two_envs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_two_envs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_two_envs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="20" y="12" width="860" height="392" rx="10" fill="#f8f9fb" stroke="#1f2430" stroke-width="1.4" stroke-dasharray="none"/>
+  <text x="32" y="29" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#1f2430" text-anchor="start">AWS ACCOUNT 824999955649  (Jemba9)</text>
+  <rect x="44" y="48" width="400" height="250" rx="10" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="56" y="65" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#1d4ed8" text-anchor="start">TERRAFORM WORKSPACE: dev</text>
+  <rect x="66" y="78" width="356" height="34" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="244.0" y="99.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">VPC  j9-dev-vpc   10.20.0.0/16</text>
+  <rect x="66" y="122" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="152.0" y="143.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ECS  j9-dev-cluster</text>
+  <rect x="250" y="122" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="336.0" y="143.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ALB  j9-dev-alb</text>
+  <rect x="66" y="166" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="152.0" y="187.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">RDS  j9-dev-pg</text>
+  <rect x="250" y="166" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="336.0" y="187.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Redis  j9-dev-redis</text>
+  <rect x="66" y="210" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="152.0" y="231.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Cognito  j9-dev-users</text>
+  <rect x="250" y="210" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="336.0" y="231.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">CloudFront (dev)</text>
+  <text x="244" y="268" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#1d4ed8" text-anchor="middle">single-AZ, smallest classes, 7-day backups</text>
+  <text x="244" y="284" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10" font-weight="400" fill="#6b7280" text-anchor="middle">d1234.cloudfront.net</text>
+  <rect x="460" y="48" width="400" height="250" rx="10" fill="#fff8f4" stroke="#EB5616" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="472" y="65" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#EB5616" text-anchor="start">TERRAFORM WORKSPACE: prod</text>
+  <rect x="482" y="78" width="356" height="34" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="660.0" y="99.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">VPC  j9-prod-vpc   10.30.0.0/16</text>
+  <rect x="482" y="122" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="568.0" y="143.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ECS  j9-prod-cluster</text>
+  <rect x="666" y="122" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="752.0" y="143.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ALB  j9-prod-alb</text>
+  <rect x="482" y="166" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="568.0" y="187.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">RDS  j9-prod-pg</text>
+  <rect x="666" y="166" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="752.0" y="187.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Redis  j9-prod-redis</text>
+  <rect x="482" y="210" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="568.0" y="231.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Cognito  j9-prod-users</text>
+  <rect x="666" y="210" width="172" height="34" rx="7" fill="#fff" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="752.0" y="231.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">CloudFront (prod)</text>
+  <text x="660" y="268" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#EB5616" text-anchor="middle">multi-AZ, failover replica, 30-day backups</text>
+  <text x="660" y="284" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="10" font-weight="400" fill="#6b7280" text-anchor="middle">jemba9.com</text>
+  <rect x="44" y="312" width="816" height="78" rx="10" fill="#f4fbf6" stroke="#15803d" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="56" y="329" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#15803d" text-anchor="start">SHARED, NOT PER-ENVIRONMENT</text>
+  <rect x="64" y="340" width="175" height="38" rx="7" fill="#fff" stroke="#15803d" stroke-width="1.5"/>
+  <text x="151.5" y="356.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">S3 j9-tf-state</text>
+  <text x="151.5" y="371.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">+ DynamoDB lock</text>
+  <rect x="254" y="340" width="175" height="38" rx="7" fill="#fff" stroke="#15803d" stroke-width="1.5"/>
+  <text x="341.5" y="356.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">ECR repositories</text>
+  <text x="341.5" y="371.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">one per service</text>
+  <rect x="444" y="340" width="175" height="38" rx="7" fill="#fff" stroke="#15803d" stroke-width="1.5"/>
+  <text x="531.5" y="356.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">GitHub OIDC provider</text>
+  <text x="531.5" y="371.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">+ 2 deploy roles</text>
+  <rect x="634" y="340" width="205" height="38" rx="7" fill="#fff" stroke="#15803d" stroke-width="1.5"/>
+  <text x="736.5" y="356.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">IAM Identity Center</text>
+  <text x="736.5" y="371.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">onej9.awsapps.com</text>
+</svg>
+<figcaption>Two workspaces, two VPCs, one account. The bottom row is created once and shared.</figcaption>
+</figure>
+
+<p>Two consequences worth internalising:</p>
+<ul>
+<li><strong>There is no network path between the environments.</strong> Separate VPCs, no peering, no transit
+gateway. A dev task cannot reach the prod database even if someone hands it the prod connection string, because
+the security group will not admit it and the subnet has no route.</li>
+<li><strong>IAM is the only shared blast radius.</strong> A policy that grants <code>ssm:GetParameters</code> on
+<code>arn:aws:ssm:*:*:parameter/j9/*</code> gives a dev task the prod secrets. Every IAM policy in this guide is
+scoped to <code>/j9/${var.environment}/*</code> for exactly that reason. Do not relax it.</li>
+</ul>
+
+<h2>2.5 &mdash; Guardrails, before anything expensive exists</h2>
+
+<p>Do these first. Each takes minutes and each has saved someone a bad month.</p>
+
+<ol class="checklist">
+<li><strong>Account-wide S3 public access block.</strong> One setting, no downside.
+<pre><code>aws s3control put-public-access-block \
+  --account-id 824999955649 \
+  --public-access-block-configuration \
+  BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true</code></pre></li>
+<li><strong>EBS encryption by default</strong> and a default KMS key, in both regions you use.
+<pre><code>aws ec2 enable-ebs-encryption-by-default --region us-west-2
+aws ec2 enable-ebs-encryption-by-default --region us-east-1</code></pre></li>
+<li><strong>Budgets with alerts.</strong> Two budgets &mdash; one for the account, one filtered to
+<code>Environment=dev</code> &mdash; both alerting at 80% forecast and 100% actual. Terraform below.</li>
+<li><strong>CloudTrail to a dedicated bucket</strong>, multi-region, log-file validation on. This is the only
+record of who changed what.</li>
+<li><strong>GuardDuty enabled.</strong> Roughly the price of a coffee per month at this scale and it is the one
+security service that earns its keep with no configuration.</li>
+<li><strong>Cost allocation tags activated</strong> for <code>Environment</code> and <code>Layer</code>, in
+Billing &rarr; Cost allocation tags. They take up to 24 hours to start populating, so switch them on today even
+though you will not need them for a fortnight.</li>
+</ol>
+
+<h2>2.6 &mdash; Terraform layout</h2>
+
+<p>The existing <code>Ecosystem/infra/terraform/</code> holds one flat Cognito configuration. Restructure it into
+ordered layers, each with its own state, each reading the layer above through remote state outputs. This is more
+files than a single root module, and it buys you two things that matter: a <code>terraform apply</code> on the
+compute layer cannot possibly delete your database, and a plan takes seconds instead of minutes.</p>
+
+<pre><code>Ecosystem/infra/terraform/
+├── 00-bootstrap/          state bucket, lock table, OIDC provider, budgets   [local state, run once]
+├── 10-network/            VPC, subnets, NAT, security groups, endpoints
+├── 20-data/               RDS, ElastiCache, S3 object bucket
+├── 30-identity/           Cognito user pool + client   (move the existing main.tf here)
+├── 40-secrets/            KMS key, SSM parameters, Secrets Manager
+├── 50-compute/            ECR, ECS cluster, task defs, services, ALB
+├── 60-frontdoor/          ACM (us-east-1), WAF, CloudFront, Route 53
+└── shared/
+    ├── backend.hcl        the S3 backend, passed with -backend-config
+    ├── dev.tfvars
+    └── prod.tfvars</code></pre>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 470" role="img" aria-label="Terraform layer order for a first bootstrap">
+  <defs>
+    <marker id="arrow_bootstrap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_bootstrap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_bootstrap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="60" y="24" width="560" height="46" rx="7" fill="#fff" stroke="#15803d" stroke-width="1.8"/>
+  <text x="78" y="44" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">00-bootstrap</text>
+  <text x="78" y="60" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">S3 state bucket, DynamoDB lock table, GitHub OIDC provider</text>
+  <text x="640" y="52" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#15803d" text-anchor="start">run once, local state, then migrate</text>
+  <line x1="340" y1="70" x2="340" y2="86" stroke="#15803d" stroke-width="1.6" marker-end="url(#arrow_bootstrap)"/>
+  <rect x="60" y="86" width="560" height="46" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/>
+  <text x="78" y="106" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">10-network</text>
+  <text x="78" y="122" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">VPC, subnets, NAT, security groups, VPC endpoints</text>
+  <text x="640" y="114" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="start">per workspace</text>
+  <line x1="340" y1="132" x2="340" y2="148" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow_bootstrap)"/>
+  <rect x="60" y="148" width="560" height="46" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/>
+  <text x="78" y="168" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">20-data</text>
+  <text x="78" y="184" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">RDS PostgreSQL 16, ElastiCache Redis, S3 object bucket</text>
+  <text x="640" y="176" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#1d4ed8" text-anchor="start">per workspace</text>
+  <line x1="340" y1="194" x2="340" y2="210" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow_bootstrap)"/>
+  <rect x="60" y="210" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="230" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">30-identity</text>
+  <text x="78" y="246" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">Cognito user pool + PKCE client, SES identity</text>
+  <text x="640" y="238" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <line x1="340" y1="256" x2="340" y2="272" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_bootstrap)"/>
+  <rect x="60" y="272" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="292" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">40-secrets</text>
+  <text x="78" y="308" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">SSM SecureStrings, Secrets Manager, KMS key</text>
+  <text x="640" y="300" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <line x1="340" y1="318" x2="340" y2="334" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_bootstrap)"/>
+  <rect x="60" y="334" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="354" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">50-compute</text>
+  <text x="78" y="370" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">ECR, ECS cluster, task definitions, services, ALB</text>
+  <text x="640" y="362" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <line x1="340" y1="380" x2="340" y2="396" stroke="#EB5616" stroke-width="1.6" marker-end="url(#arrowO_bootstrap)"/>
+  <rect x="60" y="396" width="560" height="46" rx="7" fill="#fff" stroke="#EB5616" stroke-width="1.8"/>
+  <text x="78" y="416" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="12.5" font-weight="800" fill="#1f2430" text-anchor="start">60-frontdoor</text>
+  <text x="78" y="432" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="start">ACM in us-east-1, WAFv2, CloudFront, Route 53</text>
+  <text x="640" y="424" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#EB5616" text-anchor="start">per workspace</text>
+  <rect x="60" y="412" width="560" height="0" rx="7" fill="none" stroke="none" stroke-width="1.5"/>
+  <text x="340.0" y="416.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle"></text>
+  <text x="340" y="456" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#1f2430" text-anchor="middle">Each layer reads the one above through remote state outputs. Never a hand-copied ARN.</text>
+</svg>
+<figcaption>Layer order. Later layers read earlier ones through <code>terraform_remote_state</code>; nothing is
+ever copied by hand between them.</figcaption>
+</figure>
+
+<h3>The bootstrap layer</h3>
+
+<p>This one layer runs with local state, because it creates the bucket that all the other layers will store their
+state in. Once it has applied, you migrate its own state into the bucket it just made.</p>
+
+<p class="filename">Ecosystem/infra/terraform/00-bootstrap/main.tf</p>
+<pre><code># Bootstrap: the things every other layer depends on. Runs once, in us-west-2,
+# against AWS account 824999955649. Local state initially, then migrated into
+# the bucket this layer creates.
+
+terraform {
+  required_version = "&gt;= 1.6"
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~&gt; 5.60" }
+  }
+}
+
+provider "aws" {
+  region = "us-west-2"
+  # Refuse to run against any other account. This single block is the reason a
+  # stale credential cannot quietly build Jemba9 infrastructure somewhere else.
+  allowed_account_ids = ["824999955649"]
+
+  default_tags {
+    tags = {
+      Project   = "jemba9-ecosystem"
+      ManagedBy = "terraform"
+      Layer     = "bootstrap"
+    }
+  }
+}
+
+# ---------------------------------------------------------------- state backend
+resource "aws_s3_bucket" "tf_state" {
+  bucket = "j9-tf-state-824999955649"
+}
+
+resource "aws_s3_bucket_versioning" "tf_state" {
+  bucket = aws_s3_bucket.tf_state.id
+  versioning_configuration { status = "Enabled" }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state" {
+  bucket = aws_s3_bucket.tf_state.id
+  rule {
+    apply_server_side_encryption_by_default { sse_algorithm = "AES256" }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "tf_state" {
+  bucket                  = aws_s3_bucket.tf_state.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Deny any non-TLS request to the state bucket.
+resource "aws_s3_bucket_policy" "tf_state_tls_only" {
+  bucket = aws_s3_bucket.tf_state.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "DenyInsecureTransport"
+      Effect    = "Deny"
+      Principal = "*"
+      Action    = "s3:*"
+      Resource = [
+        aws_s3_bucket.tf_state.arn,
+        "${aws_s3_bucket.tf_state.arn}/*",
+      ]
+      Condition = { Bool = { "aws:SecureTransport" = "false" } }
+    }]
+  })
+}
+
+resource "aws_dynamodb_table" "tf_locks" {
+  name         = "j9-tf-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+  point_in_time_recovery { enabled = true }
+}
+
+# ------------------------------------------------------------- GitHub OIDC
+# One provider for the whole account. The per-environment deploy roles that
+# trust it live in 50-compute, where they can be scoped to real resource ARNs.
+resource "aws_iam_openid_connect_provider" "github" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  # GitHub rotates this; verify the current value before applying:
+  #   https://docs.github.com/en/actions/deployment/security-hardening-your-deployments
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+}
+
+# ------------------------------------------------------------------- budgets
+resource "aws_budgets_budget" "account" {
+  name         = "j9-account-monthly"
+  budget_type  = "COST"
+  limit_amount = "900"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 80
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "FORECASTED"
+    subscriber_email_addresses = var.budget_alert_emails
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = var.budget_alert_emails
+  }
+}
+
+resource "aws_budgets_budget" "dev" {
+  name         = "j9-dev-monthly"
+  budget_type  = "COST"
+  limit_amount = "250"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  cost_filter {
+    name   = "TagKeyValue"
+    values = ["user:Environment$dev"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 90
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "FORECASTED"
+    subscriber_email_addresses = var.budget_alert_emails
+  }
+}</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/00-bootstrap/variables.tf</p>
+<pre><code>variable "budget_alert_emails" {
+  description = "Who hears about cost overruns."
+  type        = list(string)
+  # No default on purpose — an unowned budget alert is not a budget alert.
+}</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/00-bootstrap/outputs.tf</p>
+<pre><code>output "state_bucket" { value = aws_s3_bucket.tf_state.id }
+output "lock_table"   { value = aws_dynamodb_table.tf_locks.name }
+output "github_oidc_provider_arn" { value = aws_iam_openid_connect_provider.github.arn }</code></pre>
+
+<h3>Applying it, then moving its own state</h3>
+
+<pre><code>cd Ecosystem/infra/terraform/00-bootstrap
+
+terraform init
+terraform plan  -var 'budget_alert_emails=["you@jemba9.com"]'
+terraform apply -var 'budget_alert_emails=["you@jemba9.com"]'
+
+# Now point this layer at the bucket it just created and move the state in.
+cat &gt;&gt; main.tf &lt;&lt;'EOF'
+
+terraform {
+  backend "s3" {
+    bucket         = "j9-tf-state-824999955649"
+    key            = "bootstrap/terraform.tfstate"
+    region         = "us-west-2"
+    dynamodb_table = "j9-tf-locks"
+    encrypt        = true
+  }
+}
+EOF
+
+terraform init -migrate-state    # answer yes
+rm -f terraform.tfstate*         # the local copy is now redundant — and sensitive</code></pre>
+
+<div class="callout callout-note"><span class="label">Terraform 1.10 and newer</span>
+
+<p>If your Terraform is 1.10+, you can replace <code>dynamodb_table</code> with
+<code>use_lockfile = true</code> and skip the DynamoDB table entirely &mdash; S3 now supports conditional writes
+for locking. The table is kept here because the repo's existing backend stub already names it and because it
+works on every version. Either is fine; do not use both.</p>
+</div>
+
+<h2>2.7 &mdash; The shared backend and workspaces</h2>
+
+<p>Every layer from <code>10-network</code> onwards uses the same backend file with a different key, and selects
+an environment through a workspace.</p>
+
+<p class="filename">Ecosystem/infra/terraform/shared/backend.hcl</p>
+<pre><code>bucket         = "j9-tf-state-824999955649"
+region         = "us-west-2"
+dynamodb_table = "j9-tf-locks"
+encrypt        = true</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/10-network/versions.tf  (the same block in every layer)</p>
+<pre><code>terraform {
+  required_version = "&gt;= 1.6"
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~&gt; 5.60" }
+  }
+  backend "s3" {
+    key = "network/terraform.tfstate"   # bucket/region/lock come from -backend-config
+    # Workspaces keep dev and prod apart inside this key:
+    #   env:/dev/network/terraform.tfstate
+    #   env:/prod/network/terraform.tfstate
+  }
+}
+
+provider "aws" {
+  region              = var.region
+  allowed_account_ids = ["824999955649"]
+
+  default_tags {
+    tags = {
+      Project     = "jemba9-ecosystem"
+      Environment = terraform.workspace
+      ManagedBy   = "terraform"
+      Layer       = "network"
+    }
+  }
+}
+
+locals {
+  env    = terraform.workspace
+  prefix = "j9-${terraform.workspace}"
+  is_prod = terraform.workspace == "prod"
+}</code></pre>
+
+<p>Because <code>terraform.workspace</code> drives the prefix, a resource cannot be created without an
+environment in its name. And because <code>local.is_prod</code> drives sizing, dev and prod differ by data, not
+by divergent code.</p>
+
+<h3>The working loop</h3>
+
+<pre><code>cd Ecosystem/infra/terraform/10-network
+
+terraform init -backend-config=../shared/backend.hcl
+
+terraform workspace new dev          # first time
+terraform workspace select dev
+
+terraform plan  -var-file=../shared/dev.tfvars
+terraform apply -var-file=../shared/dev.tfvars
+
+# prod is the same commands with two words changed
+terraform workspace select prod
+terraform apply -var-file=../shared/prod.tfvars</code></pre>
+
+<div class="callout callout-stop"><span class="label">The one mistake to avoid</span>
+
+<p><code>terraform workspace select dev</code> followed by <code>-var-file=../shared/prod.tfvars</code> will
+happily build prod-sized resources with dev names, or worse. Terraform will not stop you.</p>
+<p>Guard it with a lifecycle precondition in every layer:</p>
+<pre><code>variable "environment" { type = string }
+
+resource "null_resource" "workspace_guard" {
+  lifecycle {
+    precondition {
+      condition     = var.environment == terraform.workspace
+      error_message = "tfvars environment (${var.environment}) does not match workspace (${terraform.workspace})."
+    }
+  }
+}</code></pre>
+<p>Set <code>environment = "dev"</code> in <code>dev.tfvars</code> and <code>environment = "prod"</code> in
+<code>prod.tfvars</code>. Now the mismatch fails at plan time instead of at 3am.</p>
+</div>
+
+<h3>The two tfvars files</h3>
+
+<p class="filename">Ecosystem/infra/terraform/shared/dev.tfvars</p>
+<pre><code>environment = "dev"
+region      = "us-west-2"
+
+vpc_cidr            = "10.20.0.0/16"
+single_nat_gateway  = true      # one NAT, ~$33/mo — dev does not need AZ-redundant egress
+
+db_instance_class      = "db.t4g.micro"
+db_allocated_storage   = 20
+db_multi_az            = false
+db_backup_retention    = 7
+db_deletion_protection = false
+
+redis_node_type        = "cache.t4g.micro"
+redis_replicas         = 0
+
+platform_desired_count = 1
+okr_desired_count      = 1
+dataroom_desired_count = 1
+worker_desired_count   = 1
+task_cpu               = 512
+task_memory            = 1024
+
+log_retention_days     = 14
+enable_waf             = true
+domain_name            = ""     # empty: serve on the CloudFront *.cloudfront.net hostname</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/shared/prod.tfvars</p>
+<pre><code>environment = "prod"
+region      = "us-west-2"
+
+vpc_cidr            = "10.30.0.0/16"
+single_nat_gateway  = false     # one NAT per AZ — an AZ failure must not sever egress
+
+db_instance_class      = "db.t4g.medium"
+db_allocated_storage   = 100
+db_multi_az            = true
+db_backup_retention    = 30
+db_deletion_protection = true
+
+redis_node_type        = "cache.t4g.small"
+redis_replicas         = 1      # automatic failover requires at least one replica
+
+platform_desired_count = 2      # never one — fail-closed authz makes this the critical service
+okr_desired_count      = 2
+dataroom_desired_count = 2
+worker_desired_count   = 1      # exactly one; the sweeps are not written to be run concurrently
+task_cpu               = 1024
+task_memory            = 2048
+
+log_retention_days     = 365
+enable_waf             = true
+domain_name            = "jemba9.com"   # see chapter 6 before setting this</code></pre>
+
+<div class="callout"><span class="label">worker_desired_count is 1 on purpose</span>
+
+<p>The worker runs the grant-expiry sweep, the health poll, the event rollup, and the retention prune. None of
+those are documented as safe to run concurrently, and the retention prune in particular temporarily disables a
+database trigger as the table owner. Two workers doing that at once is a genuinely bad time. Keep it at one, and
+accept the brief gap during a deploy &mdash; every job is a periodic sweep that will catch up on its next tick.</p>
+<p>If you later want the worker to be highly available, the change belongs in the application (a Redis lock around
+each job), not in the task count.</p>
+</div>
+
+</section>
+
+<div class="pager"><a href="01-architecture.html">&larr; 1. What You Are Hosting</a><span class="spacer"></span><a href="03-network-data.html">3. Network and Data &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

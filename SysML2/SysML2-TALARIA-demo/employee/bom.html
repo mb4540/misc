@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product BOM — TALARIA Employee Console</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Employee Console &mdash; Product BOM</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Purple markers link to the SysML 2.0 notes at the bottom of the page</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div>
+          <span class="brand-name">TALARIA</span>
+          <span class="brand-sub">Space Assurance Gateway</span>
+        </div>
+      </div>
+      <div class="sidebar-portal-band band-employee">Employee Console</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">TIA Power Board Rev C &middot; Phase 5</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <span class="nav-item"><span class="icon">&#9632;</span> Workspace</span>
+      <a class="nav-item active" href="bom.html"><span class="icon">&#9776;</span> Product BOM</a>
+      <a class="nav-item" href="run.html"><span class="icon">&#9881;</span> Analyses</a>
+      <a class="nav-item" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="requirements.html"><span class="icon">&#9636;</span> Requirements</a>
+      <a class="nav-item" href="phase-gate.html"><span class="icon">&#8599;</span> Phase Gate</a>
+      <div class="sidebar-section-label">Model</div>
+      <span class="nav-item">&#9671; Model Browser <span class="nav-badge-sysml">SysML</span></span>
+      <span class="nav-item">&#8644; Model Exchange <span class="nav-badge-sysml">SysML</span></span>
+      <div class="sidebar-section-label">Program</div>
+      <span class="nav-item"><span class="icon">&#9635;</span> Schedule</span>
+      <span class="nav-item"><span class="icon">&#9650;</span> Risks</span>
+      <span class="nav-item"><span class="icon">&#9634;</span> Deliverables</span>
+      <span class="nav-item"><span class="icon">&#9998;</span> Plan Documents</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SC</div>
+        <div><div>Sarah Chen</div><span class="role">Lead Engineer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Product BOM</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">model @ commit 8f2c1ae</span>
+        <span>Jemba9 Internal</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="breadcrumb">
+        <span>J9Avionics</span><span class="separator">/</span>
+        <span>Workspace</span><span class="separator">/</span>
+        <span class="current">Product BOM</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1>TIA Power Board &mdash; Rev C</h1>
+          <div class="subtitle">69 part definitions &middot; 142 part usages &middot; imported 2026-03-08 from <span class="mono">j9av-tia-revc.csv</span></div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Importing…">&#8593; Import BOM</button>
+          <button class="btn btn-sysml btn-sm" data-demo-action="Exported model.sysml">&#8595; Export .sysml <span class="sysml-pin" data-pin="5">5</span></button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">69</div>
+          <div class="stat-label">Part definitions</div>
+          <div class="stat-sub">distinct MPNs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value sysml">142</div>
+          <div class="stat-label">Part usages <span class="sysml-pin" data-pin="1">1</span></div>
+          <div class="stat-sub">addressable instances</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value danger">3</div>
+          <div class="stat-label">Non-compliant</div>
+          <div class="stat-sub">across 2 rules</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value warning">6</div>
+          <div class="stat-label">Industrial grade</div>
+          <div class="stat-sub">upscreening required</div>
+        </div>
+      </div>
+
+      <div class="tabs" data-tab-group>
+        <button class="tab active" data-tab="table">BOM Table</button>
+        <button class="tab" data-tab="tree">Model Tree <span class="sysml-pin" data-pin="1">1</span></button>
+        <button class="tab" data-tab="source">Textual Notation <span class="sysml-pin" data-pin="5">5</span></button>
+      </div>
+
+      <!-- ── Tab: BOM table ── -->
+      <div data-tab-panel="table" class="tab-panel active">
+        <div class="card">
+          <div class="card-header">
+            <h3>Bill of Materials</h3>
+            <span class="text-muted">Rev C &middot; delta shown against Rev B</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th><th>Type</th><th>Description</th><th>Designators</th>
+                  <th>Qty</th><th>Manufacturer</th><th>MPN</th><th>Grade</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-fail">
+                  <td>1</td><td>Capacitor</td>
+                  <td>10&micro;F, 50V, 10%, X7R, 1206</td>
+                  <td class="mono" style="max-width:210px;">C24, C47, C52&ndash;C55 <span class="text-muted">(19)</span></td>
+                  <td>19</td><td>TDK</td><td class="mono">CGA5L1X7R1H106K160AE</td>
+                  <td><span class="badge badge-neutral">industrial</span></td>
+                  <td><span class="badge badge-fail">fail</span></td>
+                </tr>
+                <tr>
+                  <td>2</td><td>Capacitor</td>
+                  <td>0.1&micro;F, 50V, 10%, X7R, 0402</td>
+                  <td class="mono" style="max-width:210px;">C1, C2, C4, C6, C7, C10&hellip; <span class="text-muted">(37)</span></td>
+                  <td>37</td><td>Murata</td><td class="mono">GCM155R71H104KE02D</td>
+                  <td><span class="badge badge-neutral">industrial</span></td>
+                  <td><span class="badge badge-pass">pass</span></td>
+                </tr>
+                <tr>
+                  <td>3</td><td>Capacitor</td>
+                  <td>1&micro;F, 50V, 10%, X7R, 0603</td>
+                  <td class="mono">C28, C68, C83 <span class="text-muted">(3)</span></td>
+                  <td>3 <span style="color:var(--color-success);font-size:11px;">+1</span></td>
+                  <td>TDK</td><td class="mono">CGA3E3X7R1H105K080AB</td>
+                  <td><span class="badge badge-neutral">industrial</span></td>
+                  <td><span class="badge badge-pass">pass</span></td>
+                </tr>
+                <tr class="row-fail">
+                  <td>4</td><td>Resistor</td>
+                  <td>0.05&#8486;, 1W, 1%, 2512, current sense</td>
+                  <td class="mono">R44, R45 <span class="text-muted">(2)</span></td>
+                  <td>2</td><td>Vishay</td><td class="mono">WSL2512R0500FEA</td>
+                  <td><span class="badge badge-pass">space</span></td>
+                  <td><span class="badge badge-fail">fail</span></td>
+                </tr>
+                <tr>
+                  <td>5</td><td>Photodiode</td>
+                  <td>Si PIN photodiode, TO-5</td>
+                  <td class="mono">D7 <span class="text-muted">(1)</span></td>
+                  <td>1</td><td>Thorlabs</td><td class="mono">FDS100</td>
+                  <td><span class="badge badge-neutral">commercial</span></td>
+                  <td><span class="badge badge-waiver">waived</span></td>
+                </tr>
+                <tr>
+                  <td>6</td><td>Regulator</td>
+                  <td>3.3V LDO, 1A, rad-tolerant</td>
+                  <td class="mono">U12 <span class="text-muted">(1)</span></td>
+                  <td>1</td><td>Renesas</td><td class="mono">ISL75052SEH</td>
+                  <td><span class="badge badge-pass">space</span></td>
+                  <td><span class="badge badge-pass">pass</span></td>
+                </tr>
+                <tr>
+                  <td colspan="9" style="text-align:center;color:var(--text-muted);font-size:12px;padding:14px;">&hellip; 63 further part definitions</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sysml-note">
+          <strong>Same table, different substrate.</strong> The designator column is a string today &mdash; <span class="mono">"C24, C47, C52&ndash;C55"</span> is parsed at analysis time to work out that 19 instances are affected. Under SysML v2 each of those is a part usage that exists in the model, carries its own applied stresses, and can be pointed at individually by a finding, a waiver, or a customer question. <span class="sysml-pin" data-pin="1">1</span>
+        </div>
+      </div>
+
+      <!-- ── Tab: model tree ── -->
+      <div data-tab-panel="tree" class="tab-panel">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <h3>Part usage tree <span class="badge badge-sysml">board &rarr; assembly &rarr; part</span></h3>
+              <span class="text-muted">Rev C</span>
+            </div>
+            <div class="card-body">
+              <div class="model-tree">
+                <div class="tree-row"><span class="tree-kw">part</span> <span class="tree-name">tiaPowerBoard</span> <span class="tree-val">: PowerBoard</span> <span class="sysml-pin" data-pin="1">1</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">attribute</span> <span class="tree-name">revision</span> <span class="tree-val">= "Rev C"</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">part</span> <span class="tree-name">powerStage</span> <span class="tree-val">: Assembly</span></div>
+                <div class="tree-row tree-indent-2"><span class="tree-kw">part</span> <span class="tree-name">C24</span> <span class="tree-type">: CeramicCapacitor</span></div>
+                <div class="tree-row tree-indent-3"><span class="tree-val">ratedVoltage = 50 [V]</span> <span class="sysml-pin" data-pin="2">2</span></div>
+                <div class="tree-row tree-indent-3"><span class="tree-val bad">appliedVoltage = 48 [V]&nbsp;&nbsp;&#9888; exceeds 37.5 [V] limit</span></div>
+                <div class="tree-row tree-indent-2"><span class="tree-kw">part</span> <span class="tree-name">C47</span> <span class="tree-type">: CeramicCapacitor</span></div>
+                <div class="tree-row tree-indent-3"><span class="tree-val bad">appliedVoltage = 48 [V]&nbsp;&nbsp;&#9888;</span></div>
+                <div class="tree-row tree-indent-2"><span class="tree-kw">part</span> <span class="tree-name">C52</span> <span class="tree-type">: CeramicCapacitor</span> <span class="tree-val">&hellip; C55</span></div>
+                <div class="tree-row tree-indent-2"><span class="tree-kw">part</span> <span class="tree-name">R44</span> <span class="tree-type">: CurrentSenseResistor</span></div>
+                <div class="tree-row tree-indent-3"><span class="tree-val bad">appliedPower = 0.78 [W] of 0.70 [W] limit</span></div>
+                <div class="tree-row tree-indent-2"><span class="tree-kw">part</span> <span class="tree-name">U12</span> <span class="tree-type">: LinearRegulator</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">part</span> <span class="tree-name">sensorFrontEnd</span> <span class="tree-val">: Assembly</span></div>
+                <div class="tree-row tree-indent-2"><span class="tree-kw">part</span> <span class="tree-name">D7</span> <span class="tree-type">: Photodiode</span> <span class="badge badge-waiver" style="font-size:10px;">waiver w-001</span> <span class="sysml-pin" data-pin="4">4</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">port</span> <span class="tree-name">vin</span> <span class="tree-type">: PowerPort</span> <span class="sysml-pin" data-pin="3">3</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">port</span> <span class="tree-name">v5v</span> <span class="tree-type">: PowerPort</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">port</span> <span class="tree-name">v3v3</span> <span class="tree-type">: PowerPort</span></div>
+                <div class="tree-row tree-indent-1"><span class="tree-kw">connect</span> <span class="tree-name">v5v</span> <span class="tree-val">to powerStage.C24.pos</span> <span class="sysml-pin" data-pin="3">3</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Selected: <span class="mono">C24</span></h3></div>
+              <div class="card-body">
+                <div class="detail-grid">
+                  <div class="detail-field"><div class="label">Typed by</div><div class="value mono">CeramicCapacitor</div></div>
+                  <div class="detail-field"><div class="label">MPN</div><div class="value mono">CGA5L1X7R1H106K160AE</div></div>
+                  <div class="detail-field"><div class="label">Rated</div><div class="value mono">50 [V]</div></div>
+                  <div class="detail-field"><div class="label">Applied</div><div class="value mono" style="color:var(--color-danger);">48 [V]</div></div>
+                  <div class="detail-field"><div class="label">Derated limit</div><div class="value mono">37.5 [V]</div></div>
+                  <div class="detail-field"><div class="label">Margin</div><div class="value mono" style="color:var(--color-danger);">&minus;28.0%</div></div>
+                </div>
+                <div class="sysml-note" style="margin-top:16px;">
+                  <strong>Applied voltage has a source.</strong> <span class="mono">48&nbsp;V</span> is not a number somebody typed &mdash; it is derived through <span class="mono">connect v5v to C24.pos</span> from the 5&nbsp;V rail's worst-case transient. Trace it back and the review question answers itself. <span class="sysml-pin" data-pin="3">3</span>
+                </div>
+                <button class="btn btn-outline btn-sm mt-16" data-demo-action="Opening trace…">Trace applied stress &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tab: textual notation ── -->
+      <div data-tab-panel="source" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h3>Generated SysML v2 textual notation</h3>
+            <div style="display:flex;gap:8px;">
+              <span class="badge badge-sysml">KerML 1.0 / SysML 2.0</span>
+              <button class="btn btn-outline btn-sm" data-demo-action="Copied">Copy</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <pre class="code"><span class="c">// Generated from project J9Avionics at commit 8f2c1ae</span>
+<span class="c">// board &rarr; assembly &rarr; part becomes a part usage tree</span>
+<span class="k">package</span> <span class="n">J9Avionics</span> {
+
+    <span class="k">import</span> ISQ::*;  <span class="c">// quantities</span>
+    <span class="k">import</span> SI::*;   <span class="c">// units</span>
+
+    <span class="d">part def</span> <span class="n">CeramicCapacitor</span> :&gt; EeePart {
+        <span class="k">attribute</span> mpn            : String;
+        <span class="k">attribute</span> ratedVoltage   : VoltageValue;
+        <span class="k">attribute</span> appliedVoltage : VoltageValue;
+        <span class="k">attribute</span> dielectric     : String;
+        <span class="k">attribute</span> grade          : PartGrade;
+    }
+
+    <span class="d">port def</span> <span class="n">PowerPort</span> {
+        <span class="k">attribute</span> voltage : VoltageValue;
+        <span class="k">attribute</span> current : ElectricCurrentValue;
+    }
+
+    <span class="k">part</span> <span class="n">tiaPowerBoard</span> : PowerBoard {
+        <span class="k">attribute</span> revision = <span class="s">"Rev C"</span>;
+
+        <span class="k">port</span> v5v : PowerPort { voltage = 5.0 [V]; }
+
+        <span class="k">part</span> powerStage : Assembly {
+
+            <span class="k">part</span> C24 : CeramicCapacitor {
+                mpn            = <span class="s">"CGA5L1X7R1H106K160AE"</span>;
+                ratedVoltage   = 50 [V];
+                appliedVoltage = 48 [V];        <span class="bad">// fails EEE-003</span>
+                grade          = <span class="s">"industrial"</span>;
+            }
+
+            <span class="k">part</span> C28 : CeramicCapacitor {
+                mpn            = <span class="s">"CGA3E3X7R1H105K080AB"</span>;
+                ratedVoltage   = 50 [V];
+                appliedVoltage = 12 [V];        <span class="ok">// passes</span>
+            }
+        }
+
+        <span class="k">connect</span> v5v <span class="k">to</span> powerStage.C24.pos;
+    }
+}</pre>
+            <div class="sysml-note">
+              <strong>This file is the deliverable, not a report about it.</strong> It diffs in git, opens in SysON or Cameo, and is what an agent reads and writes. <span class="sysml-pin" data-pin="5">5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SysML explanation panel ── -->
+      <div class="sysml-panel" id="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>part def</code> and part usage &mdash; 69 definitions, 142 usages</div>
+              <div class="sysml-entry-text">A <code>part def</code> is the catalogue entry for a component type; a <code>part</code> usage is that type appearing at a specific place on the board with its own values. The BOM line and the reference designator stop being one row with a string of designators, and become one definition with many addressable instances nested under <code>board &rarr; assembly &rarr; part</code>.</div>
+              <div class="sysml-today"><strong>Today:</strong> the <code>part</code> table stores <code>refDes</code> as a single varchar and the analyst expands <span class="mono">"C52&ndash;C55"</span> at run time. A finding therefore names a group, not a component.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Typed quantities from the ISQ / SI libraries</div>
+              <div class="sysml-entry-text"><code>50 [V]</code> is a quantity value, not a number with an implied unit. A rule written in volts cannot silently consume millivolts, and a krad/rad mix-up in a radiation margin becomes a parse error rather than a wrong answer that looks right.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>ratedVoltage</code> is a <code>doublePrecision</code> column whose unit lives in the column name. Better than a string, but nothing enforces it.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>port def</code> and <code>connect</code> &mdash; the connectivity layer</div>
+              <div class="sysml-entry-text">Ports are declared interaction points; <code>connect</code> joins them. This is what lets an applied stress have a provenance: 48&nbsp;V on C24 is derived from the rail it sits on, not asserted. It is also the hook that makes real ECAD netlist import meaningful rather than a spreadsheet in disguise.</div>
+              <div class="sysml-today"><strong>Today:</strong> there is no net, node or port table anywhere in the schema. <code>actualVoltage</code> is an unsourced number, and the ECAD integration is stubbed.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-4">
+            <div class="sysml-entry-num">4</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>metadata def</code> &mdash; waivers travel with the part</div>
+              <div class="sysml-entry-text">A waiver attaches to the element it excuses. D7 stays visibly non-compliant <em>and</em> visibly waived, with the justification in the model rather than in a table you have to remember to join.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>waiver</code> is a separate table keyed on <code>finding_id</code>. The information is all there; it just does not travel with the export.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-5">
+            <div class="sysml-entry-num">5</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Textual notation as an export format</div>
+              <div class="sysml-entry-text">The whole model serialises to text with a published grammar. It diffs in a pull request, opens in any conformant tool, and can be generated or checked by an agent. This is the cheapest of the integration options &mdash; a serialiser over the existing Drizzle schema, no schema change required.</div>
+              <div class="sysml-today"><strong>Today:</strong> a project leaves TALARIA as a PDF or a DOCX. Nothing downstream can compute over it.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ── RAPDA ── -->
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Rev C parsed. 69 part definitions expanded to <strong>142 part usages</strong> across 2 assemblies. Designator ranges resolved individually, so findings can name a single component.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Two parts carry applied stresses above their derated limits: <code>C24</code> (and 18 siblings on the 5&nbsp;V bypass network) and <code>R44</code>/<code>R45</code>.
+        <div class="rapda-actions">
+          <a href="run.html" class="btn btn-accent btn-sm">Run analysis</a>
+          <a href="findings.html" class="btn btn-outline btn-sm">View findings</a>
+        </div>
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">Sarah Chen</div>
+        Where does the 48&nbsp;V on C24 come from?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        From <code>connect v5v &rarr; C24.pos</code>. The 5&nbsp;V rail's worst-case transient is 48&nbsp;V during the hot-swap inrush window, per the imported netlist. That path is in the model, so I can show it rather than infer it.
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about this board…">
+    </div>
+  </aside>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

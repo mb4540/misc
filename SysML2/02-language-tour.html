@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 2 — Language Tour: Definition vs. Usage</title>
+</head>
+<body style="margin:0;padding:0;background:#0e1116;color:#d7dee8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.65;">
+<div style="max-width:1000px;margin:0 auto;padding:40px 28px 80px 28px;">
+
+<div style="font-size:13px;margin-bottom:26px;"><a href="01-what-is-sysml2.html" style="color:#4da3ff;text-decoration:none;">&#8592; Part 1</a> <span style="color:#3a4553;">|</span> <a href="index.html" style="color:#4da3ff;text-decoration:none;">Contents</a> <span style="color:#3a4553;">|</span> <a href="03-api-and-tooling.html" style="color:#4da3ff;text-decoration:none;">Part 3: API &amp; Tooling &#8594;</a></div>
+
+<div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#7f8ea3;">Part 2</div>
+<h1 style="margin:6px 0 26px 0;font-size:34px;line-height:1.2;color:#f2f6fb;">Language Tour — Definition vs. Usage</h1>
+
+<p style="font-size:17px;color:#9fb0c4;">Every example below uses TALARIA's own domain — the J9Avionics TIA Power Board, NASA-EEE-INST-002 Class B derating, a 550&#160;km LEO mission profile — so the syntax lands against something familiar.</p>
+
+<div style="background:#141b24;border-left:3px solid #4da3ff;padding:14px 18px;border-radius:0 8px 8px 0;margin:18px 0;font-size:14.5px;">
+  <strong style="color:#f2f6fb;">Which TALARIA?</strong> The illustrative values come from the mock UI's demo fixtures, but the field names in the mapping table at &sect;2.4 track the <em>real</em> application's Drizzle schema (<code style="color:#8fd4a8;">backend/src/db/schema.ts</code>), since that is what any actual integration would target. Part 4 keeps the two strictly apart.
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.1 The one idea: <code style="color:#8fd4a8;">def</code> versus usage</h2>
+
+<p>If you learn one thing about SysML v2, learn this. Every element kind comes in two flavours, and the pattern is <em>uniform</em> across the entire language — parts, ports, actions, states, requirements, constraints, cases, all of them.</p>
+
+<ul style="padding-left:22px;">
+  <li style="margin-bottom:8px;"><strong style="color:#8fd4a8;">Definition</strong> (<code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#8fd4a8;">part def Capacitor</code>) — the reusable blueprint. A kind of thing. It does not exist in any particular system; it is the catalogue entry.</li>
+  <li style="margin-bottom:8px;"><strong style="color:#4da3ff;">Usage</strong> (<code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#4da3ff;">part c24 : Capacitor</code>) — that blueprint appearing in a context, with context-specific values. This is the thing on the board at reference designator C24.</li>
+</ul>
+
+<p>In v1 you had Blocks, part properties, and instance specifications, related by rules that differed per diagram type. In v2 it is one rule, everywhere. That uniformity is what makes the textual notation tractable and the metamodel small.</p>
+
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:22px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">DEFINITION &#8594; USAGE, WITH CONTEXT-SPECIFIC REFINEMENT</text>
+
+  <!-- definition box -->
+  <rect x="55" y="70" width="300" height="180" rx="8" fill="#16221b" stroke="#5fbf8f" stroke-width="1.8"/>
+  <text x="72" y="96" fill="#5fbf8f" font-family="monospace" font-size="14" font-weight="bold">part def Capacitor</text>
+  <line x1="72" y1="106" x2="338" y2="106" stroke="#2c4438" stroke-width="1"/>
+  <text x="72" y="128" fill="#9fb0c4" font-family="monospace" font-size="12.5">attribute ratedVoltage : Volt;</text>
+  <text x="72" y="150" fill="#9fb0c4" font-family="monospace" font-size="12.5">attribute capacitance : Farad;</text>
+  <text x="72" y="172" fill="#9fb0c4" font-family="monospace" font-size="12.5">attribute dielectric : String;</text>
+  <text x="72" y="194" fill="#9fb0c4" font-family="monospace" font-size="12.5">attribute mpn : String;</text>
+  <text x="72" y="216" fill="#9fb0c4" font-family="monospace" font-size="12.5">attribute grade : PartGrade;</text>
+  <text x="72" y="240" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">The catalogue entry. Exists once.</text>
+  <text x="205" y="58" text-anchor="middle" fill="#5fbf8f" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">DEFINITION</text>
+
+  <!-- arrows -->
+  <line x1="355" y1="120" x2="500" y2="105" stroke="#4da3ff" stroke-width="1.8"/>
+  <polygon points="508,103 496,99 498,111" fill="#4da3ff"/>
+  <line x1="355" y1="160" x2="500" y2="205" stroke="#4da3ff" stroke-width="1.8"/>
+  <polygon points="508,209 498,199 494,211" fill="#4da3ff"/>
+  <line x1="355" y1="200" x2="500" y2="310" stroke="#4da3ff" stroke-width="1.8"/>
+  <polygon points="508,315 500,303 493,313" fill="#4da3ff"/>
+  <text x="425" y="145" fill="#4da3ff" font-family="sans-serif" font-size="11" transform="rotate(-6 425 145)">typed by</text>
+
+  <text x="700" y="58" text-anchor="middle" fill="#4da3ff" font-family="sans-serif" font-size="11.5" letter-spacing="1.5">USAGES (in the J9Avionics board)</text>
+
+  <!-- usage 1 -->
+  <rect x="510" y="72" width="335" height="72" rx="7" fill="#141d2b" stroke="#4da3ff" stroke-width="1.5"/>
+  <text x="526" y="94" fill="#4da3ff" font-family="monospace" font-size="13">part C24 : Capacitor {</text>
+  <text x="538" y="113" fill="#9fb0c4" font-family="monospace" font-size="12">ratedVoltage = 50[V];</text>
+  <text x="538" y="131" fill="#e08a8a" font-family="monospace" font-size="12">appliedVoltage = 48[V];  &lt;-- fails</text>
+
+  <!-- usage 2 -->
+  <rect x="510" y="176" width="335" height="72" rx="7" fill="#141d2b" stroke="#4da3ff" stroke-width="1.5"/>
+  <text x="526" y="198" fill="#4da3ff" font-family="monospace" font-size="13">part C28 : Capacitor {</text>
+  <text x="538" y="217" fill="#9fb0c4" font-family="monospace" font-size="12">ratedVoltage = 50[V];</text>
+  <text x="538" y="235" fill="#8fd4a8" font-family="monospace" font-size="12">appliedVoltage = 12[V];  &lt;-- passes</text>
+
+  <!-- usage 3 -->
+  <rect x="510" y="280" width="335" height="72" rx="7" fill="#141d2b" stroke="#4da3ff" stroke-width="1.5"/>
+  <text x="526" y="302" fill="#4da3ff" font-family="monospace" font-size="13">part C35 : Capacitor {</text>
+  <text x="538" y="321" fill="#9fb0c4" font-family="monospace" font-size="12">ratedVoltage = 16[V];</text>
+  <text x="538" y="339" fill="#8fd4a8" font-family="monospace" font-size="12">appliedVoltage = 5[V];   &lt;-- passes</text>
+
+  <rect x="55" y="290" width="300" height="90" rx="8" fill="#1a1a26" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="72" y="314" fill="#a78bfa" font-family="sans-serif" font-size="12.5" font-weight="bold">The payoff</text>
+  <text x="72" y="336" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">One derating constraint written against</text>
+  <text x="72" y="353" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">the definition evaluates automatically</text>
+  <text x="72" y="370" fill="#9fb0c4" font-family="sans-serif" font-size="11.5">over every usage. 142 instances, one rule.</text>
+</svg>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.2 Structure — parts, attributes, ports, interfaces</h2>
+
+<p>Structural decomposition is nested part usages. Ports are the declared interaction points; interfaces connect them. Note that everything below is one continuous, indentation-nested text file — there is no separate "block definition diagram" and "internal block diagram" to keep in sync.</p>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;color:#c8d4e2;margin:16px 0;">
+<span style="color:#6b7a8d;">// ---- Definitions (the catalogue) ----</span>
+<span style="color:#c98fd4;">package</span> J9Avionics {
+
+    <span style="color:#c98fd4;">import</span> ISQ::*;                    <span style="color:#6b7a8d;">// standard quantity library</span>
+    <span style="color:#c98fd4;">import</span> SI::*;                     <span style="color:#6b7a8d;">// standard unit library</span>
+
+    <span style="color:#5fbf8f;">attribute def</span> PartGrade :&gt; String;
+    <span style="color:#5fbf8f;">port def</span> PowerPort {
+        <span style="color:#4da3ff;">attribute</span> voltage : VoltageValue;
+        <span style="color:#4da3ff;">attribute</span> current : ElectricCurrentValue;
+    }
+
+    <span style="color:#5fbf8f;">part def</span> PowerBoard {
+        <span style="color:#4da3ff;">attribute</span> revision   : String;
+        <span style="color:#4da3ff;">attribute</span> partsCount : Integer;
+        <span style="color:#4da3ff;">port</span> vin  : PowerPort;
+        <span style="color:#4da3ff;">port</span> v5v  : PowerPort;
+        <span style="color:#4da3ff;">port</span> v3v3 : PowerPort;
+    }
+
+    <span style="color:#5fbf8f;">part def</span> Capacitor {
+        <span style="color:#4da3ff;">attribute</span> mpn             : String;
+        <span style="color:#4da3ff;">attribute</span> manufacturer    : String;
+        <span style="color:#4da3ff;">attribute</span> ratedVoltage    : VoltageValue;
+        <span style="color:#4da3ff;">attribute</span> appliedVoltage  : VoltageValue;
+        <span style="color:#4da3ff;">attribute</span> dielectric      : String;
+        <span style="color:#4da3ff;">attribute</span> grade           : PartGrade;
+    }
+
+    <span style="color:#6b7a8d;">// ---- Usages (this board, this revision) ----</span>
+    <span style="color:#4da3ff;">part</span> tiaPowerBoard : PowerBoard {
+        revision   = <span style="color:#e0b48a;">"Rev C"</span>;
+        partsCount = 69;
+
+        <span style="color:#4da3ff;">part</span> C24 : Capacitor {
+            mpn            = <span style="color:#e0b48a;">"CGA5L1X7R1H106K160AE"</span>;
+            manufacturer   = <span style="color:#e0b48a;">"TDK"</span>;
+            ratedVoltage   = 50 [V];
+            appliedVoltage = 48 [V];
+            dielectric     = <span style="color:#e0b48a;">"X7R"</span>;
+            grade          = <span style="color:#e0b48a;">"industrial"</span>;
+        }
+
+        <span style="color:#4da3ff;">part</span> C28 : Capacitor {
+            mpn            = <span style="color:#e0b48a;">"CGA3E3X7R1H105K080AB"</span>;
+            ratedVoltage   = 50 [V];
+            appliedVoltage = 12 [V];
+        }
+    }
+}
+</pre>
+
+<div style="background:#141b24;border-left:3px solid #4da3ff;padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;font-size:14.5px;">
+  <strong style="color:#f2f6fb;">Note the units.</strong> <code style="color:#8fd4a8;">50 [V]</code> is not a string — it is a quantity value from the standard ISQ/SI libraries. Unit mismatches are a type error, not a review finding. For an assurance product this is not cosmetic.
+</div>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.3 Constraints and requirements — the part that changes your product</h2>
+
+<p>In v1 a requirement was prose plus a link. In v2 a <code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#8fd4a8;">requirement def</code> is a specialised <code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#8fd4a8;">constraint def</code>: it has a subject, typed parameters, a human-readable <code style="color:#e0b48a;">doc</code> string, and one or more Boolean assertions. It reads like natural language and evaluates like code.</p>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;color:#c8d4e2;margin:16px 0;">
+<span style="color:#6b7a8d;">// EEE-003 from the TALARIA requirements table, made evaluable.</span>
+<span style="color:#5fbf8f;">requirement def</span> CeramicCapacitorVoltageDerating {
+    <span style="color:#c98fd4;">doc</span> <span style="color:#e0b48a;">/*
+     * Ceramic capacitors shall be derated to 75% of rated voltage
+     * at maximum operating temperature (NASA-EEE-INST-002, Class B,
+     * Table 3-2).
+     */</span>
+
+    <span style="color:#c98fd4;">subject</span> cap : Capacitor;
+
+    <span style="color:#4da3ff;">attribute</span> deratingFactor : Real <span style="color:#c98fd4;">default</span> 0.75;
+
+    <span style="color:#c98fd4;">require constraint</span> {
+        cap.appliedVoltage &lt;= cap.ratedVoltage * deratingFactor
+    }
+}
+
+<span style="color:#6b7a8d;">// Applied to the actual board. This is what a run evaluates.</span>
+<span style="color:#4da3ff;">requirement</span> eee003_C24 : CeramicCapacitorVoltageDerating {
+    <span style="color:#c98fd4;">subject</span> cap = tiaPowerBoard.C24;   <span style="color:#e08a8a;">// 48 V &gt; 37.5 V  =&gt; FAIL, severity 2</span>
+}
+<span style="color:#4da3ff;">requirement</span> eee003_C28 : CeramicCapacitorVoltageDerating {
+    <span style="color:#c98fd4;">subject</span> cap = tiaPowerBoard.C28;   <span style="color:#8fd4a8;">// 12 V &lt;= 37.5 V =&gt; PASS</span>
+}
+</pre>
+
+<p>Requirements compose. A mission-level requirement can be <em>satisfied by</em> a set of lower-level ones, and the satisfaction relationship is itself a model element — which means a traceability matrix is a query, not a spreadsheet somebody maintains.</p>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;color:#c8d4e2;margin:16px 0;">
+<span style="color:#5fbf8f;">requirement def</span> MissionRadiationTolerance {
+    <span style="color:#c98fd4;">doc</span> <span style="color:#e0b48a;">/* All EEE parts shall tolerate min TID 30 krad(Si) with 2x RDM. */</span>
+    <span style="color:#c98fd4;">subject</span> item : EeePart;
+    <span style="color:#4da3ff;">attribute</span> missionTid : Real;      <span style="color:#6b7a8d;">// 30 krad from mission profile mp-001</span>
+    <span style="color:#4da3ff;">attribute</span> rdm        : Real;      <span style="color:#6b7a8d;">// 2.0</span>
+    <span style="color:#c98fd4;">require constraint</span> { item.tidCapability &gt;= missionTid * rdm }
+}
+
+<span style="color:#4da3ff;">satisfy</span> requirement MissionRadiationTolerance <span style="color:#c98fd4;">by</span> tiaPowerBoard;
+</pre>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.4 The twelve constructs you will actually use</h2>
+
+<table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:19%;">Keyword</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;width:34%;">What it models</th>
+      <th style="text-align:left;padding:9px 12px;background:#1a2030;color:#7f8ea3;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #2b3542;">Analogue in the real TALARIA backend</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">part def / part</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Structural components, nested to any depth</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">board &#8594; assembly &#8594; part</code>, with <code>refDes</code></td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">attribute def / attribute</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Typed, unit-bearing values</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">part.ratedVoltage</code>, <code>actualPower</code>, <code>marginPercent</code></td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">port def / port</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Declared interaction points on a part</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><em>absent</em> &#8212; no net or port table today</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">interface def / connect</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Typed connections between ports</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><em>absent</em> &#8212; ECAD ingest is stubbed (FE-08)</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">action def / action</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Behaviour with <code>in</code>/<code>out</code> parameters and flow</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;">LangGraph nodes; <code style="color:#8fd4a8;">agent_trace</code> rows</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">state def / state</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Modes and transitions</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">lifecycle_phase.gateCriteria</code> (jsonb)</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">constraint def</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Parameterised Boolean expression</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">derating_rule</code> + <code>skills/*.yaml</code></td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">requirement def</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Constraint + subject + documentation</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">requirement</code> + <code>requirement_trace</code></td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">analysis case</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">A trade study or computation with a declared result</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">derating_run</code> (<code>runType</code>, <code>inputSnapshot</code>)</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">verification case</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Procedure that verifies a requirement, with a verdict</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">derating_finding.status</code> + <code style="color:#8fd4a8;">stress_case</code></td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">variation / variant</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Native product-line variability</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">board.revision</code> (varchar only)</td></tr>
+    <tr><td style="padding:9px 12px;border-bottom:1px solid #1e2632;"><code style="color:#8fd4a8;">metadata def</code></td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#9fb0c4;">Domain extension — replaces UML stereotypes</td><td style="padding:9px 12px;border-bottom:1px solid #1e2632;color:#c8d4e2;"><code style="color:#8fd4a8;">waiver</code>, <code>approval</code>, deliverable status</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.5 Cases — analysis, verification, use</h2>
+
+<p>SysML v1 had use cases. v2 generalises the idea into three kinds, all sharing a common structure of subject, objective, parameters and returned result.</p>
+
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">THE THREE CASE KINDS</text>
+
+  <rect x="45" y="58" width="260" height="200" rx="8" fill="#141d2b" stroke="#4da3ff" stroke-width="1.6"/>
+  <text x="65" y="86" fill="#4da3ff" font-family="monospace" font-size="14" font-weight="bold">analysis case</text>
+  <text x="65" y="112" fill="#9fb0c4" font-family="sans-serif" font-size="12">Trade studies, computations,</text>
+  <text x="65" y="130" fill="#9fb0c4" font-family="sans-serif" font-size="12">margin evaluation.</text>
+  <text x="65" y="158" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">Declares: subject, objective,</text>
+  <text x="65" y="176" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">inputs, and a typed return value.</text>
+  <line x1="65" y1="194" x2="285" y2="194" stroke="#243244"/>
+  <text x="65" y="216" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">TALARIA: a derating run,</text>
+  <text x="65" y="234" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">thermal analysis, worst-case</text>
+  <text x="65" y="252" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">vs nominal mode.</text>
+
+  <rect x="320" y="58" width="260" height="200" rx="8" fill="#16221b" stroke="#5fbf8f" stroke-width="1.6"/>
+  <text x="340" y="86" fill="#5fbf8f" font-family="monospace" font-size="14" font-weight="bold">verification case</text>
+  <text x="340" y="112" fill="#9fb0c4" font-family="sans-serif" font-size="12">Procedure that determines</text>
+  <text x="340" y="130" fill="#9fb0c4" font-family="sans-serif" font-size="12">whether a requirement is met.</text>
+  <text x="340" y="158" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">Returns a verdict:</text>
+  <text x="340" y="176" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">pass / fail / inconclusive / error.</text>
+  <line x1="340" y1="194" x2="560" y2="194" stroke="#24382c"/>
+  <text x="340" y="216" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">TALARIA: verification_method</text>
+  <text x="340" y="234" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">(analysis / inspection / test)</text>
+  <text x="340" y="252" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">and its evidence package.</text>
+
+  <rect x="595" y="58" width="260" height="200" rx="8" fill="#221a26" stroke="#a78bfa" stroke-width="1.6"/>
+  <text x="615" y="86" fill="#a78bfa" font-family="monospace" font-size="14" font-weight="bold">use case</text>
+  <text x="615" y="112" fill="#9fb0c4" font-family="sans-serif" font-size="12">How the system is used from</text>
+  <text x="615" y="130" fill="#9fb0c4" font-family="sans-serif" font-size="12">an actor's perspective.</text>
+  <text x="615" y="158" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">Declares actors and the</text>
+  <text x="615" y="176" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">included behaviour.</text>
+  <line x1="615" y1="194" x2="835" y2="194" stroke="#332844"/>
+  <text x="615" y="216" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">TALARIA: the six demo flows</text>
+  <text x="615" y="234" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">(BOM import, interview,</text>
+  <text x="615" y="252" fill="#8fd4a8" font-family="sans-serif" font-size="11.5">phase advance, release&#8230;).</text>
+</svg>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;color:#c8d4e2;margin:16px 0;">
+<span style="color:#5fbf8f;">analysis def</span> DeratingAnalysis {
+    <span style="color:#c98fd4;">subject</span> board : PowerBoard;
+    <span style="color:#4da3ff;">in attribute</span> standard : String;        <span style="color:#6b7a8d;">// "NASA-EEE-INST-002"</span>
+    <span style="color:#4da3ff;">in attribute</span> deratingClass : String;   <span style="color:#6b7a8d;">// "Class B"</span>
+    <span style="color:#4da3ff;">in attribute</span> mode : AnalysisMode;      <span style="color:#6b7a8d;">// nominal | worstCase</span>
+    <span style="color:#c98fd4;">return attribute</span> findings : Finding[0..*];
+}
+
+<span style="color:#5fbf8f;">verification def</span> VerifyVoltageDerating {
+    <span style="color:#c98fd4;">subject</span> cap : Capacitor;
+    <span style="color:#c98fd4;">objective</span> {
+        <span style="color:#c98fd4;">verify</span> requirement CeramicCapacitorVoltageDerating;
+    }
+    <span style="color:#c98fd4;">return</span> verdict : VerdictKind;   <span style="color:#6b7a8d;">// pass | fail | inconclusive | error</span>
+}
+</pre>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.6 States — lifecycle phases as a first-class model</h2>
+
+<p>TALARIA's ten lifecycle phases with gate criteria are, in modelling terms, a state machine with guarded transitions. In v2 that is directly expressible, which means the gate logic stops living only in application code.</p>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;color:#c8d4e2;margin:16px 0;">
+<span style="color:#5fbf8f;">state def</span> ProgramLifecycle {
+    <span style="color:#4da3ff;">entry</span>; <span style="color:#c98fd4;">then</span> InitiateProgram;
+
+    <span style="color:#4da3ff;">state</span> InitiateProgram;
+    <span style="color:#4da3ff;">state</span> EstablishRequirements;
+    <span style="color:#4da3ff;">state</span> DefineArchitecture;
+    <span style="color:#4da3ff;">state</span> PreliminaryDesign;
+    <span style="color:#4da3ff;">state</span> DetailedDesign;
+    <span style="color:#6b7a8d;">// ... phases 6-10</span>
+
+    <span style="color:#c98fd4;">transition</span> InitiateProgram <span style="color:#c98fd4;">then</span> EstablishRequirements
+        <span style="color:#c98fd4;">accept</span> AdvancePhaseRequest
+        <span style="color:#c98fd4;">if</span> sowBaselineEstablished
+        <span style="color:#c98fd4;">and</span> rapdaPersonaConfigured
+        <span style="color:#c98fd4;">and</span> customerInterviewScheduled
+        <span style="color:#c98fd4;">and</span> teamRolesAssigned;
+}
+</pre>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.7 Metadata — how you add Jemba9-specific vocabulary</h2>
+
+<p>UML stereotypes are gone. Domain extension in v2 is a <code style="background:#1c2430;padding:1px 5px;border-radius:3px;color:#8fd4a8;">metadata def</code>, which is a real semantic construct rather than a decoration. This is the mechanism you would use for maturity gating, export markings, waiver state, and counterfeit-risk flags.</p>
+
+<pre style="background:#0b0f16;border:1px solid #242c38;border-radius:8px;padding:18px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;color:#c8d4e2;margin:16px 0;">
+<span style="color:#5fbf8f;">metadata def</span> CustomerVisibility {
+    <span style="color:#4da3ff;">attribute</span> maturityLevel : MaturityKind;   <span style="color:#6b7a8d;">// L1..L4</span>
+    <span style="color:#4da3ff;">attribute</span> releasedToCustomer : Boolean;
+    <span style="color:#4da3ff;">attribute</span> exportMarking : String;         <span style="color:#6b7a8d;">// e.g. "ITAR"</span>
+}
+
+<span style="color:#5fbf8f;">metadata def</span> WaiverRecord {
+    <span style="color:#4da3ff;">attribute</span> waiverId : String;
+    <span style="color:#4da3ff;">attribute</span> status : WaiverStatus;
+    <span style="color:#4da3ff;">attribute</span> justification : String;
+    <span style="color:#4da3ff;">attribute</span> approvedBy : String;
+}
+
+<span style="color:#6b7a8d;">// Attach it. The finding for the FDS100 photodiode carries its waiver in-model.</span>
+<span style="color:#4da3ff;">part</span> photodiode : EeePart {
+    <span style="color:#c98fd4;">@</span>WaiverRecord {
+        waiverId      = <span style="color:#e0b48a;">"w-001"</span>;
+        status        = <span style="color:#e0b48a;">"approved"</span>;
+        justification = <span style="color:#e0b48a;">"No applicable EEE-INST-002 rule for commercial TO-5 Si PIN; "</span>
+                        <span style="color:#e0b48a;">"operates at &lt;10% of absolute maximum ratings."</span>;
+    }
+}
+</pre>
+
+<h2 style="font-size:22px;color:#f2f6fb;margin:40px 0 12px 0;border-bottom:1px solid #242c38;padding-bottom:8px;">2.8 Model organisation at a glance</h2>
+
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#121722;border:1px solid #242c38;border-radius:10px;margin:20px 0;">
+  <text x="450" y="30" text-anchor="middle" fill="#7f8ea3" font-family="sans-serif" font-size="13" letter-spacing="2">A J9AVIONICS MODEL TREE, AS IT WOULD BE ORGANISED</text>
+
+  <rect x="330" y="52" width="240" height="40" rx="6" fill="#1a2030" stroke="#4da3ff" stroke-width="1.6"/>
+  <text x="450" y="77" text-anchor="middle" fill="#e8eef6" font-family="monospace" font-size="13">package J9Avionics</text>
+
+  <line x1="450" y1="92" x2="450" y2="112" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="130" y1="112" x2="770" y2="112" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="130" y1="112" x2="130" y2="136" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="290" y1="112" x2="290" y2="136" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="450" y1="112" x2="450" y2="136" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="610" y1="112" x2="610" y2="136" stroke="#3a4553" stroke-width="1.6"/>
+  <line x1="770" y1="112" x2="770" y2="136" stroke="#3a4553" stroke-width="1.6"/>
+
+  <rect x="55" y="136" width="150" height="44" rx="6" fill="#16221b" stroke="#5fbf8f" stroke-width="1.4"/>
+  <text x="130" y="154" text-anchor="middle" fill="#5fbf8f" font-family="monospace" font-size="12">Definitions</text>
+  <text x="130" y="171" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10.5">part / port / attribute defs</text>
+
+  <rect x="215" y="136" width="150" height="44" rx="6" fill="#141d2b" stroke="#4da3ff" stroke-width="1.4"/>
+  <text x="290" y="154" text-anchor="middle" fill="#4da3ff" font-family="monospace" font-size="12">Architecture</text>
+  <text x="290" y="171" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10.5">board usage tree</text>
+
+  <rect x="375" y="136" width="150" height="44" rx="6" fill="#221a26" stroke="#a78bfa" stroke-width="1.4"/>
+  <text x="450" y="154" text-anchor="middle" fill="#a78bfa" font-family="monospace" font-size="12">Requirements</text>
+  <text x="450" y="171" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10.5">EEE-001 &#8230; EEE-006</text>
+
+  <rect x="535" y="136" width="150" height="44" rx="6" fill="#26201a" stroke="#f0a868" stroke-width="1.4"/>
+  <text x="610" y="154" text-anchor="middle" fill="#f0a868" font-family="monospace" font-size="12">Cases</text>
+  <text x="610" y="171" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10.5">analysis &amp; verification</text>
+
+  <rect x="695" y="136" width="150" height="44" rx="6" fill="#251a1e" stroke="#e08a8a" stroke-width="1.4"/>
+  <text x="770" y="154" text-anchor="middle" fill="#e08a8a" font-family="monospace" font-size="12">Metadata</text>
+  <text x="770" y="171" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="10.5">visibility, waivers</text>
+
+  <!-- second row detail -->
+  <line x1="290" y1="180" x2="290" y2="206" stroke="#3a4553" stroke-width="1.4"/>
+  <rect x="200" y="206" width="180" height="34" rx="5" fill="#111926" stroke="#2c3d54"/>
+  <text x="290" y="228" text-anchor="middle" fill="#9fb0c4" font-family="monospace" font-size="11.5">part tiaPowerBoard</text>
+  <line x1="290" y1="240" x2="290" y2="264" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="215" y1="264" x2="365" y2="264" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="215" y1="264" x2="215" y2="286" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="290" y1="264" x2="290" y2="286" stroke="#3a4553" stroke-width="1.4"/>
+  <line x1="365" y1="264" x2="365" y2="286" stroke="#3a4553" stroke-width="1.4"/>
+  <rect x="175" y="286" width="80" height="30" rx="5" fill="#111926" stroke="#2c3d54"/>
+  <text x="215" y="306" text-anchor="middle" fill="#9fb0c4" font-family="monospace" font-size="11">part C24</text>
+  <rect x="250" y="286" width="80" height="30" rx="5" fill="#111926" stroke="#2c3d54"/>
+  <text x="290" y="306" text-anchor="middle" fill="#9fb0c4" font-family="monospace" font-size="11">part C28</text>
+  <rect x="325" y="286" width="80" height="30" rx="5" fill="#111926" stroke="#2c3d54"/>
+  <text x="365" y="306" text-anchor="middle" fill="#6b7a8d" font-family="monospace" font-size="11">&#8230; 67 more</text>
+
+  <!-- satisfy links -->
+  <path d="M 405 300 Q 470 300 450 190" stroke="#a78bfa" stroke-width="1.4" fill="none" stroke-dasharray="4 3"/>
+  <text x="500" y="270" fill="#a78bfa" font-family="sans-serif" font-size="11">satisfy / verify relationships are</text>
+  <text x="500" y="287" fill="#a78bfa" font-family="sans-serif" font-size="11">model elements — the traceability</text>
+  <text x="500" y="304" fill="#a78bfa" font-family="sans-serif" font-size="11">matrix becomes a query result.</text>
+
+  <text x="450" y="360" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">All of this is one text file (or a set of them) under version control. A pull request shows exactly which parts, values and requirements changed.</text>
+  <text x="450" y="380" text-anchor="middle" fill="#6b7a8d" font-family="sans-serif" font-size="11.5">Graphical views are generated from it, not maintained alongside it.</text>
+</svg>
+
+<div style="margin-top:44px;padding-top:20px;border-top:1px solid #242c38;font-size:13px;color:#6b7a8d;">
+  <div style="color:#7f8ea3;letter-spacing:.14em;text-transform:uppercase;font-size:11.5px;margin-bottom:8px;">Sources</div>
+  <a href="https://sensmetry.com/sysml-cheatsheet/" style="color:#4da3ff;">Sensmetry — SysML v2 Textual Notation cheat sheet</a><br>
+  <a href="https://sensmetry.com/advent-of-sysml-v2-lesson-23-formal-requirements-constraints-and-templates/" style="color:#4da3ff;">Sensmetry — Formal Requirements, Constraints and Templates</a><br>
+  <a href="https://roth-soft.de/blog/2025-08-23-sysml-2-definition-usage.html" style="color:#4da3ff;">Stephan Roth — SysML v2 Definition vs. Usage</a><br>
+  <a href="https://blog.visual-paradigm.com/the-definitive-guide-to-sysml-v2-textual-notation/" style="color:#4da3ff;">Visual Paradigm — Guide to SysML v2 Textual Notation</a><br>
+  <a href="https://www.incose.org/docs/default-source/working-groups/mbse-initiative/sysml-2-documents/sysml_v2_overview_demo.pdf?sfvrsn=50b971c7_2" style="color:#4da3ff;">INCOSE / Friedenthal — SysML v2 Overview &amp; Demo</a><br>
+  <a href="https://support.ptc.com/help/modeler/r10.1/en/Modeler/sysml2/requirements.html" style="color:#4da3ff;">PTC Modeler — SysML v2 Requirements reference</a><br>
+  <a href="https://www.se-trends.de/en/sysml-v2-an-overview-on-four-pages-for-practitioners/" style="color:#4da3ff;">SE Trends — SysML v2 four-page practitioner overview</a>
+  <p style="margin-top:12px;color:#5a6675;">Code samples are illustrative and written against the SysML v2 textual notation as of the 2026-04 pilot release; validate against your chosen tool's parser before use.</p>
+</div>
+
+<div style="margin-top:30px;font-size:14px;"><a href="01-what-is-sysml2.html" style="color:#4da3ff;text-decoration:none;">&#8592; Part 1</a> <span style="color:#3a4553;">&#160;|&#160;</span> <a href="index.html" style="color:#4da3ff;text-decoration:none;">Contents</a> <span style="color:#3a4553;">&#160;|&#160;</span> <a href="03-api-and-tooling.html" style="color:#4da3ff;text-decoration:none;">Part 3: API &amp; Tooling &#8594;</a></div>
+
+</div>
+</body>
+</html>

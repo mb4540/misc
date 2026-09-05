@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commercial & Ops Readiness — Jemba9 Commercialization Roadmap (Concise)</title>
+
+<style>
+:root {
+  --bg:#f8fafc; --card-bg:#ffffff; --border:#e2e8f0; --row-border:#eef2f7; --surface:#f1f5f9;
+  --heading:#0f172a; --text:#334155; --text-secondary:#475569; --muted:#64748b; --muted-2:#94a3b8;
+  --link:#2563eb; --accent:#3b82f6;
+}
+:root:has(#theme-toggle:checked) {
+  --bg:#0d1524; --card-bg:#17202f; --border:#2a3648; --row-border:#212c3d; --surface:#1c2536;
+  --heading:#f1f5f9; --text:#cbd5e1; --text-secondary:#94a3b8; --muted:#94a3b8; --muted-2:#64748b;
+  --link:#60a5fa; --accent:#60a5fa;
+}
+#theme-toggle:checked ~ .rm-track { background:#2563eb; border-color:var(--link); }
+#theme-toggle:checked ~ .rm-track .rm-thumb { transform:translateX(16px); }
+</style>
+</head>
+<body style="margin:0;display:flex;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);">
+
+<nav style="width:240px;min-width:240px;background:#0b1220;color:#cbd5e1;min-height:100vh;padding:24px 0;box-sizing:border-box;position:sticky;top:0;align-self:flex-start;">
+  <div style="padding:0 20px 14px 20px;border-bottom:1px solid #1e293b;margin-bottom:0;">
+    <img src="assets/jemba9-logo-orange.png" alt="Jemba9" style="height:20px;width:auto;display:block;margin-bottom:6px;">
+    <div style="color:#64748b;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;">Roadmap · Concise</div>
+  </div>
+  <label for="theme-toggle" style="display:flex;align-items:center;gap:9px;padding:10px 20px 4px;cursor:pointer;user-select:none;">
+    <input type="checkbox" id="theme-toggle" style="display:none;">
+    <span class="rm-track" style="position:relative;width:34px;height:19px;background:#334155;border:1px solid #334155;border-radius:999px;display:inline-block;flex-shrink:0;transition:background .15s;">
+      <span class="rm-thumb" style="position:absolute;top:1px;left:1px;width:15px;height:15px;border-radius:50%;background:#f8fafc;transition:transform .15s;"></span>
+    </span>
+    <span style="font-size:11.5px;color:#94a3b8;">Light / Dark mode</span>
+  </label>
+  <div style="border-bottom:1px solid #1e293b;margin-bottom:16px;"></div>
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:6px 0 8px;">DOCUMENTS</div>
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">00</span> Overview &amp; Verdict
+  </a>
+  <a href="backlog.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">01</span> Backlog &amp; Timeline
+  </a>
+  <a href="architecture.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">02</span> Architecture &amp; Observability
+  </a>
+  <a href="readiness.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px 9px 17px;color:#f1f5f9;text-decoration:none;font-size:13px;background:#1e293b;border-left:3px solid #3b82f6;font-weight:600;">
+    <span style="color:#60a5fa;font-size:11px;font-weight:700;width:20px;display:inline-block;">03</span> Commercial &amp; Ops Readiness
+  </a>
+  <div style="margin:14px 0;border-top:1px solid #1e293b;"></div>
+  <a href="forecast.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:13px;font-weight:700;width:20px;display:inline-block;">→</span> MVP Roadmap Forecast
+  </a>
+
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:18px 0 8px;">RUNBOOKS</div>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R</span> All Runbooks
+  </a>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R1</span> Secrets Management Runbook
+  </a>
+  <a href="runbooks.html" style="display:flex;align-items:center;gap:10px;padding:9px 20px;color:#94a3b8;text-decoration:none;font-size:13px;border-left:3px solid transparent;">
+    <span style="color:#475569;font-size:11px;font-weight:700;width:20px;display:inline-block;">R2</span> Tenant Isolation Testing Runbook
+  </a>
+
+  <div style="padding:0 20px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#64748b;margin:22px 0 8px;">ON THIS PAGE</div>
+  <a href="#gates" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Commercial Gates</a>
+  <a href="#narrative" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Value Proposition</a>
+  <a href="#ops" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Support Tooling</a>
+  <a href="#admin" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Admin Console</a>
+  <a href="#incident" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Incident Management</a>
+  <a href="#sla" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">SLA / SLO</a>
+  <a href="#runbooks" style="display:block;padding:5px 20px;color:#64748b;text-decoration:none;font-size:12px;">Runbooks &amp; Releases</a>
+</nav>
+
+<main style="flex:1;padding:40px 56px;box-sizing:border-box;">
+<div style="max-width:1000px;margin:0 auto;">
+
+  <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">03 — COMMERCIAL &amp; OPS READINESS</div>
+  <h1 style="font-size:26px;font-weight:800;color:var(--heading);margin:0 0 6px;">Commercial &amp; Operational Readiness</h1>
+  <div style="font-size:13px;color:var(--muted);margin:0 0 24px;">Launch gates, go-to-market narrative, and the operational tooling/process needed before paying customers. LBGUPS scorecard lives on <a href="index.html" style="color:var(--link);">Overview</a>; item status lives on <a href="backlog.html" style="color:var(--link);">Backlog</a>.</div>
+
+  <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#1e3a8a;line-height:1.6;">
+    <strong>Bottom line:</strong> the platform is <strong>demo-ready today</strong> for sophisticated technical audiences. It is <strong>not yet beta-ready</strong> for paying customers. The gap is operational (no support channel, no status page, no metering) and product/legal (billing, contracts) — not core product capability. Both prior security gaps (secrets posture, tenant boundary test coverage) are remediated.
+  </div>
+
+  <!-- ═══ GATES ═══ -->
+  <h2 id="gates" style="font-size:17px;font-weight:700;color:var(--heading);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Commercial Gates</h2>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:16px 0 8px;">Gate 1 — Investor / Partner Demo</h3>
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;">
+    <div style="font-size:13.5px;font-weight:700;color:#065f46;margin-bottom:6px;">Verdict: Ready with prep</div>
+    <p style="font-size:13.5px;line-height:1.6;color:var(--text);margin:0;">The core platform — agentic pipeline execution, HITL approval, BOM parsing, compliance report generation — is demonstrable end-to-end today. A well-prepared demo with curated data and a stable dev environment can convincingly show the product's differentiated value.</p>
+  </div>
+  <p style="font-size:13px;color:var(--text-secondary);margin:0 0 4px;"><strong>What to show:</strong> project creation → agent pipeline → node-by-node trace · HITL approval step (pause, review, approve, resume) · BOM ingestion + compliance check · agent trace timeline · multi-tenant architecture (two tenants, no cross-access) · CDK estate + CloudWatch dashboard for technical credibility.</p>
+  <p style="font-size:13px;color:var(--text-secondary);margin:0 0 20px;"><strong>Demo risks:</strong> LLM latency (prepare a pre-seeded fallback run) · no staging means a dev deploy gone wrong could break the demo (freeze deploys 48h before) · avoid raw env-var dumps on screen.</p>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:16px 0 8px;">Gate 2 — Private Beta (First Paying Customer)</h3>
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;">
+    <div style="font-size:13.5px;font-weight:700;color:#92400e;margin-bottom:6px;">Verdict: Not yet ready</div>
+    <p style="font-size:13.5px;line-height:1.6;color:var(--text);margin:0 0 8px;">All Phase 0 backlog items must close, plus a status page and support ticket channel — see the live status on <a href="backlog.html#phase0" style="color:var(--link);">Backlog → Phase 0</a>, <a href="backlog.html#p1-04" style="color:var(--link);">P1-04</a>, and <a href="backlog.html#p1-08" style="color:var(--link);">P1-08</a>.</p>
+    <p style="font-size:13px;color:var(--text-secondary);margin:0;"><strong>Waivable for a sophisticated design partner:</strong> full self-service provisioning (<a href="backlog.html#p1-01" style="color:var(--link);">P1-01</a>, can be operator-assisted) · Stripe billing (<a href="backlog.html#p1-10" style="color:var(--link);">P1-10</a>, can invoice manually) · onboarding docs (<a href="backlog.html#p1-13" style="color:var(--link);">P1-13</a>, can be walkthrough-assisted).</p>
+  </div>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:16px 0 8px;">Gate 3 — Paid General Availability</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Requirement</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Backlog</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">All Gate 2 items resolved</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#phase0" style="color:var(--link);">Phase 0</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Usage metering operational ≥1 billing period</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-02" style="color:var(--link);">P1-02</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Stripe billing integration live</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-10" style="color:var(--link);">P1-10</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Self-service onboarding</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-01" style="color:var(--link);">P1-01</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Public product website</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-11" style="color:var(--link);">P1-11</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Security &amp; compliance evidence pack</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-12" style="color:var(--link);">P1-12</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">OpenTelemetry traces operational in prod</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-03" style="color:var(--link);">P1-03</a></td></tr>
+      <tr><td style="padding:8px 10px;">Admin console operational</td><td style="padding:8px 10px;"><a href="backlog.html#p1-07" style="color:var(--link);">P1-07</a></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:16px 0 8px;">Gate 4 — Enterprise Contract Readiness</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Requirement</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Typical Enterprise Ask</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">SOC 2 Type II report</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Required by most Fortune 500 procurement</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">SAML / OIDC SSO federation</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Required; employees must not create separate passwords</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">MSA / DPA / BAA templates</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Legal will not accept clickwrap ToS</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">ITAR / CMMC posture statement</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Aerospace primes will ask; even "not subject" needs documentation</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">99.9% SLA in contract</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Requires multi-region or equivalent architecture</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Data deletion / right to erasure</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">GDPR + enterprise data governance</td></tr>
+      <tr><td style="padding:8px 10px;">Penetration test report</td><td style="padding:8px 10px;color:var(--muted);">Annual pentest required by enterprise security teams</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ NARRATIVE ═══ -->
+  <h2 id="narrative" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Value Proposition &amp; Recommended Narrative</h2>
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;">
+    <div style="font-size:13px;font-weight:700;color:var(--heading);margin-bottom:8px;">For aerospace &amp; defense suppliers</div>
+    <p style="font-size:13.5px;line-height:1.65;color:var(--text);margin:0;font-style:italic;">"Jemba9 — Space Assurance Gateway eliminates the manual compliance overhead that slows your engineering teams. Our AI agent pipelines run your qualification, BOM compliance, and assurance workflows end-to-end — with human-in-the-loop review at every critical decision — and produce audit-ready documentation your customers accept. You get faster cycle times, fewer NCRs, and a complete digital trail from requirement to delivery."</p>
+  </div>
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:16px 0 8px;">Credibility Risks to Address</h3>
+  <ul style="font-size:13.5px;line-height:1.7;margin:0 0 28px;padding-left:20px;">
+    <li><strong>"Is my data safe with an AI system?"</strong> → Tenant isolation architecture brief; data never used to train models; Databricks model serving privacy policy.</li>
+    <li><strong>"What happens when the AI is wrong?"</strong> → HITL approval gates are the answer; show the approval step in the demo.</li>
+    <li><strong>"Are you a real company with real support?"</strong> → Needs: status page, support SLA, named account contact.</li>
+    <li><strong>"Do you have AS9100 customers?"</strong> → Phase 1: get one referenceable design partner from the aerospace supply chain.</li>
+  </ul>
+
+  <!-- ═══ SUPPORT TOOLING ═══ -->
+  <h2 id="ops" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Support Tooling Roadmap</h2>
+  <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#991b1b;">
+    <strong>Critical gap:</strong> there is currently no customer-facing support channel, no status page, no incident management process, and no on-call rotation. Must be resolved before any paying customer is onboarded.
+  </div>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Tool / Process</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Priority</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Notes</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Backlog</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Internal admin console</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Tenant mgmt, usage, run log, error log</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-07" style="color:var(--link);">P1-07</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Customer status page</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Statuspage.io or Atlassian; CloudWatch alarm integration</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-04" style="color:var(--link);">P1-04</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Support ticket channel</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Email alias minimum; HubSpot/Intercom for scale</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p1-08" style="color:var(--link);">P1-08</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">On-call rotation</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">PagerDuty/OpsGenie; route from CloudWatch SNS</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted-2);">—</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">DR runbook</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">P0</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Required before prod; RTO/RPO defined</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><a href="backlog.html#p0-06" style="color:var(--link);">P0-06</a></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Incident playbooks</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">One per alert type (ECS OOM, DB down, LLM timeout)</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted-2);">—</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Release notes / changelog</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Customer-facing; required for trust</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted-2);">—</td></tr>
+      <tr><td style="padding:8px 10px;">Self-service tenant provisioning</td><td style="padding:8px 10px;"><span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#ffedd5;color:#9a3412;">P1</span></td><td style="padding:8px 10px;color:var(--muted);">Reduces ops toil</td><td style="padding:8px 10px;"><a href="backlog.html#p1-01" style="color:var(--link);">P1-01</a></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ ADMIN CONSOLE ═══ -->
+  <h2 id="admin" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Internal Admin Console — Requirements</h2>
+  <p style="font-size:13.5px;line-height:1.6;margin:0 0 12px;">Internal-only tool (not customer-facing) so operations can manage the platform without raw DB access.</p>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;">
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:12.5px;font-weight:700;color:var(--heading);margin-bottom:6px;">Tenant Management</div>
+      <ul style="font-size:12.5px;line-height:1.6;margin:0;padding-left:18px;color:var(--text-secondary);">
+        <li>List tenants with status (active, trial, suspended, churned)</li>
+        <li>Create tenant + Cognito group in one action, send invite</li>
+        <li>Suspend/reactivate (blocks API access)</li>
+        <li>View per-tenant config (plan, limits, model overrides)</li>
+      </ul>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:12.5px;font-weight:700;color:var(--heading);margin-bottom:6px;">Usage &amp; Billing View</div>
+      <ul style="font-size:12.5px;line-height:1.6;margin:0;padding-left:18px;color:var(--text-secondary);">
+        <li>Per-tenant tokens, agent runs, BOM uploads — this period vs last</li>
+        <li>Cost estimate (Databricks serving cost × tokens)</li>
+        <li>Flagged tenants: approaching limit, anomalous spend</li>
+      </ul>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:12.5px;font-weight:700;color:var(--heading);margin-bottom:6px;">Run Health</div>
+      <ul style="font-size:12.5px;line-height:1.6;margin:0;padding-left:18px;color:var(--text-secondary);">
+        <li>Active runs: agent type, tenant, started, current node, status</li>
+        <li>Failed runs: error type, stack trace, run ID (link to trace)</li>
+        <li>Stale runs: <code style="background:var(--surface);padding:1px 4px;border-radius:3px;">running</code> past timeout</li>
+        <li>HITL pending: approver, elapsed wait time</li>
+      </ul>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:12.5px;font-weight:700;color:var(--heading);margin-bottom:6px;">Access Control</div>
+      <ul style="font-size:12.5px;line-height:1.6;margin:0;padding-left:18px;color:var(--text-secondary);">
+        <li>Accessible only to <code style="background:var(--surface);padding:1px 4px;border-radius:3px;">system_admin</code> role</li>
+        <li>All actions written to <code style="background:var(--surface);padding:1px 4px;border-radius:3px;">audit_events</code></li>
+        <li>No direct DB mutation — typed API endpoints only</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ INCIDENT MANAGEMENT ═══ -->
+  <h2 id="incident" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Incident Management Process</h2>
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:24px;">
+    <div style="display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:110px;background:#fee2e2;border:1.5px solid #fca5a5;border-radius:6px;padding:10px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:#991b1b;">1. Detect</div>
+        <div style="font-size:10px;color:#b91c1c;margin-top:3px;">CW Alarm → SNS</div>
+        <div style="font-size:9px;color:var(--muted-2);margin-top:4px;">≤ 5 min</div>
+      </div>
+      <div style="flex:1;min-width:110px;background:#ffedd5;border:1.5px solid #fed7aa;border-radius:6px;padding:10px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:#c2410c;">2. Alert</div>
+        <div style="font-size:10px;color:#ea580c;margin-top:3px;">PagerDuty + Slack</div>
+        <div style="font-size:9px;color:var(--muted-2);margin-top:4px;">≤ 15 min</div>
+      </div>
+      <div style="flex:1;min-width:110px;background:#fef3c7;border:1.5px solid #fcd34d;border-radius:6px;padding:10px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:#92400e;">3. Triage</div>
+        <div style="font-size:10px;color:#b45309;margin-top:3px;">On-call opens doc</div>
+        <div style="font-size:9px;color:var(--muted-2);margin-top:4px;">≤ 30 min</div>
+      </div>
+      <div style="flex:1;min-width:110px;background:#dbeafe;border:1.5px solid #93c5fd;border-radius:6px;padding:10px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:#1d4ed8;">4. Mitigate</div>
+        <div style="font-size:10px;color:var(--link);margin-top:3px;">Runbook + status update</div>
+        <div style="font-size:9px;color:var(--muted-2);margin-top:4px;">P1: ≤4h RTO</div>
+      </div>
+      <div style="flex:1;min-width:110px;background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:6px;padding:10px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:#065f46;">5. Resolve</div>
+        <div style="font-size:10px;color:#047857;margin-top:3px;">Close alarm + status</div>
+        <div style="font-size:9px;color:var(--muted-2);margin-top:4px;">Communicate</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:var(--bg);border:1.5px solid var(--border);border-radius:6px;padding:10px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:var(--text);">6. PIR</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">Post-incident review</div>
+        <div style="font-size:9px;color:var(--muted-2);margin-top:4px;">48h after</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLA ═══ -->
+  <h2 id="sla" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Recommended SLA / SLO Targets</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <thead><tr>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Metric</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Target</th>
+      <th style="text-align:left;padding:8px 10px;background:var(--surface);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;border-bottom:2px solid var(--border);">Notes</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">API availability</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">99.5% monthly (Beta) → 99.9% (GA)</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Measured from ALB health check</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Agent pipeline RTO</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">4 hours, complete outage</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">After DR runbook is tested (<a href="backlog.html#p0-06" style="color:var(--link);">P0-06</a>)</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P1 support response</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">≤ 4 business hours</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Acknowledge; not necessarily resolve</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">P2 support response</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">≤ 1 business day</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);"></td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">Data recovery (RPO)</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);">≤ 1 hour</td><td style="padding:8px 10px;border-bottom:1px solid var(--row-border);color:var(--muted);">Requires PITR on Databricks Postgres</td></tr>
+      <tr><td style="padding:8px 10px;">Scheduled maintenance window</td><td style="padding:8px 10px;">Tuesdays 2–4 AM PT</td><td style="padding:8px 10px;color:var(--muted);">Communicated via status page 48h ahead</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ RUNBOOKS ═══ -->
+  <h2 id="runbooks" style="font-size:17px;font-weight:700;color:var(--heading);margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Runbooks Required (Phase 0 / Phase 1)</h2>
+  <ol style="font-size:13.5px;line-height:1.75;margin:0 0 20px;padding-left:20px;">
+    <li><strong>ECS task OOM / container crash</strong> — identify, force redeploy, check memory headroom.</li>
+    <li><strong>Databricks Postgres connection failure</strong> — connectivity check, pool reset, failover steps.</li>
+    <li><strong>LLM endpoint timeout / model serving down</strong> — check Databricks status, switch fallback model, communicate.</li>
+    <li><strong>Stale / hung agent run</strong> — identify, cancel, clean up a run stuck in <code style="background:var(--surface);padding:1px 4px;border-radius:3px;">running</code>.</li>
+    <li><strong>Database point-in-time restore</strong> — step-by-step restore to staging, verify, promote if needed. (<a href="backlog.html#p0-06" style="color:var(--link);">P0-06</a>)</li>
+    <li><strong>Tenant data access emergency (suspected leak)</strong> — isolate tenant, revoke tokens, preserve evidence, notify.</li>
+    <li><strong>CDK deploy rollback</strong> — roll back a failed ECS deploy or CDK stack update.</li>
+  </ol>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--heading);margin:16px 0 8px;">Release Management</h3>
+  <ul style="font-size:13.5px;line-height:1.7;margin:0;padding-left:20px;">
+    <li>Release notes published to the status page changelog on every production deployment.</li>
+    <li>Semantic versioning — breaking API changes require a MAJOR bump and 30-day deprecation notice.</li>
+    <li>No Friday afternoon production deployments (unless emergency hotfix).</li>
+    <li>All deployments require staging validation first (enforced by CI gate once <a href="backlog.html#p0-03" style="color:var(--link);">P0-03</a> lands).</li>
+  </ul>
+
+</div>
+</main>
+</body>
+</html>

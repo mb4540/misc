@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Requirements — TALARIA Employee Console</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Employee Console &mdash; Requirements &amp; Traceability</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Switch tabs to see the traceability matrix as a model query</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-employee">Employee Console</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">TIA Power Board Rev C &middot; Phase 5</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <span class="nav-item"><span class="icon">&#9632;</span> Workspace</span>
+      <a class="nav-item" href="bom.html"><span class="icon">&#9776;</span> Product BOM</a>
+      <a class="nav-item" href="run.html"><span class="icon">&#9881;</span> Analyses</a>
+      <a class="nav-item" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">3</span></a>
+      <a class="nav-item active" href="requirements.html"><span class="icon">&#9636;</span> Requirements</a>
+      <a class="nav-item" href="phase-gate.html"><span class="icon">&#8599;</span> Phase Gate</a>
+      <div class="sidebar-section-label">Model</div>
+      <span class="nav-item">&#9671; Model Browser <span class="nav-badge-sysml">SysML</span></span>
+      <span class="nav-item">&#8644; Model Exchange <span class="nav-badge-sysml">SysML</span></span>
+      <div class="sidebar-section-label">Program</div>
+      <span class="nav-item"><span class="icon">&#9635;</span> Schedule</span>
+      <span class="nav-item"><span class="icon">&#9650;</span> Risks</span>
+      <span class="nav-item"><span class="icon">&#9634;</span> Deliverables</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SC</div>
+        <div><div>Sarah Chen</div><span class="role">Lead Engineer</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">Requirements</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">model @ commit 8f2c1ae</span>
+        <span>Jemba9 Internal</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="breadcrumb">
+        <span>J9Avionics</span><span class="separator">/</span>
+        <span>Workspace</span><span class="separator">/</span>
+        <span class="current">Requirements</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1>EEE Requirements</h1>
+          <div class="subtitle">6 requirements &middot; verification status computed from the model at commit 8f2c1ae <span class="sysml-pin" data-pin="2">2</span></div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Adding…">+ New requirement</button>
+          <button class="btn btn-sysml btn-sm" data-demo-action="Recomputed">Recompute verification</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value success">3</div><div class="stat-label">Verified</div><div class="stat-sub">by evaluation</div></div>
+        <div class="stat-card"><div class="stat-value danger">2</div><div class="stat-label">Not verified</div><div class="stat-sub">constraint failed</div></div>
+        <div class="stat-card"><div class="stat-value warning">1</div><div class="stat-label">Not evaluable</div><div class="stat-sub">needs test evidence</div></div>
+        <div class="stat-card"><div class="stat-value sysml">100%</div><div class="stat-label">Traced <span class="sysml-pin" data-pin="3">3</span></div><div class="stat-sub">no orphans</div></div>
+      </div>
+
+      <div class="tabs" data-tab-group>
+        <button class="tab active" data-tab="list">Requirements</button>
+        <button class="tab" data-tab="matrix">Traceability Matrix <span class="sysml-pin" data-pin="3">3</span></button>
+        <button class="tab" data-tab="formal">Formal Definition <span class="sysml-pin" data-pin="1">1</span></button>
+      </div>
+
+      <!-- Requirements list -->
+      <div data-tab-panel="list" class="tab-panel active">
+        <div class="card">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>ID</th><th>Title</th><th>Statement</th><th>Method</th><th>Verification status</th><th>Evaluated</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono">EEE-001</td>
+                  <td>Derating Standard</td>
+                  <td style="max-width:300px;">All EEE parts shall comply with NASA-EEE-INST-002 Class B derating requirements.</td>
+                  <td><span class="badge badge-neutral">analysis</span></td>
+                  <td><span class="badge badge-fail">not verified</span></td>
+                  <td class="mono" style="font-size:11px;">derived from EEE-003</td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-002</td>
+                  <td>Prohibited Materials</td>
+                  <td style="max-width:300px;">Pure tin finishes are prohibited per J-STD-006.</td>
+                  <td><span class="badge badge-neutral">inspection</span></td>
+                  <td><span class="badge badge-pass">verified</span></td>
+                  <td class="mono" style="font-size:11px;">142 / 142 usages</td>
+                </tr>
+                <tr class="row-fail">
+                  <td class="mono">EEE-003</td>
+                  <td>Capacitor Voltage Derating</td>
+                  <td style="max-width:300px;">Ceramic capacitors shall be derated to 75% of rated voltage at maximum operating temperature.</td>
+                  <td><span class="badge badge-neutral">analysis</span></td>
+                  <td><span class="badge badge-fail">not verified</span></td>
+                  <td class="mono" style="font-size:11px;">62 / 81 usages</td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-004</td>
+                  <td>Resistor Power Derating</td>
+                  <td style="max-width:300px;">Fixed resistors shall be derated to 70% of rated power dissipation.</td>
+                  <td><span class="badge badge-neutral">analysis</span></td>
+                  <td><span class="badge badge-fail">not verified</span></td>
+                  <td class="mono" style="font-size:11px;">32 / 34 usages</td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-005</td>
+                  <td>TID Tolerance</td>
+                  <td style="max-width:300px;">All EEE parts shall tolerate a minimum TID of 30 krad(Si) with 2&times; RDM.</td>
+                  <td><span class="badge badge-neutral">test</span></td>
+                  <td><span class="badge badge-waiver">not evaluable</span></td>
+                  <td class="mono" style="font-size:11px;">awaiting test data</td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-006</td>
+                  <td>SEE Tolerance</td>
+                  <td style="max-width:300px;">Critical SEE shall be addressed for devices with LET threshold &lt; 40 MeV&middot;cm&sup2;/mg.</td>
+                  <td><span class="badge badge-neutral">analysis</span></td>
+                  <td><span class="badge badge-pass">verified</span></td>
+                  <td class="mono" style="font-size:11px;">14 / 14 usages</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sysml-note">
+          <strong>Nobody set these statuses.</strong> Each one is the result of evaluating the requirement's constraint over the part usages its subject binds to, at the pinned commit. EEE-001 is <em>not verified</em> because EEE-003 is, and the <span class="mono">derive</span> relationship propagates it. <span class="sysml-pin" data-pin="2">2</span>
+        </div>
+      </div>
+
+      <!-- Matrix -->
+      <div data-tab-panel="matrix" class="tab-panel">
+        <div class="card mb-16">
+          <div class="card-header">
+            <h3>Requirement &rarr; verification &rarr; evidence</h3>
+            <span class="badge badge-sysml">query result, not a maintained document</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Requirement</th><th>Relationship</th><th>Verified by</th><th>Subject binds to</th><th>Evidence</th><th>Verdict</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono">EEE-001</td>
+                  <td><span class="badge badge-info">derive</span></td>
+                  <td class="mono">EEE-003, EEE-004</td>
+                  <td>&mdash;</td>
+                  <td class="mono" style="font-size:11px;">inherited</td>
+                  <td><span class="badge badge-fail">fail</span></td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-002</td>
+                  <td><span class="badge badge-info">satisfy</span></td>
+                  <td class="mono">ProhibitedFinishPureTin</td>
+                  <td>142 usages</td>
+                  <td class="mono" style="font-size:11px;">J-STD-006 &sect;4.2</td>
+                  <td><span class="badge badge-pass">pass</span></td>
+                </tr>
+                <tr class="row-fail">
+                  <td class="mono">EEE-003</td>
+                  <td><span class="badge badge-info">satisfy</span></td>
+                  <td class="mono">CeramicCapacitorVoltageDerating</td>
+                  <td>81 usages</td>
+                  <td class="mono" style="font-size:11px;">EEE-INST-002 Table 3-2</td>
+                  <td><span class="badge badge-fail">fail (19)</span></td>
+                </tr>
+                <tr class="row-fail">
+                  <td class="mono">EEE-004</td>
+                  <td><span class="badge badge-info">satisfy</span></td>
+                  <td class="mono">ResistorPowerDerating</td>
+                  <td>34 usages</td>
+                  <td class="mono" style="font-size:11px;">EEE-INST-002 Table 3-4</td>
+                  <td><span class="badge badge-fail">fail (2)</span></td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-005</td>
+                  <td><span class="badge badge-info">verify</span></td>
+                  <td class="mono">RadiationTestCampaign</td>
+                  <td>14 usages</td>
+                  <td class="mono" style="font-size:11px;">&mdash; pending</td>
+                  <td><span class="badge badge-waiver">inconclusive</span></td>
+                </tr>
+                <tr>
+                  <td class="mono">EEE-006</td>
+                  <td><span class="badge badge-info">satisfy</span></td>
+                  <td class="mono">SeeLetThresholdCheck</td>
+                  <td>14 usages</td>
+                  <td class="mono" style="font-size:11px;">EEE-INST-002 &sect;6</td>
+                  <td><span class="badge badge-pass">pass</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><h3>Coverage gaps</h3></div>
+            <div class="card-body">
+              <ul class="checklist">
+                <li><span class="check-icon met">&#10003;</span><div><strong>No orphaned requirements.</strong> Every requirement has at least one verification relationship.</div></li>
+                <li><span class="check-icon met">&#10003;</span><div><strong>No unverified parts.</strong> All 142 usages are the subject of at least one bound constraint.</div></li>
+                <li><span class="check-icon unmet">!</span><div><strong>EEE-005 has no evidence.</strong> The verification case exists and declares its return type, but the test campaign has not produced a verdict.</div></li>
+                <li><span class="check-icon unmet">!</span><div><strong>PhotodetectorDerating binds to nothing.</strong> D7 has no matching subject; covered by waiver w-001.</div></li>
+              </ul>
+            </div>
+          </div>
+          <div class="sysml-note" style="margin:0;">
+            <strong>Why this is a query.</strong> <span class="mono">satisfy</span>, <span class="mono">derive</span> and <span class="mono">verify</span> are model elements, so the matrix above is a traversal of the model at a commit. It cannot drift from the design, because it is not a separate artefact. Ask it a month from now against the same commit and you get the same table. <span class="sysml-pin" data-pin="3">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formal -->
+      <div data-tab-panel="formal" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h3>EEE-003 as a formal requirement <span class="sysml-pin" data-pin="1">1</span></h3>
+            <span class="badge badge-sysml">requirement def</span>
+          </div>
+          <div class="card-body">
+            <pre class="code"><span class="d">requirement def</span> <span class="n">CeramicCapacitorVoltageDerating</span> {
+
+    <span class="c">// The human-readable statement stays. It is documentation on a</span>
+    <span class="c">// structure, not the whole of what the requirement is.</span>
+    <span class="k">doc</span> <span class="s">/* EEE-003 — Ceramic capacitors shall be derated to 75% of rated
+             voltage at maximum operating temperature (Class B). */</span>
+
+    <span class="k">subject</span> cap : CeramicCapacitor;          <span class="c">// what it applies to</span>
+
+    <span class="k">attribute</span> deratingFactor : Real <span class="k">default</span> 0.75;
+    <span class="k">attribute</span> :&gt;&gt; source = <span class="s">"EEE-INST-002 Rev C, Table 3-2"</span>;
+
+    <span class="k">require constraint</span> {                     <span class="c">// what makes it true</span>
+        cap.appliedVoltage &lt;= cap.ratedVoltage * deratingFactor
+    }
+}
+
+<span class="c">// Traceability is declared, not documented separately.</span>
+<span class="k">requirement</span> eee001 : DeratingStandardCompliance;
+<span class="k">requirement</span> eee003 : CeramicCapacitorVoltageDerating;
+
+<span class="k">derive</span> eee003 <span class="k">from</span> eee001;
+<span class="k">satisfy</span> eee003 <span class="k">by</span> tiaPowerBoard.powerStage;</pre>
+
+            <div class="sysml-note">
+              <strong>A requirement is a specialised constraint.</strong> It has a subject, typed parameters, prose for humans and an assertion for machines. That is the whole difference between a requirement you read and a requirement you can check.
+            </div>
+
+            <div class="text-muted mb-16" style="text-transform:uppercase;letter-spacing:.5px;font-weight:600;font-size:11px;">The same requirement as TALARIA stores it today</div>
+            <pre class="code"><span class="c">// requirement table row</span>
+{ reqNumber: <span class="s">"EEE-003"</span>,
+  title:       <span class="s">"Capacitor Voltage Derating"</span>,
+  description: <span class="s">"Ceramic capacitors shall be derated to 75% of rated voltage…"</span>,
+  reqType:     <span class="s">"eee"</span>,
+  status:      <span class="s">"approved"</span>,
+  tbxStatus:   <span class="k">null</span> }
+
+<span class="c">// requirement_trace row — the relationship IS already modelled</span>
+{ sourceReqId: <span class="s">"&lt;EEE-001&gt;"</span>, targetReqId: <span class="s">"&lt;EEE-003&gt;"</span>,
+  relationshipType: <span class="s">"derive"</span> }
+
+<span class="c">// …but nothing connects EEE-003 to the derating_rule that verifies it.</span>
+<span class="c">// That link lives in the analyst's logic, so verification status is</span>
+<span class="c">// a field somebody updates rather than a value the model computes.</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>requirement def</code> &mdash; prose plus an assertion</div>
+              <div class="sysml-entry-text">In SysML v1 a requirement was text with an ID and a satisfy link; nothing in the language could evaluate it. In v2 it is a specialisation of <code>constraint def</code> with a declared subject and typed parameters, so the same element serves the reviewer reading it and the pipeline checking it.</div>
+              <div class="sysml-today"><strong>Today:</strong> the <code>requirement</code> table holds title, description, status and <code>tbxStatus</code>. It sits beside the <code>derating_rule</code> table with no structural link between the two.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Verification status becomes computed</div>
+              <div class="sysml-entry-text">Because the requirement carries its own assertion and the model carries the values, status is derived on demand for a given commit. A BOM change makes dependent statuses stale automatically instead of quietly leaving them wrong.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>status</code> and verification state are curated fields. They are accurate when someone remembers to update them after a run.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>satisfy</code>, <code>derive</code>, <code>verify</code> as model elements</div>
+              <div class="sysml-entry-text">Relationships are first-class, navigable and queryable. The traceability matrix is a traversal, so it cannot fall out of step with the design, and impact analysis ("what does this change break?") is the same traversal run backwards.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>requirement_trace</code> already stores typed relationships between requirements &mdash; this part is genuinely in place. What it does not reach is the parts and the rules on the other side of the verification.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Verification recomputed at commit <code>8f2c1ae</code>. Three requirements verified, two failed, one inconclusive pending test data.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        <code>EEE-001</code> flipped to <em>not verified</em> without anyone touching it &mdash; it derives from <code>EEE-003</code>, which failed on 19 capacitor usages.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">Sarah Chen</div>
+        Draft EEE-007 for junction temperature, Class B.
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Drafted as a <code>requirement def</code> with subject <code>Semiconductor</code> and the assertion <code>junctionTemp &lt;= maxRatedJunction - 25 [°C]</code>, sourced from Table 4-1. It parses and binds to 12 usages, all currently passing. Ready for your review before I commit it.
+        <div class="rapda-actions">
+          <button class="btn btn-accent btn-sm" data-demo-action="Opening draft…">Review draft</button>
+          <button class="btn btn-outline btn-sm" data-demo-action="Discarded">Discard</button>
+        </div>
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about requirements…">
+    </div>
+  </aside>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>

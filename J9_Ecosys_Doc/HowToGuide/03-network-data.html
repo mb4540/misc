@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jemba9 Ecosystem on AWS — Network and data</title>
+<style>
+  :root{
+    --orange:#EB5616;
+    --orange-dark:#c2410c;
+    --ink:#1f2430;
+    --text:#2c313a;
+    --muted:#6b7280;
+    --line:#e2e4e9;
+    --panel:#f8f9fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);background:#fff;line-height:1.6;
+  }
+  a{color:var(--orange-dark);}
+  a:hover{color:var(--orange);}
+
+  header.page-header{background:var(--ink);color:#f3f4f6;padding:2.6rem 1.5rem 2rem;}
+  header.page-header .wrap{max-width:980px;margin:0 auto;padding:0;}
+  header.page-header .kicker{
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--orange);margin:0 0 .7rem;
+  }
+  header.page-header h1{margin:0 0 .6rem;font-size:1.9rem;letter-spacing:-.01em;line-height:1.25;}
+  header.page-header p{margin:.2rem 0;color:#c7cad1;font-size:.95rem;}
+  header.page-header .accent{color:var(--orange);font-weight:700;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:10;background:#ffffffee;
+    border-bottom:1px solid var(--line);backdrop-filter:saturate(180%) blur(6px);
+  }
+  nav.topnav .wrap{
+    max-width:980px;margin:0 auto;padding:.65rem 1.5rem;
+    display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;
+  }
+  nav.topnav a{
+    font-size:.78rem;font-weight:700;text-decoration:none;color:var(--ink);
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  nav.topnav a:hover{color:var(--orange);}
+  nav.topnav a.here{color:var(--orange);border-bottom:2px solid var(--orange);padding-bottom:2px;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:0 1.5rem;}
+
+  nav.toc{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:1.25rem 1.5rem;margin:2.5rem 0;
+  }
+  nav.toc h2{
+    margin:0 0 .75rem;font-size:.85rem;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted);border:none;padding:0;
+  }
+  nav.toc ol{margin:0;padding-left:1.25rem;}
+  nav.toc li{margin:.5rem 0;}
+  nav.toc span.desc{color:var(--muted);font-size:.88rem;}
+
+  section{margin:3.2rem 0;padding-top:.5rem;}
+  section > h1{
+    font-size:1.5rem;border-bottom:3px solid var(--orange);padding-bottom:.5rem;
+    margin:0 0 1rem;color:var(--ink);
+  }
+  h2{
+    font-size:1.18rem;color:var(--ink);margin-top:2.25rem;
+    border-left:4px solid var(--orange);padding-left:.65rem;
+  }
+  h3{font-size:1.0rem;color:#374151;margin-top:1.5rem;}
+  h4{font-size:.9rem;color:#4b5563;margin-top:1.2rem;text-transform:uppercase;letter-spacing:.04em;}
+  p{margin:.85rem 0;}
+  ul,ol{margin:.75rem 0;padding-left:1.4rem;}
+  li{margin:.35rem 0;}
+  strong{color:var(--ink);}
+
+  code{
+    background:#f0f1f3;border:1px solid var(--line);border-radius:4px;padding:.12rem .35rem;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    font-size:.87em;color:#b91c1c;
+  }
+  pre{
+    background:#1b1d22;color:#e5e7eb;padding:1rem 1.15rem;border-radius:10px;
+    overflow-x:auto;font-size:.79rem;line-height:1.55;
+  }
+  pre code{background:none;border:none;padding:0;color:inherit;font-size:1em;}
+  .filename{
+    background:#2b2f37;color:#9ca3af;font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;padding:.4rem .9rem;
+    border-radius:10px 10px 0 0;margin-top:1.1rem;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .filename + pre{margin-top:0;border-radius:0 0 10px 10px;}
+
+  blockquote{
+    border-left:4px solid #94a3b8;margin:1.1rem 0;padding:.6rem 1.1rem;
+    background:var(--panel);color:#4b5563;border-radius:0 6px 6px 0;
+  }
+  .callout{
+    border:1px solid var(--line);border-left:5px solid var(--orange);
+    background:#fff8f4;border-radius:0 8px 8px 0;padding:.9rem 1.15rem;margin:1.4rem 0;
+  }
+  .callout .label{
+    display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--orange-dark);margin-bottom:.35rem;
+  }
+  .callout p{margin:.4rem 0;}
+  .callout-stop{border-left-color:#b91c1c;background:#fef4f4;}
+  .callout-stop .label{color:#b91c1c;}
+  .callout-note{border-left-color:#1d4ed8;background:#f4f7ff;}
+  .callout-note .label{color:#1d4ed8;}
+  .callout-ok{border-left-color:#15803d;background:#f4fbf6;}
+  .callout-ok .label{color:#15803d;}
+
+  table{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.88rem;}
+  th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;}
+  th{
+    background:var(--ink);color:#fff;font-weight:700;font-size:.78rem;
+    text-transform:uppercase;letter-spacing:.02em;
+  }
+  tr:nth-child(even) td{background:var(--panel);}
+  td code{font-size:.82em;}
+
+  .badge{
+    display:inline-block;padding:.15rem .55rem;border-radius:999px;
+    font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
+  }
+  .badge-gray{background:#e5e7eb;color:#374151;}
+  .badge-blue{background:#dbeafe;color:#1d4ed8;}
+  .badge-green{background:#dcfce7;color:#15803d;}
+  .badge-red{background:#fee2e2;color:#b91c1c;}
+  .badge-amber{background:#fef3c7;color:#b45309;}
+
+  figure.diagram{
+    margin:1.7rem 0;padding:1.25rem 1rem;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;text-align:center;
+  }
+  figure.diagram svg{max-width:100%;height:auto;}
+  figure.diagram figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);font-style:italic;}
+
+  .cards{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0;}
+  .card{
+    flex:1 1 260px;border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.15rem;background:#fff;
+  }
+  .card h3{margin:0 0 .4rem;font-size:.98rem;color:var(--ink);}
+  .card p{margin:.3rem 0;font-size:.88rem;color:var(--muted);}
+
+  ol.checklist{list-style:none;padding-left:0;counter-reset:step;}
+  ol.checklist > li{
+    counter-increment:step;position:relative;padding-left:2.6rem;margin:1.1rem 0;
+    min-height:1.8rem;
+  }
+  ol.checklist > li::before{
+    content:counter(step);position:absolute;left:0;top:.05rem;
+    width:1.85rem;height:1.85rem;border-radius:50%;background:var(--orange);color:#fff;
+    font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:center;
+  }
+
+  hr{border:none;border-top:1px solid var(--line);margin:2.5rem 0;}
+
+  /* keep sticky-nav from covering a heading jumped to by an anchor link */
+  section > h1, h2, h3{scroll-margin-top:80px;}
+  [id]{scroll-margin-top:80px;}
+
+  .pager{
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    margin:3.5rem 0 1rem;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.9rem;
+  }
+  .pager a{font-weight:700;text-decoration:none;}
+  .pager span.spacer{flex:1;}
+
+  footer.page-footer{
+    background:var(--panel);border-top:1px solid var(--line);
+    margin-top:3rem;padding:1.6rem 1.5rem;color:var(--muted);font-size:.82rem;
+  }
+  footer.page-footer .wrap{padding:0;}
+  footer.page-footer p{margin:.25rem 0;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="kicker">Chapter 3</p>
+    <h1>Network and data</h1>
+    <p>A VPC across two availability zones, a security-group chain instead of CIDR rules, one PostgreSQL 16
+    instance holding three databases, Redis, and S3.</p>
+  </div>
+</header>
+
+<nav class="topnav"><div class="wrap">
+      <a href="index.html">Start</a>
+      <a href="01-architecture.html">1 · Apps</a>
+      <a href="02-account-foundation.html">2 · Account</a>
+      <a href="03-network-data.html" class="here">3 · Network</a>
+      <a href="04-secrets-identity.html">4 · Secrets</a>
+      <a href="05-compute.html">5 · Compute</a>
+      <a href="06-frontdoor.html">6 · Front Door</a>
+      <a href="07-cicd.html">7 · CI/CD</a>
+      <a href="08-runbook.html">8 · Runbook</a>
+    </div></nav>
+
+<div class="wrap">
+
+<section>
+<h1>3.1 &mdash; The network</h1>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 400" role="img" aria-label="VPC subnet layout across two availability zones">
+  <defs>
+    <marker id="arrow_vpc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_vpc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_vpc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="20" y="12" width="860" height="372" rx="10" fill="#fbfcfd" stroke="#1f2430" stroke-width="1.4" stroke-dasharray="none"/>
+  <text x="32" y="29" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#1f2430" text-anchor="start">VPC  10.20.0.0/16  (dev)   ·   10.30.0.0/16  (prod)</text>
+  <text x="300" y="56" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#6b7280" text-anchor="middle">AVAILABILITY ZONE  a</text>
+  <text x="660" y="56" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#6b7280" text-anchor="middle">AVAILABILITY ZONE  b</text>
+  <text x="120" y="100" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#EB5616" text-anchor="middle">PUBLIC</text>
+  <text x="120" y="196" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#1d4ed8" text-anchor="middle">PRIVATE</text>
+  <text x="120" y="296" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#15803d" text-anchor="middle">ISOLATED</text>
+  <rect x="180" y="74" width="320" height="56" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="340.0" y="99.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">x.x.0.0/20</text>
+  <text x="340.0" y="114.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">ALB node  &middot;  NAT gateway</text>
+  <rect x="530" y="74" width="320" height="56" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="690.0" y="99.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">x.x.16.0/20</text>
+  <text x="690.0" y="114.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">ALB node  &middot;  NAT gateway (prod only)</text>
+  <rect x="180" y="170" width="320" height="56" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="340.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">x.x.32.0/20</text>
+  <text x="340.0" y="210.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Fargate tasks  &middot;  VPC endpoints</text>
+  <rect x="530" y="170" width="320" height="56" rx="7" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="690.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">x.x.48.0/20</text>
+  <text x="690.0" y="210.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Fargate tasks  &middot;  VPC endpoints</text>
+  <rect x="180" y="270" width="320" height="56" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="340.0" y="295.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">x.x.64.0/20</text>
+  <text x="340.0" y="310.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">RDS  &middot;  ElastiCache</text>
+  <rect x="530" y="270" width="320" height="56" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="690.0" y="295.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">x.x.80.0/20</text>
+  <text x="690.0" y="310.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">RDS standby  &middot;  Redis replica</text>
+  <text x="450" y="152" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="middle">no route to the internet except through NAT</text>
+  <text x="450" y="252" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#15803d" text-anchor="middle">no route to the internet at all — no NAT, no IGW</text>
+  <text x="450" y="352" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700" fill="#1f2430" text-anchor="middle">security groups chain: ALB &rarr; task &rarr; database. No CIDR rules between tiers.</text>
+  <text x="450" y="370" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#6b7280" text-anchor="middle">Interface endpoints for ECR, Logs, SSM, Secrets Manager; gateway endpoint for S3.</text>
+</svg>
+<figcaption>Three subnet tiers per availability zone. The isolated tier has no route to the internet at all,
+which is why the database can never be reached from outside the VPC regardless of any security-group mistake.</figcaption>
+</figure>
+
+<p>Three tiers, two AZs, six subnets. The reasoning:</p>
+
+<ul>
+<li><strong>Public</strong> holds the ALB nodes and the NAT gateways. Nothing else. No EC2, no tasks.</li>
+<li><strong>Private</strong> holds the Fargate tasks. They reach the internet through NAT and reach AWS APIs
+through VPC endpoints, which is both cheaper and faster than routing ECR pulls through NAT.</li>
+<li><strong>Isolated</strong> holds RDS and ElastiCache and has no route table entry pointing anywhere outside the
+VPC. Not to a NAT gateway, not to an internet gateway. If a task is compromised, the database is still only
+reachable on the paths the security groups allow.</li>
+</ul>
+
+<div class="callout callout-note"><span class="label">The NAT gateway is your biggest fixed cost</span>
+
+<p>A NAT gateway is roughly 32&ndash;35 USD per month before data processing, per AZ. In dev,
+<code>single_nat_gateway = true</code> gives you one. In prod you want one per AZ so that losing an AZ does not
+sever egress for the surviving tasks.</p>
+<p>You can go further: only the Data Room genuinely needs internet egress (the Resend mail API), and the platform
+needs Cognito and SES. If you add VPC endpoints for everything else and are willing to give the Data Room task
+its own narrower path, you could drop NAT entirely in dev. That is an optimisation for month two, not week one
+&mdash; the debugging cost of a missing endpoint exceeds 33 dollars.</p>
+</div>
+
+<p class="filename">Ecosystem/infra/terraform/10-network/main.tf</p>
+<pre><code>data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+locals {
+  azs = slice(data.aws_availability_zones.available.names, 0, 2)
+
+  # /20 per subnet: 4096 addresses each, room for growth, easy to read.
+  public_cidrs   = [cidrsubnet(var.vpc_cidr, 4, 0), cidrsubnet(var.vpc_cidr, 4, 1)]
+  private_cidrs  = [cidrsubnet(var.vpc_cidr, 4, 2), cidrsubnet(var.vpc_cidr, 4, 3)]
+  isolated_cidrs = [cidrsubnet(var.vpc_cidr, 4, 4), cidrsubnet(var.vpc_cidr, 4, 5)]
+}
+
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = { Name = "${local.prefix}-vpc" }
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+  tags   = { Name = "${local.prefix}-igw" }
+}
+
+# ------------------------------------------------------------------- subnets
+resource "aws_subnet" "public" {
+  count                   = 2
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = local.public_cidrs[count.index]
+  availability_zone       = local.azs[count.index]
+  map_public_ip_on_launch = false   # the ALB gets its own addresses; nothing else lives here
+  tags = { Name = "${local.prefix}-public-${local.azs[count.index]}", Tier = "public" }
+}
+
+resource "aws_subnet" "private" {
+  count             = 2
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.private_cidrs[count.index]
+  availability_zone = local.azs[count.index]
+  tags = { Name = "${local.prefix}-private-${local.azs[count.index]}", Tier = "private" }
+}
+
+resource "aws_subnet" "isolated" {
+  count             = 2
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.isolated_cidrs[count.index]
+  availability_zone = local.azs[count.index]
+  tags = { Name = "${local.prefix}-isolated-${local.azs[count.index]}", Tier = "isolated" }
+}
+
+# ----------------------------------------------------------------------- NAT
+resource "aws_eip" "nat" {
+  count  = var.single_nat_gateway ? 1 : 2
+  domain = "vpc"
+  tags   = { Name = "${local.prefix}-nat-eip-${count.index}" }
+}
+
+resource "aws_nat_gateway" "main" {
+  count         = var.single_nat_gateway ? 1 : 2
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
+  depends_on    = [aws_internet_gateway.main]
+  tags          = { Name = "${local.prefix}-nat-${count.index}" }
+}
+
+# ------------------------------------------------------------- route tables
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+  tags = { Name = "${local.prefix}-rt-public" }
+}
+
+resource "aws_route_table_association" "public" {
+  count          = 2
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table" "private" {
+  count  = 2
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main[var.single_nat_gateway ? 0 : count.index].id
+  }
+  tags = { Name = "${local.prefix}-rt-private-${count.index}" }
+}
+
+resource "aws_route_table_association" "private" {
+  count          = 2
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
+}
+
+# Isolated: a route table with NO default route. This is the point.
+resource "aws_route_table" "isolated" {
+  vpc_id = aws_vpc.main.id
+  tags   = { Name = "${local.prefix}-rt-isolated" }
+}
+
+resource "aws_route_table_association" "isolated" {
+  count          = 2
+  subnet_id      = aws_subnet.isolated[count.index].id
+  route_table_id = aws_route_table.isolated.id
+}</code></pre>
+
+<h2>3.2 &mdash; Security groups as a chain, not a list of CIDRs</h2>
+
+<p>Every rule below references another security group rather than an address range. That means you can resize
+subnets, add AZs, or move a service and none of the rules need editing. It also means a reader can see the intended
+data flow by reading the group names.</p>
+
+<p class="filename">Ecosystem/infra/terraform/10-network/security-groups.tf</p>
+<pre><code># ALB — the only thing with an ingress rule from outside the VPC, and even that is
+# narrowed to CloudFront's own address ranges via a managed prefix list.
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
+resource "aws_security_group" "alb" {
+  name        = "${local.prefix}-alb-sg"
+  description = "Public entry point. CloudFront only."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "HTTPS from CloudFront edge locations only"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront.id]
+  }
+
+  egress {
+    description = "To the task security group"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  tags = { Name = "${local.prefix}-alb-sg" }
+}
+
+# All four Fargate services share one security group. They are peers: the OKR task
+# calling the platform task is the same trust relationship as the reverse.
+resource "aws_security_group" "task" {
+  name        = "${local.prefix}-task-sg"
+  description = "Fargate tasks."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "From the ALB"
+    from_port       = 3000
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb.id]
+  }
+
+  ingress {
+    description = "Task to task — this is what makes fail-closed authz work"
+    from_port   = 3000
+    to_port     = 8080
+    protocol    = "tcp"
+    self        = true
+  }
+
+  egress {
+    description = "Anywhere: AWS APIs via endpoints, Resend and Cognito via NAT"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${local.prefix}-task-sg" }
+}
+
+resource "aws_security_group" "database" {
+  name        = "${local.prefix}-db-sg"
+  description = "RDS. Reachable only from tasks."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "PostgreSQL from tasks"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.task.id]
+  }
+
+  # No egress rule at all. RDS does not initiate connections.
+  tags = { Name = "${local.prefix}-db-sg" }
+}
+
+resource "aws_security_group" "cache" {
+  name        = "${local.prefix}-cache-sg"
+  description = "ElastiCache. Reachable only from tasks."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "Redis from tasks"
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.task.id]
+  }
+
+  tags = { Name = "${local.prefix}-cache-sg" }
+}
+
+resource "aws_security_group" "vpce" {
+  name        = "${local.prefix}-vpce-sg"
+  description = "Interface VPC endpoints."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "HTTPS from tasks"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.task.id]
+  }
+
+  tags = { Name = "${local.prefix}-vpce-sg" }
+}</code></pre>
+
+<div class="callout"><span class="label">The task-to-task rule is not optional</span>
+
+<p>Delete the <code>self = true</code> ingress rule and the system will come up, serve the login page, show the
+portal, and then deny every single action in both apps &mdash; because the OKR and Data Room tasks will time out
+calling the platform's <code>can()</code> endpoint, and a timeout is a DENY by design.</p>
+<p>The symptom is maddening: healthy targets, 200 responses, no errors in the app logs, and users who cannot do
+anything. If you ever see that pattern, check this rule first.</p>
+</div>
+
+<h2>3.3 &mdash; VPC endpoints</h2>
+
+<p>Five interface endpoints and one gateway endpoint. The interface endpoints cost about 7&ndash;8 USD each per
+month per AZ, so in dev this is a real line item &mdash; but ECR pulls through NAT cost data-processing charges on
+every deploy, and the S3 gateway endpoint is free and eliminates the largest share of that traffic.</p>
+
+<p class="filename">Ecosystem/infra/terraform/10-network/endpoints.tf</p>
+<pre><code># Free. Do this one even if you skip the others.
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = concat(aws_route_table.private[*].id, [aws_route_table.isolated.id])
+  tags              = { Name = "${local.prefix}-vpce-s3" }
+}
+
+locals {
+  interface_endpoints = {
+    ecr_api = "ecr.api"          # authenticating to ECR
+    ecr_dkr = "ecr.dkr"          # pulling image layers
+    logs    = "logs"             # CloudWatch Logs from the awslogs driver
+    ssm     = "ssm"              # reading SSM parameters at task boot
+    secrets = "secretsmanager"   # reading the RDS master secret
+  }
+}
+
+resource "aws_vpc_endpoint" "interface" {
+  for_each            = local.interface_endpoints
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${var.region}.${each.value}"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpce.id]
+  private_dns_enabled = true
+  tags                = { Name = "${local.prefix}-vpce-${each.key}" }
+}</code></pre>
+
+<h2>3.4 &mdash; RDS PostgreSQL 16</h2>
+
+<p>One instance per environment, holding three databases. Not three instances &mdash; the databases are logically
+isolated by ownership and role grants, which is exactly what the architecture document describes ("each future app
+gets its own schema (or database) with credentials scoped to it"), and it keeps the bill sane.</p>
+
+<p class="filename">Ecosystem/infra/terraform/20-data/rds.tf</p>
+<pre><code>resource "aws_db_subnet_group" "main" {
+  name       = "${local.prefix}-db-subnets"
+  subnet_ids = data.terraform_remote_state.network.outputs.isolated_subnet_ids
+  tags       = { Name = "${local.prefix}-db-subnets" }
+}
+
+# Standard PostgreSQL only (NFR-3). The only parameters changed are for
+# observability and for forcing TLS — nothing that affects SQL semantics.
+resource "aws_db_parameter_group" "pg16" {
+  name   = "${local.prefix}-pg16"
+  family = "postgres16"
+
+  parameter {
+    name  = "rds.force_ssl"
+    value = "1"
+  }
+  parameter {
+    name  = "log_min_duration_statement"
+    value = "1000"          # log anything slower than a second
+  }
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+  parameter {
+    name  = "log_lock_waits"
+    value = "1"
+  }
+}
+
+# The master password lives in Secrets Manager, rotated by AWS, and is used ONLY
+# to create the per-database owners and app roles. Applications never see it.
+resource "aws_db_instance" "main" {
+  identifier     = "${local.prefix}-pg"
+  engine         = "postgres"
+  engine_version = "16"
+  instance_class = var.db_instance_class
+
+  allocated_storage     = var.db_allocated_storage
+  max_allocated_storage = var.db_allocated_storage * 4    # storage autoscaling
+  storage_type          = "gp3"
+  storage_encrypted     = true
+  kms_key_id            = data.terraform_remote_state.secrets.outputs.kms_key_arn
+
+  db_name  = "j9_platform"          # the first database; the others are created by SQL
+  username = "j9_master"
+  manage_master_user_password = true                        # AWS manages + rotates it
+  master_user_secret_kms_key_id = data.terraform_remote_state.secrets.outputs.kms_key_arn
+
+  multi_az               = var.db_multi_az
+  db_subnet_group_name   = aws_db_subnet_group.main.name
+  vpc_security_group_ids = [data.terraform_remote_state.network.outputs.database_sg_id]
+  parameter_group_name   = aws_db_parameter_group.pg16.name
+  publicly_accessible    = false
+
+  backup_retention_period = var.db_backup_retention
+  backup_window           = "09:00-10:00"                   # 02:00 Pacific
+  maintenance_window      = "Sun:10:30-Sun:11:30"
+  copy_tags_to_snapshot   = true
+
+  # Audit retention is 730 days (company.config.yaml). PITR covers operational
+  # recovery; long-term retention is a separate export, not a backup window.
+  performance_insights_enabled          = local.is_prod
+  performance_insights_retention_period = local.is_prod ? 7 : null
+  enabled_cloudwatch_logs_exports       = ["postgresql", "upgrade"]
+
+  auto_minor_version_upgrade = true
+  deletion_protection        = var.db_deletion_protection
+  skip_final_snapshot        = !local.is_prod
+  final_snapshot_identifier  = local.is_prod ? "${local.prefix}-pg-final" : null
+
+  apply_immediately = !local.is_prod
+
+  lifecycle {
+    ignore_changes = [engine_version]   # minor upgrades happen in the maintenance window
+  }
+
+  tags = { Name = "${local.prefix}-pg" }
+}</code></pre>
+
+<div class="callout callout-note"><span class="label">Why manage_master_user_password</span>
+
+<p>It puts the master credential in Secrets Manager with AWS-managed rotation, so no password is ever in your
+Terraform state, your tfvars, or your terminal history. The tradeoff is that you cannot read the password in a
+<code>terraform output</code> &mdash; which is the point. Chapter 3.6 shows how to run the bootstrap SQL without
+ever seeing it.</p>
+</div>
+
+<h2>3.5 &mdash; ElastiCache Redis 7</h2>
+
+<p class="filename">Ecosystem/infra/terraform/20-data/redis.tf</p>
+<pre><code>resource "aws_elasticache_subnet_group" "main" {
+  name       = "${local.prefix}-cache-subnets"
+  subnet_ids = data.terraform_remote_state.network.outputs.isolated_subnet_ids
+}
+
+resource "random_password" "redis_auth" {
+  length  = 48
+  special = false          # ElastiCache AUTH tokens reject several special characters
+}
+
+resource "aws_elasticache_replication_group" "main" {
+  replication_group_id = "${local.prefix}-redis"
+  description          = "Sessions, BullMQ queues, rate-limit counters."
+
+  engine         = "redis"
+  engine_version = "7.1"
+  node_type      = var.redis_node_type
+  port           = 6379
+
+  num_cache_clusters         = 1 + var.redis_replicas
+  automatic_failover_enabled = var.redis_replicas &gt; 0
+  multi_az_enabled           = var.redis_replicas &gt; 0
+
+  subnet_group_name  = aws_elasticache_subnet_group.main.name
+  security_group_ids = [data.terraform_remote_state.network.outputs.cache_sg_id]
+
+  at_rest_encryption_enabled = true
+  kms_key_id                 = data.terraform_remote_state.secrets.outputs.kms_key_arn
+  transit_encryption_enabled = true
+  auth_token                 = random_password.redis_auth.result
+
+  snapshot_retention_limit = local.is_prod ? 7 : 0
+  snapshot_window          = "08:00-09:00"
+  maintenance_window       = "sun:11:30-sun:12:30"
+
+  apply_immediately = !local.is_prod
+  tags              = { Name = "${local.prefix}-redis" }
+}</code></pre>
+
+<div class="callout callout-stop"><span class="label">Transit encryption changes the connection URL</span>
+
+<p>With <code>transit_encryption_enabled = true</code> and an auth token, the connection string is
+<code>rediss://</code> &mdash; two esses &mdash; with the token as the password:</p>
+<pre><code>rediss://:TOKEN@j9-dev-redis.xxxxx.ng.0001.usw2.cache.amazonaws.com:6379</code></pre>
+<p>The repo's <code>.env.example</code> uses <code>redis://localhost:6380</code> with no auth. <code>ioredis</code>
+handles <code>rediss://</code> natively, so no code change is needed &mdash; but if you write
+<code>redis://</code> into the SSM parameter, the connection will hang rather than fail cleanly, and you will
+spend an afternoon on it.</p>
+</div>
+
+<h2 id="dbroles">3.6 &mdash; Three databases, six roles</h2>
+
+<figure class="diagram">
+<svg viewBox="0 0 900 330" role="img" aria-label="One RDS instance, three databases, two roles each">
+  <defs>
+    <marker id="arrow_db_layout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2430"/>
+    </marker>
+    <marker id="arrowO_db_layout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EB5616"/>
+    </marker>
+    <marker id="arrowR_db_layout" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+  <rect x="20" y="12" width="860" height="244" rx="10" fill="#f4f7ff" stroke="#1d4ed8" stroke-width="1.4" stroke-dasharray="none"/>
+  <text x="32" y="29" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="800" fill="#1d4ed8" text-anchor="start">ONE RDS POSTGRESQL 16 INSTANCE PER ENVIRONMENT</text>
+  <rect x="46" y="46" width="240" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="166.0" y="63.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">j9_platform</text>
+  <text x="166.0" y="78.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">the platform</text>
+  <rect x="46" y="100" width="240" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="166.0" y="120.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">owner: j9</text>
+  <text x="166.0" y="135.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">migrations only, from CI</text>
+  <rect x="46" y="160" width="240" height="46" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="166.0" y="180.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">runtime: j9_app</text>
+  <text x="166.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">NOSUPERUSER, NOBYPASSRLS</text>
+  <text x="166" y="226" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">prisma migrate deploy</text>
+  <rect x="330" y="46" width="240" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="450.0" y="63.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">okr</text>
+  <text x="450.0" y="78.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Applications/OKR</text>
+  <rect x="330" y="100" width="240" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="450.0" y="120.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">owner: okr</text>
+  <text x="450.0" y="135.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">migrations only, from CI</text>
+  <rect x="330" y="160" width="240" height="46" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="450.0" y="180.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">runtime: okr_app</text>
+  <text x="450.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">NOSUPERUSER, NOBYPASSRLS</text>
+  <text x="450" y="226" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">prisma migrate deploy</text>
+  <rect x="614" y="46" width="240" height="40" rx="7" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="734.0" y="63.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">dataroom</text>
+  <text x="734.0" y="78.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">Applications/dataroom</text>
+  <rect x="614" y="100" width="240" height="46" rx="7" fill="#fff8f4" stroke="#EB5616" stroke-width="1.5"/>
+  <text x="734.0" y="120.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">owner: dataroom</text>
+  <text x="734.0" y="135.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">migrations only, from CI</text>
+  <rect x="614" y="160" width="240" height="46" rx="7" fill="#f4fbf6" stroke="#15803d" stroke-width="1.5"/>
+  <text x="734.0" y="180.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">runtime: dataroom_app</text>
+  <text x="734.0" y="195.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="10.5" fill="#6b7280" text-anchor="middle">NOSUPERUSER, NOBYPASSRLS</text>
+  <text x="734" y="226" font-family="ui-monospace,SF Mono,Menlo,Consolas,monospace" font-size="9.5" font-weight="400" fill="#6b7280" text-anchor="middle">node scripts/db-migrate.mjs</text>
+  <rect x="20" y="272" width="860" height="46" rx="7" fill="#f8f9fb" stroke="#c9cdd6" stroke-width="1.5"/>
+  <text x="450.0" y="299.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700" fill="#1f2430" text-anchor="middle">Row-level security keys off a per-transaction GUC. Unset context matches no rows — which is why the runtime role must never be the owner or a superuser.</text>
+</svg>
+<figcaption>Migrations run as the owner; the application connects as a role that cannot bypass row-level
+security. This split is a correctness requirement, not a hardening nicety.</figcaption>
+</figure>
+
+<p>Terraform creates the instance. SQL creates the databases and roles. Run it once per environment, immediately
+after the instance is available, before any migration.</p>
+
+<p class="filename">Ecosystem/infra/terraform/20-data/bootstrap.sql</p>
+<pre><code>-- Run as the RDS master user, once per environment, before any migration.
+-- Creates three databases, each with an owner role (migrations) and a
+-- least-privilege runtime role (RLS-enforced). Mirrors, in a managed
+-- environment, what docker/postgres-init/01-init-roles-and-shadow.sql and
+-- Applications/dataroom/db/init/01-roles-and-schema.sql do locally.
+--
+-- Passwords are placeholders: substitute the generated values, and put those
+-- same values into SSM (chapter 4). Never commit real ones.
+
+-- ============================================================ platform
+CREATE ROLE j9      WITH LOGIN PASSWORD :'j9_pw'      NOSUPERUSER CREATEDB NOCREATEROLE;
+CREATE ROLE j9_app  WITH LOGIN PASSWORD :'j9_app_pw'  NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE;
+
+-- j9_platform already exists (db_name on the instance). Hand it to the owner.
+ALTER DATABASE j9_platform OWNER TO j9;
+GRANT CONNECT ON DATABASE j9_platform TO j9_app;
+
+-- ================================================================= okr
+CREATE ROLE okr     WITH LOGIN PASSWORD :'okr_pw'     NOSUPERUSER CREATEDB NOCREATEROLE;
+CREATE ROLE okr_app WITH LOGIN PASSWORD :'okr_app_pw' NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE;
+CREATE DATABASE okr OWNER okr;
+GRANT CONNECT ON DATABASE okr TO okr_app;
+
+-- ============================================================ dataroom
+CREATE ROLE dataroom     WITH LOGIN PASSWORD :'dr_pw'     NOSUPERUSER CREATEDB NOCREATEROLE;
+CREATE ROLE dataroom_app WITH LOGIN PASSWORD :'dr_app_pw' NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE;
+CREATE DATABASE dataroom OWNER dataroom;
+GRANT CONNECT ON DATABASE dataroom TO dataroom_app;</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/20-data/bootstrap-dataroom.sql</p>
+<pre><code>-- Connect to the `dataroom` database AS the `dataroom` owner and run this.
+-- Identical in intent to db/init/01-roles-and-schema.sql, which only runs on a
+-- fresh Docker container and therefore never runs against RDS.
+
+CREATE SCHEMA IF NOT EXISTS dataroom AUTHORIZATION dataroom;
+
+GRANT USAGE ON SCHEMA dataroom TO dataroom_app;
+
+ALTER DEFAULT PRIVILEGES FOR ROLE dataroom IN SCHEMA dataroom
+  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dataroom_app;
+ALTER DEFAULT PRIVILEGES FOR ROLE dataroom IN SCHEMA dataroom
+  GRANT USAGE, SELECT ON SEQUENCES TO dataroom_app;
+
+-- Keep the runtime role out of public entirely.
+REVOKE ALL ON SCHEMA public FROM dataroom_app;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;</code></pre>
+
+<div class="callout"><span class="label">The platform migration also grants and enables RLS</span>
+
+<p>For <code>j9_platform</code>, the table grants to <code>j9_app</code> and the RLS policies are inside the
+Prisma migration <code>20260714173418_constraints_rls</code>, so they travel with
+<code>prisma migrate deploy</code> and you do not repeat them here. The same is true of the Data Room's
+<code>db/migrations/0002_rls.sql</code> and <code>0004_crm_rls.sql</code>.</p>
+<p>What does <em>not</em> travel is the role creation and the schema authorization above &mdash; those only exist
+in Docker init scripts, which never run on RDS. Missing them is the second most common first-deploy failure after
+the health-check path.</p>
+</div>
+
+<h3>Running the bootstrap SQL without a bastion host</h3>
+
+<p>The database is in an isolated subnet with no inbound path from the internet, which is correct and means you
+cannot simply <code>psql</code> at it. Two ways in, neither requiring a bastion EC2 instance:</p>
+
+<h4>Option A &mdash; a one-off ECS task (preferred)</h4>
+
+<pre><code># Build a tiny image once: postgres client + the two SQL files.
+cat &gt; infra/dbadmin/Dockerfile &lt;&lt;'EOF'
+FROM postgres:16-alpine
+COPY *.sql /sql/
+ENTRYPOINT ["/bin/sh","-c"]
+EOF
+
+# Push it to ECR as j9/dbadmin, then run it inside the VPC with the task SG,
+# passing the master secret in as an environment secret. It has network reach
+# to RDS because it is in the private subnets with the task security group.
+aws ecs run-task \
+  --cluster j9-dev-cluster \
+  --task-definition j9-dev-dbadmin \
+  --launch-type FARGATE \
+  --network-configuration 'awsvpcConfiguration={subnets=[subnet-aaa,subnet-bbb],securityGroups=[sg-task],assignPublicIp=DISABLED}' \
+  --overrides '{"containerOverrides":[{"name":"dbadmin","command":["psql \"$MASTER_URL\" -v j9_pw=... -f /sql/bootstrap.sql"]}]}'</code></pre>
+
+<h4>Option B &mdash; SSM port forwarding through a throwaway instance</h4>
+
+<p>If you would rather work interactively while developing, start a <code>t4g.nano</code> in a private subnet with
+the SSM agent and the task security group, then forward a local port. No SSH key, no inbound rule, and you delete
+it afterwards.</p>
+
+<pre><code>aws ssm start-session \
+  --target i-0123456789abcdef0 \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{"host":["j9-dev-pg.xxxxx.us-west-2.rds.amazonaws.com"],"portNumber":["5432"],"localPortNumber":["5433"]}'
+
+# Now, in another shell — note it lands on 5433, the same port the repo's local
+# docker-compose uses, so every documented psql command works unchanged.
+psql "postgresql://j9_master:...@localhost:5433/j9_platform?sslmode=require"</code></pre>
+
+<div class="callout callout-ok"><span class="label">Verify before you move on</span>
+
+<pre><code>-- As each app role, confirm it cannot bypass RLS:
+SELECT rolname, rolsuper, rolbypassrls FROM pg_roles
+WHERE rolname IN ('j9','j9_app','okr','okr_app','dataroom','dataroom_app');
+-- Every *_app row must read: rolsuper=f, rolbypassrls=f
+</code></pre>
+<p>If <code>rolbypassrls</code> is true for any <code>_app</code> role, row-level security is silently doing
+nothing and every org can read every other org's data. Fix it before you load any real data.</p>
+</div>
+
+<h2>3.7 &mdash; S3</h2>
+
+<p>One object bucket per environment, with a prefix per app, matching the architecture's "S3 with per-app
+prefixes, signed URLs only". Plus two log buckets.</p>
+
+<p class="filename">Ecosystem/infra/terraform/20-data/s3.tf</p>
+<pre><code>resource "aws_s3_bucket" "objects" {
+  bucket = "${local.prefix}-objects-824999955649"
+}
+
+resource "aws_s3_bucket_public_access_block" "objects" {
+  bucket                  = aws_s3_bucket.objects.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "objects" {
+  bucket = aws_s3_bucket.objects.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = data.terraform_remote_state.secrets.outputs.kms_key_arn
+    }
+    bucket_key_enabled = true      # cuts KMS request cost substantially
+  }
+}
+
+resource "aws_s3_bucket_versioning" "objects" {
+  bucket = aws_s3_bucket.objects.id
+  versioning_configuration { status = "Enabled" }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "objects" {
+  bucket = aws_s3_bucket.objects.id
+
+  rule {
+    id     = "expire-old-versions"
+    status = "Enabled"
+    noncurrent_version_expiration { noncurrent_days = 90 }
+    abort_incomplete_multipart_upload { days_after_initiation = 7 }
+  }
+
+  # Exports are regenerable; do not pay to keep them forever.
+  rule {
+    id     = "expire-dataroom-exports"
+    status = "Enabled"
+    filter { prefix = "dataroom/exports/" }
+    expiration { days = 180 }
+  }
+}
+
+resource "aws_s3_bucket_policy" "objects_tls_only" {
+  bucket = aws_s3_bucket.objects.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "DenyInsecureTransport"
+      Effect    = "Deny"
+      Principal = "*"
+      Action    = "s3:*"
+      Resource  = [aws_s3_bucket.objects.arn, "${aws_s3_bucket.objects.arn}/*"]
+      Condition = { Bool = { "aws:SecureTransport" = "false" } }
+    }]
+  })
+}</code></pre>
+
+<p>Prefix convention inside the bucket, so a task role can be scoped to exactly its own tree:</p>
+
+<pre><code>s3://j9-&lt;env&gt;-objects-824999955649/
+├── platform/          branding overrides, admin exports
+├── okr/               attachments on objectives and check-ins
+└── dataroom/
+    ├── documents/     investor documents
+    └── exports/       generated proforma workbooks (lifecycle: 180 days)</code></pre>
+
+<h2>3.8 &mdash; Outputs the later layers consume</h2>
+
+<p class="filename">Ecosystem/infra/terraform/10-network/outputs.tf</p>
+<pre><code>output "vpc_id"              { value = aws_vpc.main.id }
+output "vpc_cidr"            { value = aws_vpc.main.cidr_block }
+output "public_subnet_ids"   { value = aws_subnet.public[*].id }
+output "private_subnet_ids"  { value = aws_subnet.private[*].id }
+output "isolated_subnet_ids" { value = aws_subnet.isolated[*].id }
+output "alb_sg_id"           { value = aws_security_group.alb.id }
+output "task_sg_id"          { value = aws_security_group.task.id }
+output "database_sg_id"      { value = aws_security_group.database.id }
+output "cache_sg_id"         { value = aws_security_group.cache.id }</code></pre>
+
+<p class="filename">Ecosystem/infra/terraform/20-data/outputs.tf</p>
+<pre><code>output "db_address"          { value = aws_db_instance.main.address }
+output "db_port"             { value = aws_db_instance.main.port }
+output "db_master_secret_arn" {
+  value = aws_db_instance.main.master_user_secret[0].secret_arn
+}
+output "redis_primary_endpoint" {
+  value = aws_elasticache_replication_group.main.primary_endpoint_address
+}
+output "redis_auth_token" {
+  value     = random_password.redis_auth.result
+  sensitive = true
+}
+output "objects_bucket"      { value = aws_s3_bucket.objects.id }
+output "objects_bucket_arn"  { value = aws_s3_bucket.objects.arn }</code></pre>
+
+<p>And the boilerplate every downstream layer repeats to read them:</p>
+
+<p class="filename">Ecosystem/infra/terraform/50-compute/remote-state.tf  (pattern)</p>
+<pre><code>data "terraform_remote_state" "network" {
+  backend   = "s3"
+  workspace = terraform.workspace       # this is what keeps dev reading dev
+  config = {
+    bucket = "j9-tf-state-824999955649"
+    key    = "network/terraform.tfstate"
+    region = "us-west-2"
+  }
+}</code></pre>
+
+<div class="callout callout-stop"><span class="label">workspace = terraform.workspace matters</span>
+
+<p>Omit that line and every layer reads the <code>default</code> workspace's state, which is empty. You will get
+a plan full of <code>(known after apply)</code> nulls and errors about empty lists. It is a one-line mistake with
+a very confusing signature.</p>
+</div>
+
+</section>
+
+<div class="pager"><a href="02-account-foundation.html">&larr; 2. Account Foundation</a><span class="spacer"></span><a href="04-secrets-identity.html">4. Secrets and Identity &rarr;</a></div>
+</div>
+
+<footer class="page-footer">
+  <div class="wrap">
+    <p><strong>Jemba9 Ecosystem &mdash; AWS Hosting Primer.</strong> Written 17 August 2026 against the
+    <code>Jemba9_Ecosystem</code> repository (platform in <code>Ecosystem/</code>, apps in
+    <code>Applications/OKR/</code> and <code>Applications/dataroom/</code>).</p>
+    <p>Authoritative sources in the repo: <code>Ecosystem/docs/deployment/aws.md</code>,
+    <code>Ecosystem/docs/adr/0002-compute.md</code>, <code>Ecosystem/docs/architecture/database.md</code>,
+    <code>Ecosystem/docs/architecture/rls.md</code>, <code>Ecosystem/docs/notes/security-baseline.md</code>,
+    <code>Applications/dataroom/HANDOFF.md</code>. Where this guide and those disagree, the repo docs win
+    &mdash; except on the AWS account number, which this guide corrects.</p>
+    <p>No JavaScript. All graphics are inline SVG. Styling is a single style block per page.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IAM Identity Center Setup for Staging — Jemba9 — Space Assurance Gateway</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #0f172a; margin: 0; padding: 32px 24px 64px;">
+
+  <div style="max-width: 900px; margin: 0 auto;">
+
+    <h1 style="font-size: 24px; margin: 0 0 4px;">IAM Identity Center Setup for Staging — Governance Hardening</h1>
+    <p style="margin: 0 0 24px; color: #475569; font-size: 14px;">
+      Jemba9 — Space Assurance Gateway &mdash; Staging CDK Stack + Deploy Pipeline &mdash; Phase 10 preflight item 3 (groups).
+      <strong>Updated 2026-07-19 after the staging deploy went live.</strong>
+    </p>
+
+    <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 14px; line-height: 1.6;">
+      <strong style="color: #15803d;">Status update &mdash; this is no longer a deploy blocker.</strong> The staging
+      environment is <strong>already deployed and live</strong> (Phase 10 complete: all 11 stacks up, the
+      <code>sag-platform-release-staging</code> pipeline runs green end-to-end, and the staging backend serves
+      <code>/health</code> 200). The work below is now <strong>governance hardening</strong> &mdash; it enforces that
+      <code>main</code> can't be pushed to directly and that PRs need real approvals &mdash; not something that gates the
+      already-running staging deploy. Also note <strong>Part 2 (the CodeCommit approval-rule template) is already done</strong>
+      (Cascade created + associated <code>sag-main-2-approvals</code> on 2026-07-19); it now only needs an optional
+      pool refinement once Chad's groups exist. So the only outstanding work is <strong>Part 1 (Chad)</strong> below.
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; font-size: 14px; line-height: 1.7;">
+      <h2 style="font-size: 15px; margin: 0 0 8px; color: #0f172a;">Executive Summary</h2>
+      <p style="margin: 0 0 10px;">
+        This is a preflight task for <strong>P0-02</strong> (<code style="background:#f1f5f9; padding:2px 5px; border-radius:4px;">documents/plans/active/25-staging-cdk-stack-and-deploy-pipeline-execution.md</code>),
+        which is adding a real <strong>staging</strong> environment and an AWS-native deploy pipeline in front of production.
+        Today only <code style="background:#f1f5f9; padding:2px 5px; border-radius:4px;">dev</code> exists &mdash; there is
+        no staged environment to catch problems before they reach customers, no enforced change gate on <code>main</code>,
+        and no SLA credibility we can point to when asked how changes are controlled.
+      </p>
+      <p style="margin: 0;">
+        Phases 0&ndash;10 of that plan are done: the CDK stacks, secrets, database isolation, release pipeline, rollback
+        scripts, <strong>and the first live staging deploy</strong> are all complete. What remains is the human-governance
+        layer that code alone can't create: real people, in real IAM groups, with a real enforced rule that <code>main</code>
+        requires 2 approvals and cannot be pushed to directly. That's what this document sets up &mdash; the IAM Identity
+        Center groups/permissions (Part 1, Chad). The CodeCommit approval-rule template (Part 2) is already created and
+        associated; it just needs its approver pool pointed at Chad's new deployer/approver roles once they exist.
+      </p>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 20px 22px 16px; margin-bottom: 28px;">
+      <svg viewBox="0 0 900 220" width="100%" height="220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Environment status: Dev and Staging are real and live, Prod is a future ghosted placeholder">
+        <!-- Dev box -->
+        <rect x="30" y="50" width="230" height="130" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5" />
+        <circle cx="60" cy="80" r="11" fill="#10b981" />
+        <path d="M54 80 l4 4 l8 -9" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        <text x="80" y="86" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" fill="#065f46">DEV</text>
+        <text x="60" y="118" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#047857">Real &amp; live</text>
+        <text x="60" y="138" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#047857">today</text>
+        <rect x="60" y="150" width="106" height="20" rx="10" fill="#10b981" />
+        <text x="113" y="164" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">LIVE</text>
+
+        <!-- Arrow Dev -> Staging (solid, real) -->
+        <line x1="262" y1="115" x2="328" y2="115" stroke="#2563eb" stroke-width="3" />
+        <path d="M328 115 l-10 -6 l0 12 z" fill="#2563eb" />
+
+        <!-- Staging box -->
+        <rect x="335" y="50" width="230" height="130" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" />
+        <circle cx="365" cy="80" r="11" fill="#2563eb" />
+        <path d="M359 80 l4 4 l8 -9" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        <text x="385" y="86" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" fill="#1e3a8a">STAGING</text>
+        <text x="365" y="118" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#1d4ed8">Real &amp; live</text>
+        <text x="365" y="138" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#1d4ed8">(Phase 10 done)</text>
+        <rect x="365" y="150" width="106" height="20" rx="10" fill="#2563eb" />
+        <text x="418" y="164" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">LIVE</text>
+
+        <!-- Arrow Staging -> Prod (dashed, not yet real) -->
+        <line x1="567" y1="115" x2="633" y2="115" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 6" />
+        <path d="M633 115 l-10 -6 l0 12 z" fill="#94a3b8" />
+
+        <!-- Prod box (ghosted / future) -->
+        <rect x="640" y="50" width="230" height="130" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="8 6" opacity="0.75" />
+        <circle cx="670" cy="80" r="11" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3 3" />
+        <text x="670" y="85" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">?</text>
+        <text x="690" y="86" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" fill="#94a3b8">PROD</text>
+        <text x="670" y="118" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#94a3b8">Future —</text>
+        <text x="670" y="138" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#94a3b8">not deployed yet</text>
+        <rect x="670" y="150" width="130" height="20" rx="10" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" />
+        <text x="735" y="164" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="700" fill="#94a3b8" text-anchor="middle">deployEnabled: false</text>
+
+        <!-- Legend -->
+        <rect x="30" y="198" width="16" height="16" rx="3" fill="#10b981" stroke="#10b981" />
+        <text x="52" y="211" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="12" fill="#334155">Solid = real, deployed</text>
+        <rect x="230" y="198" width="16" height="16" rx="3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" />
+        <text x="252" y="211" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="12" fill="#334155">Dashed/ghosted = synthesized only, not deployed</text>
+      </svg>
+      <p style="margin: 4px 0 0; font-size: 12.5px; color: #64748b; text-align: center;">
+        Dev and Staging are both real, deployed CDK stack sets after this document's steps complete. Prod continues to
+        synthesize (<code>cdk synth</code>) for structural parity but stays a ghosted placeholder — <code>prodDeployEnabled: false</code>
+        means its deploy action is structurally omitted, so nothing ever actually ships to it yet.
+      </p>
+    </div>
+
+    <div style="background: #eef2ff; border: 1px solid #6366f1; border-radius: 8px; padding: 16px 20px; margin-bottom: 28px; font-size: 14px;">
+      <strong style="color: #3730a3;">What's left:</strong> only <strong>Part 1 (Chad Fisher)</strong> &mdash; the IAM
+      Identity Center groups + permission sets, which only he can create because they live in the AWS Organizations
+      management account. <strong>Part 2 (the approval-rule template) is already complete</strong> &mdash; it's kept below
+      for reference and for one small optional follow-up (pointing its approver pool at Chad's new roles once they exist).
+    </div>
+
+    <h2 style="font-size: 17px; color: #92400e; margin: 0 0 4px; padding: 8px 14px; background: #fef3c7; border-radius: 6px; display: inline-block;">
+      PART 1 &mdash; Chad Fisher must do this
+    </h2>
+    <p style="margin: 10px 0 20px; color: #475569; font-size: 13.5px;">(steps 1&ndash;4 below)</p>
+
+    <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 14px;">
+      <strong style="color: #92400e;">Why you, specifically:</strong> the <code style="background:#fff7ed; padding:2px 5px; border-radius:4px;">jemba9-dev</code>
+      AWS account (<code style="background:#fff7ed; padding:2px 5px; border-radius:4px;">824999955649</code>) is a
+      <strong>member account</strong> of an AWS Organization. The management account is
+      <strong>581837412467</strong>, owned by <strong>cfisher@jemba9.com</strong> &mdash; that's the account that
+      actually hosts our IAM Identity Center instance (the one behind the <code>onej9.awsapps.com</code> SSO login).
+      Groups and permission-set assignments have to be created there, not inside <code>jemba9-dev</code> itself.
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e293b; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        1. Create three groups in IAM Identity Center
+      </div>
+      <div style="padding: 18px 20px;">
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>Log into the AWS Organizations <strong>management account</strong> (<code style="background:#f1f5f9; padding:2px 5px; border-radius:4px;">581837412467</code>,
+            <code style="background:#f1f5f9; padding:2px 5px; border-radius:4px;">cfisher@jemba9.com</code>).</li>
+          <li>Console search &rarr; <strong>IAM Identity Center</strong>.</li>
+          <li>Left nav &rarr; <strong>Groups</strong> &rarr; <strong>Create group</strong>. Create these three, one at a time:</li>
+        </ol>
+        <table style="width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px;">
+          <thead>
+            <tr style="background: #f8fafc; text-align: left;">
+              <th style="padding: 8px 10px; border: 1px solid #e2e8f0;">Group name</th>
+              <th style="padding: 8px 10px; border: 1px solid #e2e8f0;">Purpose</th>
+              <th style="padding: 8px 10px; border: 1px solid #e2e8f0;">Suggested members</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;"><code>sag-developers-staging</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;">Developers who push feature branches and open PRs; denied direct push to <code>main</code> and denied overriding PR approval rules.</td>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;">All active engineers working on this repo</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;"><code>sag-staging-deployers</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;">Can trigger/approve break-glass staging deploy/rollback scripts. Routine staging deploys are automated on merge &mdash; this group is for the manual scripts only.</td>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;">Mike Berry, Chad Fisher (+ any on-call engineer)</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;"><code>sag-production-approvers</code></td>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;">Approves the manual gate on the prod-promotion pipeline. Currently the prod deploy action itself is disabled, so this is a placeholder until <code>prodDeployEnabled</code> is turned on.</td>
+              <td style="padding: 8px 10px; border: 1px solid #e2e8f0;">Mike Berry, Chad Fisher</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size: 13px; color: #475569; margin: 4px 0 0;">Add the suggested members to each group as you create it, or afterward via <strong>Groups &rarr; [group name] &rarr; Add users</strong>.</p>
+      </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e293b; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        2. Attach the existing deny policy to sag-developers-staging
+      </div>
+      <div style="padding: 18px 20px;">
+        <p style="font-size: 14px; margin: 0 0 10px;">
+          A customer-managed IAM policy already exists in the <strong>jemba9-dev</strong> account
+          (<code style="background:#f1f5f9; padding:2px 5px; border-radius:4px;">824999955649</code>) &mdash; created by our CDK
+          <code>CodeCommitGovernanceStack</code>, but deliberately left unattached until this step:
+        </p>
+        <pre style="background:#0f172a; color:#e2e8f0; padding:12px 16px; border-radius:6px; font-size:12.5px; overflow-x:auto; margin: 0 0 14px;">Policy name: sag-developer-main-protection-staging
+Policy ARN:  arn:aws:iam::824999955649:policy/sag-developer-main-protection-staging
+
+Denies:
+  - codecommit:GitPush on refs/heads/main
+  - codecommit:OverridePullRequestApprovalRules</pre>
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>Still in IAM Identity Center &rarr; left nav &rarr; <strong>Permission sets</strong> &rarr; <strong>Create permission set</strong>.</li>
+          <li>Choose <strong>Custom permission set</strong>. Name it <code>SagDeveloperStaging</code>.</li>
+          <li>Under <strong>Policies for this permission set</strong>, click <strong>Add a customer managed policy</strong> (this attaches by name/path &mdash;
+            it works because the policy already exists in the target account from step 3 below). Enter the policy name exactly:
+            <code>sag-developer-main-protection-staging</code>.</li>
+          <li>You'll likely also want to add an AWS-managed baseline policy (e.g. <code>PowerUserAccess</code> or a narrower one your team already
+            uses) alongside the deny policy, so developers have normal working access <em>minus</em> the two denied actions above.
+            Deny statements always win regardless of what else is attached.</li>
+          <li>Save the permission set.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e293b; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        3. Assign the permission set + groups to the jemba9-dev account
+      </div>
+      <div style="padding: 18px 20px;">
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>IAM Identity Center &rarr; left nav &rarr; <strong>AWS accounts</strong> &rarr; check the box next to <strong>jemba9-dev</strong>
+            (<code>824999955649</code>) &rarr; <strong>Assign users or groups</strong>.</li>
+          <li>Select the <strong>Groups</strong> tab &rarr; check <code>sag-developers-staging</code> &rarr; Next.</li>
+          <li>Select the permission set <code>SagDeveloperStaging</code> (created in step 2) &rarr; Next &rarr; Submit.</li>
+          <li>Wait for provisioning to finish (usually under a minute &mdash; status shows on the assignment page).</li>
+          <li>Repeat the assignment for <code>sag-staging-deployers</code> and <code>sag-production-approvers</code>, using whichever existing
+            permission set is appropriate for each (e.g. <code>PowerUserAccess</code> or <code>AdministratorAccess</code> &mdash; both already
+            exist per the account's current permission sets). These two groups don't need the deny policy since they're meant to have
+            elevated deploy/approval access, not restricted developer access.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e293b; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        4. Verify
+      </div>
+      <div style="padding: 18px 20px;">
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>Have a member of <code>sag-developers-staging</code> log into the AWS access portal (<code>onej9.awsapps.com</code>), pick the
+            <code>SagDeveloperStaging</code> role under <code>jemba9-dev</code>, and confirm they can push a feature branch but get an
+            <strong>AccessDenied</strong> error attempting <code>git push origin main</code> directly.</li>
+          <li>Confirm the same user cannot call <code>codecommit:OverridePullRequestApprovalRules</code> (no UI action needed to test this normally &mdash;
+            it's only exercised if someone tries to bypass a PR approval rule in the CodeCommit console).</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="background: #eff6ff; border: 1px solid #93c5fd; border-radius: 8px; padding: 14px 18px; font-size: 13.5px; color: #1e3a8a; margin-bottom: 36px;">
+      <strong>Report back to Mike:</strong> once done, just confirm the three group names exist, membership is set, and the
+      <code>SagDeveloperStaging</code> permission set is assigned to <code>jemba9-dev</code>. Also tell Mike which existing
+      permission set (e.g. <code>PowerUserAccess</code> or <code>AdministratorAccess</code>) you assigned to
+      <code>sag-staging-deployers</code> and <code>sag-production-approvers</code> in step 3 &mdash; Mike needs that name for
+      Part 2 below. No AWS console screenshots needed unless something doesn't match what's described above.
+    </div>
+
+    <hr style="border: none; border-top: 2px dashed #cbd5e1; margin: 8px 0 32px;" />
+
+    <h2 style="font-size: 17px; color: #1e3a8a; margin: 0 0 4px; padding: 8px 14px; background: #dbeafe; border-radius: 6px; display: inline-block;">
+      PART 2 &mdash; ALREADY DONE (reference + one optional follow-up)
+    </h2>
+    <p style="margin: 10px 0 20px; color: #475569; font-size: 13.5px;">(steps 5&ndash;8 below were completed on 2026-07-19)</p>
+
+    <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 14px; line-height: 1.6;">
+      <strong style="color: #15803d;">Already complete:</strong> the <code>sag-main-2-approvals</code> approval-rule
+      template exists and is associated with <code>j9ccgit</code> (2 approvals required on <code>main</code>). Its approver
+      pool currently references only <code>AWSReservedSSO_AdministratorAccess_b5a29e2ce3a578c0</code> (Mike's role).
+      <br><br>
+      <strong>Optional follow-up once Chad finishes Part 1:</strong> update the template's <code>ApprovalPoolMembers</code>
+      to also include the role provisioned for <code>sag-staging-deployers</code> / <code>sag-production-approvers</code>, so
+      approvals aren't limited to a single identity. Steps 5&ndash;8 below show how; re-run step 6 with
+      <code>update-approval-rule-template-content</code> instead of <code>create-approval-rule-template</code>. Until then,
+      the 2-approver rule can only be satisfied by an override, which is why Phase 10 merged to <code>main</code> via direct
+      push rather than a PR.
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e3a5f; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        5. Look up the real SSO-provisioned role ARN
+      </div>
+      <div style="padding: 18px 20px; font-size: 14px; line-height: 1.7;">
+        <p style="margin-top: 0;">Chad's Part 1 step 3 assignment provisions a role in <code>jemba9-dev</code> named
+        <code>AWSReservedSSO_&lt;PermissionSetName&gt;_&lt;hash&gt;</code>. Find its exact ARN:</p>
+        <pre style="background:#0f172a; color:#e2e8f0; padding:12px 16px; border-radius:6px; font-size:13px; overflow-x:auto; margin: 0;">aws sso login --profile jemba9-dev
+aws iam list-roles --profile jemba9-dev \
+  --query "Roles[?contains(RoleName,'AWSReservedSSO')].{Name:RoleName,Arn:Arn}" \
+  --output table</pre>
+        <p>Match the row whose name contains the permission set Chad told you he used for
+        <code>sag-staging-deployers</code> / <code>sag-production-approvers</code> (e.g.
+        <code>AWSReservedSSO_AdministratorAccess_1a2b3c4d5e6f7890</code>). Copy its <strong>Arn</strong> value exactly.</p>
+      </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e3a5f; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        6. Create the CodeCommit approval-rule template
+      </div>
+      <div style="padding: 18px 20px; font-size: 14px; line-height: 1.7;">
+        <p style="margin-top: 0;">No CDK/CloudFormation resource exists for this (confirmed during Phase 5) &mdash; it's CLI-only.
+        Convert the role's <strong>IAM role ARN</strong> from step 5 into its <strong>assumed-role ARN</strong> pattern
+        (swap <code>:role/</code> for <code>:assumed-role/</code>, drop the <code>aws-reserved/sso.amazonaws.com/&lt;region&gt;/</code>
+        prefix if present, and append <code>/*</code> as a wildcard session name):</p>
+        <pre style="background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:6px; font-size:13px; overflow-x:auto;">export AWS_PROFILE=jemba9-dev
+export AWS_REGION=us-east-2
+
+aws codecommit create-approval-rule-template \
+  --approval-rule-template-name "sag-main-2-approvals" \
+  --approval-rule-template-content '{
+    "Version": "2018-11-08",
+    "DestinationReferences": ["refs/heads/main"],
+    "Statements": [{
+      "Type": "Approvers",
+      "NumberOfApprovalsNeeded": 2,
+      "ApprovalPoolMembers": [
+        "arn:aws:sts::824999955649:assumed-role/AWSReservedSSO_&lt;PermissionSetName&gt;_&lt;hash&gt;/*"
+      ]
+    }]
+  }' \
+  --region us-east-2</pre>
+        <p>Replace <code>AWSReservedSSO_&lt;PermissionSetName&gt;_&lt;hash&gt;</code> with the exact role name segment
+        found in step 5.</p>
+      </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e3a5f; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        7. Associate the template with the repository
+      </div>
+      <div style="padding: 18px 20px; font-size: 14px; line-height: 1.7;">
+        <pre style="background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:6px; font-size:13px; overflow-x:auto;">aws codecommit associate-approval-rule-template-with-repository \
+  --approval-rule-template-name "sag-main-2-approvals" \
+  --repository-name j9ccgit \
+  --region us-east-2</pre>
+      </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+      <div style="background: #1e3a5f; color: #fff; padding: 12px 20px; font-weight: 600; font-size: 15px;">
+        8. Verify
+      </div>
+      <div style="padding: 18px 20px;">
+        <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+          <li>Confirm the template exists: <code>aws codecommit get-approval-rule-template --approval-rule-template-name sag-main-2-approvals --region us-east-2</code></li>
+          <li>Confirm the association: <code>aws codecommit list-associated-approval-rule-templates-for-repository --repository-name j9ccgit --region us-east-2</code></li>
+          <li>Open a real test PR against <code>main</code> and confirm CodeCommit shows it requires 2 approvals from the pool member role before it can be merged.</li>
+          <li>Confirm a member of <code>sag-developers-staging</code> cannot override that approval rule (from Part 1's deny policy).</li>
+        </ol>
+        <p style="font-size: 13px; color: #475569; margin: 12px 0 0;">Once this passes, Phase 10 preflight items 3 and 4
+        are both satisfied and the plan's Phase 10 §10.2 staging deploy can proceed.</p>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

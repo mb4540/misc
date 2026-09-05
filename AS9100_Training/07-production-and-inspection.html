@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Production &amp; Inspection | Jemba9 QMS Training</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c2b39;
+    background: #f4f6f9;
+  }
+  a { color: #0e6e73; }
+  a:visited { color: #0e6e73; }
+  .layout { display: flex; align-items: flex-start; min-height: 100vh; }
+  .sidebar {
+    width: 270px;
+    flex: 0 0 270px;
+    background: #0f2942;
+    color: #dce6ef;
+    padding: 22px 18px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .brand {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .sidebar .brand small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #8fa9c2;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .sidebar .home-link {
+    display: inline-block;
+    margin: 14px 0 18px;
+    font-size: 0.82rem;
+    color: #f5c064;
+    text-decoration: none;
+    border: 1px solid #2c4a68;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .sidebar .home-link:hover { background: #16324f; }
+  .nav-group { margin-top: 18px; }
+  .nav-group h2 {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7fa0bd;
+    margin: 0 0 6px;
+    font-weight: 700;
+    border-bottom: 1px solid #23405e;
+    padding-bottom: 5px;
+  }
+  .nav-group a {
+    display: block;
+    color: #cddbe8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 8px 6px 10px;
+    border-left: 3px solid transparent;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .nav-group a:hover { background: #16324f; }
+  .nav-group a.active {
+    background: #16324f;
+    border-left: 3px solid #f5a623;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .nav-group a .num {
+    display: inline-block;
+    min-width: 20px;
+    color: #7fa0bd;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-group a.active .num { color: #f5a623; }
+
+  .main { flex: 1 1 auto; min-width: 0; padding: 32px 44px 70px; max-width: 980px; }
+  .breadcrumb {
+    font-size: 0.8rem;
+    color: #5b7085;
+    margin-bottom: 18px;
+  }
+  .breadcrumb a { color: #0e6e73; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    color: #0f2942;
+  }
+  .page-header .subtitle {
+    color: #4a5b6c;
+    font-size: 1rem;
+    margin: 0 0 26px;
+  }
+  .process-badge {
+    display: inline-block;
+    background: #eaf3f2;
+    color: #0e6e73;
+    border: 1px solid #bfdbd9;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #dde5ec;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 26px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #0f2942;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+  }
+  .card h3 { font-size: 1.02rem; color: #163a54; }
+
+  table.doc-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  table.doc-table th, table.doc-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e6ebf0;
+    vertical-align: top;
+  }
+  table.doc-table th {
+    background: #f5f8fa;
+    color: #33495e;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  table.doc-table td code { font-size: 0.8rem; background: #f0f4f7; padding: 1px 5px; border-radius: 3px; }
+  .clause-tag {
+    display: inline-block;
+    background: #fbeedd;
+    color: #8a5a12;
+    border: 1px solid #f0d4a6;
+    font-size: 0.72rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    margin: 1px 2px 1px 0;
+    white-space: nowrap;
+  }
+
+  .jemba9-fact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 10px 24px;
+    font-size: 0.9rem;
+  }
+  .jemba9-fact-grid dt { font-weight: 700; color: #163a54; }
+  .jemba9-fact-grid dd { margin: 0 0 10px; color: #33495e; }
+
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .syllabus-grid { grid-template-columns: 1fr; } }
+  .syllabus-grid ol, .syllabus-grid ul { padding-left: 20px; margin: 0; }
+  .syllabus-grid li { margin-bottom: 9px; font-size: 0.92rem; }
+  .audience-tags span {
+    display: inline-block;
+    background: #eef3f8;
+    color: #234a68;
+    border: 1px solid #d4e0ec;
+    font-size: 0.78rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+
+  fieldset.notes-section {
+    background: #fffaf1;
+    border: 1px solid #f0dbb0;
+    border-radius: 8px;
+    padding: 20px 24px 24px;
+    margin: 0 0 20px;
+  }
+  fieldset.notes-section legend {
+    font-weight: 700;
+    color: #8a5a12;
+    padding: 0 8px;
+    font-size: 1.02rem;
+  }
+  .ref-strip {
+    background: #ffffff;
+    border: 1px solid #eadab8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #4a5b6c;
+    margin-bottom: 16px;
+  }
+  .ref-strip strong { color: #163a54; }
+  .field-row { margin-bottom: 14px; }
+  .field-row label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #33495e;
+    margin-bottom: 4px;
+  }
+  .field-row input[type="text"], .field-row input[type="date"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 7px 9px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .field-row.inline { display: flex; gap: 24px; flex-wrap: wrap; }
+  .field-row.inline > div { flex: 1 1 200px; }
+  .radio-set label { font-weight: 400; display: inline-flex; align-items: center; gap: 5px; margin-right: 18px; font-size: 0.88rem; }
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 10px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .save-instructions {
+    background: #eef6f6;
+    border: 1px solid #bfdbd9;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #204a4d;
+    margin-top: 16px;
+  }
+  .save-instructions strong { color: #0e6e73; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e6eb;
+    font-size: 0.76rem;
+    color: #8593a0;
+  }
+
+  @media print {
+    .sidebar, .breadcrumb, .save-instructions { display: none !important; }
+    .main { max-width: 100%; padding: 0; }
+    .layout { display: block; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+    textarea { min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand">Jemba9 QMS Training Program<small>AS9100D Rev D &middot; Document Review Portal</small></div>
+  <a class="home-link" href="index.html">&#8962; Program Home</a>
+
+  <div class="nav-group">
+    <h2>Leadership</h2>
+    <a href="01-qms-overview.html"><span class="num">01</span> QMS Overview &amp; Company Context</a>
+    <a href="02-quality-policy-objectives.html"><span class="num">02</span> Quality Policy &amp; Objectives</a>
+    <a href="13-management-review.html"><span class="num">13</span> Management Review</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Quality System</h2>
+    <a href="03-risk-management.html"><span class="num">03</span> Risk Management</a>
+    <a href="11-nonconformance-and-corrective-action.html"><span class="num">11</span> Nonconformance &amp; CAPA</a>
+    <a href="12-internal-audit.html"><span class="num">12</span> Internal Audit</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Core Value Stream</h2>
+    <a href="04-design-and-development.html"><span class="num">04</span> Design &amp; Development</a>
+    <a href="05-supplier-management.html"><span class="num">05</span> Supplier Management</a>
+    <a href="06-counterfeit-parts-prevention.html"><span class="num">06</span> Counterfeit Parts Prevention</a>
+    <a class="active" href="07-production-and-inspection.html"><span class="num">07</span> Production &amp; Inspection</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Supporting Processes</h2>
+    <a href="08-document-control.html"><span class="num">08</span> Document Control</a>
+    <a href="09-configuration-management.html"><span class="num">09</span> Configuration Management</a>
+    <a href="10-training-and-competency.html"><span class="num">10</span> Training &amp; Competency</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Core Value Stream &rsaquo; Production &amp; Inspection</div>
+
+  <div class="page-header">
+    <span class="process-badge">Core Value Stream Process</span>
+    <h1>7. Production &amp; Inspection</h1>
+    <p class="subtitle">Work orders, travelers, in-process inspection, FAI, calibration, and product release at Jemba9 and J9CM</p>
+  </div>
+
+  <div class="card">
+    <h2>Source Documents for This Topic</h2>
+    <table class="doc-table">
+      <thead>
+        <tr><th>Doc #</th><th>Title</th><th>Type</th><th>AS9100D Clause(s)</th><th>Owner / Status</th><th>Repository Path</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>QP-008</code></td>
+          <td>Production and Inspection Procedure</td>
+          <td>Procedure (Level 2)</td>
+          <td><span class="clause-tag">8.1</span><span class="clause-tag">8.1.3</span><span class="clause-tag">8.5</span><span class="clause-tag">8.5.1</span><span class="clause-tag">8.5.2</span><span class="clause-tag">8.5.3</span><span class="clause-tag">8.5.4</span><span class="clause-tag">8.5.5</span><span class="clause-tag">8.6</span><span class="clause-tag">7.1.5</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/procedures/QP-008-production-and-inspection.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-009</code></td>
+          <td>First Article Inspection (FAI) Checklist</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">8.1.3</span><span class="clause-tag">8.5.1</span><span class="clause-tag">8.6</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-009-fai-checklist.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-011</code></td>
+          <td>Calibration Log</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">7.1.5</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-011-calibration-log.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-015</code></td>
+          <td>Product Safety Assessment</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">8.1.3</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-015-product-safety-assessment.md</code></td>
+        </tr>
+        <tr>
+          <td><code>QF-018</code></td>
+          <td>Work Transfer Checklist</td>
+          <td>Template (Level 4)</td>
+          <td><span class="clause-tag">8.5.1</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-018-work-transfer-checklist.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.82rem;color:#5b7085;margin-top:14px;">Clause 8.5.3 (customer property) applicability to Jemba9 &mdash; only when a customer supplies CFE/GFE, in which case QP-008 governs &mdash; comes from a reviewer note submitted by <strong>Paul Rutt (prutt@jemba9.com)</strong>, Co-founder &amp; CTO, on QM-001, June 2, 2026.</p>
+    <div style="background:#fdf3f3;border:1px solid #efc3c3;border-radius:6px;padding:12px 16px;margin-top:14px;font-size:0.85rem;color:#7a2020;">
+      <strong>Open reviewer note &mdash; pending action:</strong> Reviewer <strong>bharr@jemba9.com</strong> submitted an open note on <code>QF-015</code> Product Safety Assessment (2026-06-03, file <code>review-notes/QF-015/2026-06-03T19-21-09-432Z-bharr_jemba9_com.md</code>, status: <strong>open</strong>): &ldquo;Approval, replace CEO with COO.&rdquo; This means the QF-015 approval signature block (Section 8) currently designates the <strong>CEO</strong> as the required approver for Safety-critical classifications, and this reviewer believes it should instead be the <strong>COO</strong>. This change has <strong>not yet been actioned</strong> into the template &mdash; QF-015 as currently published still lists CEO. Trainers should note this is an open item, not yet reflected in the controlled document, when teaching Section 8 of QF-015.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Student Introduction</h2>
+    <p>Production and inspection is where Jemba9's design and supplier-qualification work becomes a physical, deliverable product &mdash; PCB assemblies from J9CM, mechanical assemblies, cable harnesses, and integrated systems. QP-008 governs the entire path a unit takes from work order to shipment: planning, manufacturing, in-process inspection, first article inspection, final acceptance, and post-delivery support. It also governs the calibration program that keeps every inspection measurement trustworthy, and the product safety assessment that has to be completed before a new program is ever allowed to start production.</p>
+    <p>Before any production begins, the Manufacturing Manager confirms that released design documentation, a Cetec ERP work order, a traveler, lot-traced materials, calibrated equipment, and qualified personnel are all in place. For new programs or significant design changes, a <strong>Product Safety Assessment (QF-015)</strong> must be completed and approved by the Quality Manager and Chief Engineer first &mdash; identifying safety-critical characteristics, failure modes with safety consequences, and the mandatory inspection points that flow into the traveler. Production cannot start on a new program without an approved QF-015.</p>
+    <p>Every unit or lot is accompanied by a traveler that records what was done, by whom, and what was inspected, with defined inspection point types &mdash; first article, in-process, hold point, witness point, and final inspection. A <strong>First Article Inspection (FAI)</strong>, using the AS9102-aligned checklist (QF-009), is required on the first unit of any new design, after form/fit/function changes, after a production lapse, or when a customer contract requires it; it verifies part accountability, material and process conformance, and every drawing characteristic before the design is approved for production. No product ships without final acceptance: all traveler operations signed off, hold points cleared, FAI complete (first article only), NCRs dispositioned, and a Certificate of Conformance issued.</p>
+    <p>Underlying all of this is the calibration program (QF-011, clause 7.1.5): every instrument used to verify conformance is NIST-traceable, tracked for calibration due dates, and immediately pulled from service if out of tolerance, with an impact assessment on any product measured with it since its last known-good calibration. When work moves between facilities, work centers, or subcontractors, the Work Transfer Checklist (QF-018) confirms documentation, personnel qualification, equipment/calibration, and quality flow-downs all transferred correctly before the first unit is built at the new location. Clause 8.5.3 (customer property) is one part of QP-008 that applies conditionally: it only comes into play when a customer supplies Customer-Furnished Equipment (CFE) or Government-Furnished Equipment (GFE) &mdash; per Paul Rutt's reviewer note on QM-001 (June 2, 2026), &ldquo;Clause 8.5.3 Applicable only when customers provide customer furnished equipment (CFE) and/or government-furnished equipment (GFE). When applicable, QP-008 governs&rdquo; &mdash; and when it applies, QP-008 §9 governs receipt, inspection, storage, protection, and return of that equipment.</p>
+    <p><strong>Who needs this training:</strong> Manufacturing Manager and J9CM production operators, the Quality Manager and Quality Inspectors, the Chief Engineer, Operations Manager, and Program Managers who manage customer-furnished equipment and post-delivery support.</p>
+  </div>
+
+  <div class="card">
+    <h2>Syllabus &amp; Training Goals</h2>
+    <div class="syllabus-grid">
+      <div>
+        <h3>Class Syllabus</h3>
+        <ol>
+          <li>Operational planning prerequisites before production starts: documentation, work orders, materials, calibrated equipment, qualified personnel</li>
+          <li>Product Safety Assessment (QF-015): when required, what it evaluates, and why production cannot start without it &mdash; including the open reviewer note on the Section 8 approval signature block (CEO vs. COO)</li>
+          <li>Work orders and travelers in Cetec ERP: required contents and sign-off blocks</li>
+          <li>Identification and traceability through production: receiving labels, WIP tags, accept/hold tagging, lot traceability for safety-critical components</li>
+          <li>Inspection point types (first article, in-process, hold point, witness point, final) and how they're defined on the traveler</li>
+          <li>First Article Inspection (QF-009): AS9102 Form 1/2/3 methodology, FAI triggers, and approval before production ships</li>
+          <li>Final acceptance and product release: closing NCRs, reviewing test data, Certificate of Conformance</li>
+          <li>Calibration program (QF-011): NIST traceability, due-date tracking, and the out-of-tolerance impact-assessment protocol</li>
+          <li>Customer property (clause 8.5.3, CFE/GFE) and work transfer (QF-018) between facilities or subcontractors</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Learning Objectives</h3>
+        <p>By the end of this session, participants will be able to:</p>
+        <ul>
+          <li>List the prerequisites the Manufacturing Manager must confirm before production begins</li>
+          <li>Explain when a Product Safety Assessment (QF-015) is required and why production cannot proceed without it</li>
+          <li>Complete traveler sign-offs correctly at each defined inspection point</li>
+          <li>Execute an FAI using the AS9102-aligned QF-009 checklist and interpret a pass/fail result</li>
+          <li>Identify what to do when a calibrated instrument is found out of tolerance</li>
+          <li>State when clause 8.5.3 (CFE/GFE) applies and where it is governed (QP-008 §9)</li>
+        </ul>
+        <p style="margin-top:16px;"><strong>Recommended audience:</strong></p>
+        <div class="audience-tags">
+          <span>J9CM Production Operators</span>
+          <span>Manufacturing Manager</span>
+          <span>Quality Inspectors</span>
+          <span>Quality Manager</span>
+          <span>Chief Engineer</span>
+          <span>Program Managers</span>
+        </div>
+        <p style="margin-top:10px;"><strong>Suggested periodicity:</strong> Full session at onboarding for production, inspection, and engineering roles; annual refresher for all; additional targeted refresher whenever QF-015 or the calibration program changes (e.g., once the open CEO/COO reviewer note on QF-015 is actioned).</p>
+      </div>
+    </div>
+  </div>
+
+  <fieldset class="notes-section">
+    <legend>Reviewer Notes</legend>
+    <div class="ref-strip">
+      <strong>Correlation reference:</strong> Page <code>07-production-and-inspection.html</code> &middot; Topic: Production &amp; Inspection &middot; Source docs: <code>QP-008</code>, <code>QF-009</code>, <code>QF-011</code>, <code>QF-015</code>, <code>QF-018</code> &middot; Clauses: 7.1.5, 8.1, 8.1.3, 8.5, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.6 &middot; Files under <code>docs/AS9100/procedures/</code> and <code>docs/AS9100/templates/</code>
+    </div>
+    <div class="field-row inline">
+      <div>
+        <label for="reviewer-name">Reviewer name</label>
+        <input type="text" id="reviewer-name" name="reviewer-name">
+      </div>
+      <div>
+        <label for="reviewer-date">Date</label>
+        <input type="date" id="reviewer-date" name="reviewer-date">
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="section-ref">Section or clause this note refers to</label>
+      <input type="text" id="section-ref" name="section-ref" placeholder="e.g. QF-015 &sect;8 Approval, or clause 8.5.3">
+    </div>
+    <div class="field-row radio-set">
+      <label style="display:block;margin-bottom:6px;">Review status</label>
+      <label><input type="radio" name="status" value="approved"> Content approved as written</label>
+      <label><input type="radio" name="status" value="revise"> Needs revision</label>
+      <label><input type="radio" name="status" value="question"> Question for author</label>
+    </div>
+    <div class="field-row">
+      <label for="notes">Comments</label>
+      <textarea id="notes" name="notes" placeholder="Type your notes here before saving/printing this page..."></textarea>
+    </div>
+    <div class="save-instructions">
+      <strong>How to save these notes:</strong> Use your browser's <strong>Print &rarr; Save as PDF</strong> (recommended &mdash; captures exactly what you typed) or <strong>File &rarr; Save Page As &rarr; Webpage, Complete</strong>. The correlation reference above is included in the saved file so your notes can be matched back to this page and its source documents later. No data is transmitted anywhere &mdash; this page has no server and no script; your notes exist only in your browser until you save or print.
+    </div>
+  </fieldset>
+
+  <footer>
+    Jemba9 QMS Training Program &middot; Topic 7 of 13 &middot; Generated from Jemba9_QMS repository (branches <code>main</code> and <code>qms-review-notes</code>) &middot; Static reference material &mdash; not a controlled QMS document.
+  </footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training &amp; Competency | Jemba9 QMS Training</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c2b39;
+    background: #f4f6f9;
+  }
+  a { color: #0e6e73; }
+  a:visited { color: #0e6e73; }
+  .layout { display: flex; align-items: flex-start; min-height: 100vh; }
+  .sidebar {
+    width: 270px;
+    flex: 0 0 270px;
+    background: #0f2942;
+    color: #dce6ef;
+    padding: 22px 18px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .brand {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .sidebar .brand small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.72rem;
+    color: #8fa9c2;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .sidebar .home-link {
+    display: inline-block;
+    margin: 14px 0 18px;
+    font-size: 0.82rem;
+    color: #f5c064;
+    text-decoration: none;
+    border: 1px solid #2c4a68;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .sidebar .home-link:hover { background: #16324f; }
+  .nav-group { margin-top: 18px; }
+  .nav-group h2 {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7fa0bd;
+    margin: 0 0 6px;
+    font-weight: 700;
+    border-bottom: 1px solid #23405e;
+    padding-bottom: 5px;
+  }
+  .nav-group a {
+    display: block;
+    color: #cddbe8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 8px 6px 10px;
+    border-left: 3px solid transparent;
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .nav-group a:hover { background: #16324f; }
+  .nav-group a.active {
+    background: #16324f;
+    border-left: 3px solid #f5a623;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .nav-group a .num {
+    display: inline-block;
+    min-width: 20px;
+    color: #7fa0bd;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-group a.active .num { color: #f5a623; }
+
+  .main { flex: 1 1 auto; min-width: 0; padding: 32px 44px 70px; max-width: 980px; }
+  .breadcrumb {
+    font-size: 0.8rem;
+    color: #5b7085;
+    margin-bottom: 18px;
+  }
+  .breadcrumb a { color: #0e6e73; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    color: #0f2942;
+  }
+  .page-header .subtitle {
+    color: #4a5b6c;
+    font-size: 1rem;
+    margin: 0 0 26px;
+  }
+  .process-badge {
+    display: inline-block;
+    background: #eaf3f2;
+    color: #0e6e73;
+    border: 1px solid #bfdbd9;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #dde5ec;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 26px;
+    box-shadow: 0 1px 2px rgba(15,41,66,0.04);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #0f2942;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+  }
+  .card h3 { font-size: 1.02rem; color: #163a54; }
+
+  table.doc-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  table.doc-table th, table.doc-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e6ebf0;
+    vertical-align: top;
+  }
+  table.doc-table th {
+    background: #f5f8fa;
+    color: #33495e;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  table.doc-table td code { font-size: 0.8rem; background: #f0f4f7; padding: 1px 5px; border-radius: 3px; }
+  .clause-tag {
+    display: inline-block;
+    background: #fbeedd;
+    color: #8a5a12;
+    border: 1px solid #f0d4a6;
+    font-size: 0.72rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    margin: 1px 2px 1px 0;
+    white-space: nowrap;
+  }
+
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .syllabus-grid { grid-template-columns: 1fr; } }
+  .syllabus-grid ol, .syllabus-grid ul { padding-left: 20px; margin: 0; }
+  .syllabus-grid li { margin-bottom: 9px; font-size: 0.92rem; }
+  .audience-tags span {
+    display: inline-block;
+    background: #eef3f8;
+    color: #234a68;
+    border: 1px solid #d4e0ec;
+    font-size: 0.78rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+
+  .pending-note {
+    background: #fdf1f1;
+    border: 1px solid #efc3c3;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: #7a2020;
+    margin-top: 14px;
+  }
+  .pending-note strong { color: #a32222; }
+
+  fieldset.notes-section {
+    background: #fffaf1;
+    border: 1px solid #f0dbb0;
+    border-radius: 8px;
+    padding: 20px 24px 24px;
+    margin: 0 0 20px;
+  }
+  fieldset.notes-section legend {
+    font-weight: 700;
+    color: #8a5a12;
+    padding: 0 8px;
+    font-size: 1.02rem;
+  }
+  .ref-strip {
+    background: #ffffff;
+    border: 1px solid #eadab8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #4a5b6c;
+    margin-bottom: 16px;
+  }
+  .ref-strip strong { color: #163a54; }
+  .field-row { margin-bottom: 14px; }
+  .field-row label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #33495e;
+    margin-bottom: 4px;
+  }
+  .field-row input[type="text"], .field-row input[type="date"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 7px 9px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .field-row.inline { display: flex; gap: 24px; flex-wrap: wrap; }
+  .field-row.inline > div { flex: 1 1 200px; }
+  .radio-set label { font-weight: 400; display: inline-flex; align-items: center; gap: 5px; margin-right: 18px; font-size: 0.88rem; }
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 10px;
+    border: 1px solid #cbb98a;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+  }
+  .save-instructions {
+    background: #eef6f6;
+    border: 1px solid #bfdbd9;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #204a4d;
+    margin-top: 16px;
+  }
+  .save-instructions strong { color: #0e6e73; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e6eb;
+    font-size: 0.76rem;
+    color: #8593a0;
+  }
+
+  @media print {
+    .sidebar, .breadcrumb, .save-instructions { display: none !important; }
+    .main { max-width: 100%; padding: 0; }
+    .layout { display: block; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+    textarea { min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand">Jemba9 QMS Training Program<small>AS9100D Rev D &middot; Document Review Portal</small></div>
+  <a class="home-link" href="index.html">&#8962; Program Home</a>
+
+  <div class="nav-group">
+    <h2>Leadership</h2>
+    <a href="01-qms-overview.html"><span class="num">01</span> QMS Overview &amp; Company Context</a>
+    <a href="02-quality-policy-objectives.html"><span class="num">02</span> Quality Policy &amp; Objectives</a>
+    <a href="13-management-review.html"><span class="num">13</span> Management Review</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Quality System</h2>
+    <a href="03-risk-management.html"><span class="num">03</span> Risk Management</a>
+    <a href="11-nonconformance-and-corrective-action.html"><span class="num">11</span> Nonconformance &amp; CAPA</a>
+    <a href="12-internal-audit.html"><span class="num">12</span> Internal Audit</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Core Value Stream</h2>
+    <a href="04-design-and-development.html"><span class="num">04</span> Design &amp; Development</a>
+    <a href="05-supplier-management.html"><span class="num">05</span> Supplier Management</a>
+    <a href="06-counterfeit-parts-prevention.html"><span class="num">06</span> Counterfeit Parts Prevention</a>
+    <a href="07-production-and-inspection.html"><span class="num">07</span> Production &amp; Inspection</a>
+  </div>
+
+  <div class="nav-group">
+    <h2>Supporting Processes</h2>
+    <a href="08-document-control.html"><span class="num">08</span> Document Control</a>
+    <a href="09-configuration-management.html"><span class="num">09</span> Configuration Management</a>
+    <a class="active" href="10-training-and-competency.html"><span class="num">10</span> Training &amp; Competency</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Supporting Processes &rsaquo; Training &amp; Competency</div>
+
+  <div class="page-header">
+    <span class="process-badge">Supporting Process</span>
+    <h1>10. Training &amp; Competency</h1>
+    <p class="subtitle">Competency, awareness, and the training record that makes this entire training program auditable</p>
+  </div>
+
+  <div class="card">
+    <h2>Source Documents for This Topic</h2>
+    <table class="doc-table">
+      <thead>
+        <tr><th>Doc #</th><th>Title</th><th>Type</th><th>AS9100D Clause(s)</th><th>Owner / Status</th><th>Repository Path</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>QF-010</code></td>
+          <td>Training Record / Competency Matrix</td>
+          <td>Template (Level 4), parent <code>QP-001</code></td>
+          <td><span class="clause-tag">7.2</span><span class="clause-tag">7.3</span></td>
+          <td>Quality Manager &middot; Approved Rev A</td>
+          <td><code>docs/AS9100/templates/QF-010-training-record.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.82rem;color:#5b7085;margin-top:14px;">Reviewer notes affecting this template were submitted by <strong>Paul Rutt (prutt@jemba9.com)</strong> on the <code>qms-review-notes</code> branch, folder <code>review-notes/QF-010/</code> (2026-06-02 and 2026-06-05). Both remain <code>status: open</code> &mdash; not yet actioned into the controlled template. This training topic surfaces them so the Quality Manager can action them.</p>
+    <div class="pending-note">
+      <strong>Open reviewer notes not yet incorporated into QF-010:</strong>
+      <ul style="margin:8px 0 0;padding-left:20px;">
+        <li>Department field should list <code>Engineering / Manufacturing / Operations / Program Management / Executive Management</code> (current template lists Quality / Engineering / Manufacturing / Supply Chain / Operations).</li>
+        <li>The form needs <strong>two</strong> dates, not one "Start Date": (1) initial date of employment at Jemba9, and (2) initial date in the employee's present role.</li>
+        <li>Document Control Procedure (QP-001) training should be explicitly required for Engineering, Program Management, Operations, and Executive Management (the current template marks it "All employees" &mdash; Paul's note may be narrowing or clarifying which roles are mandatory).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Student Introduction</h2>
+    <p>This topic is different from the other twelve: it is not just a subject to be trained on, it is the <em>record-keeping mechanism</em> for the entire Jemba9 QMS Training Program. Every other topic page in this site &mdash; QMS Overview, Risk Management, Design &amp; Development, and so on &mdash; ultimately produces one line item on an employee's Training Record / Competency Matrix (QF-010).</p>
+    <p>This is also the exact question Paul Rutt raised in his July 21, 2026 email: Jemba9 needs "a training matrix for each of the employee roles within Jemba9 (e.g. assembly technician, design engineer, supply chain, etc.)," a required-training-periodicity table (e.g., ESD training annually for assembly technicians vs. once every three years for supply chain), and eventually a way to score tests and record pass/fail results per employee. QF-010 is the template that record will live in; the "QMS Role-Based Training Requirements" table inside it already sketches a first draft of that matrix, mapping each procedure to the roles who need it.</p>
+    <p>AS9100D requires two related things here: <strong>competence</strong> (clause 7.2 &mdash; people doing work that affects quality must be competent, and Jemba9 must evaluate the effectiveness of training, not just attendance) and <strong>awareness</strong> (clause 7.3 &mdash; every employee must understand the quality policy, their contribution to it, and the implications of not conforming). QF-010's "Effectiveness Evaluation" section (post-training test score &ge; 80%, OJT observation, or quality metric trend) is exactly how Jemba9 satisfies the "not just attendance" requirement &mdash; and it is the design point Paul asked about directly: how tests get scored and how pass/fail is recorded.</p>
+    <p><strong>Who needs this training:</strong> HR Lead and Quality Manager (as record owners/administrators), all people managers (who sign off on their reports' competency), and every new hire during onboarding (so they understand what is being tracked about their own training and why).</p>
+  </div>
+
+  <div class="card">
+    <h2>Syllabus &amp; Training Goals</h2>
+    <div class="syllabus-grid">
+      <div>
+        <h3>Class Syllabus</h3>
+        <ol>
+          <li>Why AS9100D treats training as a quality control, not an HR formality (clauses 7.2 Competence, 7.3 Awareness)</li>
+          <li>Walkthrough of QF-010: Employee Information, QMS Role-Based Training Requirements table, Competency Assessment, Certifications, Effectiveness Evaluation, and Acknowledgment sections</li>
+          <li>How the 13 topics in this training program map onto QF-010's "Training Topic" rows (this program <em>is</em> the syllabus behind that table)</li>
+          <li>Building a role-based training matrix: job function &times; required topic &times; periodicity (Paul Rutt's request) &mdash; e.g., ESD handling annually for production/receiving vs. multi-year cycles for less-exposed roles</li>
+          <li>Effectiveness evaluation methods: post-training test scoring, on-the-job observation, and quality-metric trending &mdash; and what "pass" should mean before a retake is required</li>
+          <li>Record retention: duration of employment plus 7 years; update within 5 business days of completion or assessment</li>
+          <li>Status of open reviewer notes on QF-010 (see pending-note box above) and how document owners action or dismiss review notes per <code>docs/review-notes-guide.md</code></li>
+        </ol>
+      </div>
+      <div>
+        <h3>Learning Objectives</h3>
+        <p>By the end of this session, participants will be able to:</p>
+        <ul>
+          <li>Explain the difference between AS9100D "competence" (7.2) and "awareness" (7.3) and give a Jemba9 example of each</li>
+          <li>Complete every section of QF-010 for a hypothetical new hire, including both hire-date fields once the open reviewer note is actioned</li>
+          <li>Identify which QMS training topics are mandatory for their own department using the QMS Role-Based Training Requirements table</li>
+          <li>Describe at least two acceptable effectiveness-evaluation methods and Jemba9's target pass threshold once defined</li>
+          <li>Locate and read an open reviewer note on the <code>qms-review-notes</code> branch and describe how the document owner should action or dismiss it</li>
+        </ul>
+        <p style="margin-top:16px;"><strong>Recommended audience:</strong></p>
+        <div class="audience-tags">
+          <span>Quality Manager</span>
+          <span>HR Lead</span>
+          <span>People managers</span>
+          <span>All employees (onboarding overview)</span>
+        </div>
+        <p style="margin-top:10px;"><strong>Suggested periodicity:</strong> Quality Manager/HR Lead: at QF-010 revision; people managers: annually alongside QO-09 Training Completion review; all employees: once at onboarding.</p>
+      </div>
+    </div>
+  </div>
+
+  <fieldset class="notes-section">
+    <legend>Reviewer Notes</legend>
+    <div class="ref-strip">
+      <strong>Correlation reference:</strong> Page <code>10-training-and-competency.html</code> &middot; Topic: Training &amp; Competency &middot; Source doc: <code>QF-010</code> (parent <code>QP-001</code>) &middot; Clauses: 7.2, 7.3 &middot; File: <code>docs/AS9100/templates/QF-010-training-record.md</code> &middot; Related open notes: <code>review-notes/QF-010/2026-06-02T20-09-26-490Z-prutt_jemba9_com.md</code>, <code>review-notes/QF-010/2026-06-05T16-42-12-748Z-prutt_jemba9_com.md</code>
+    </div>
+    <div class="field-row inline">
+      <div>
+        <label for="reviewer-name">Reviewer name</label>
+        <input type="text" id="reviewer-name" name="reviewer-name">
+      </div>
+      <div>
+        <label for="reviewer-date">Date</label>
+        <input type="date" id="reviewer-date" name="reviewer-date">
+      </div>
+    </div>
+    <div class="field-row">
+      <label for="section-ref">Section or clause this note refers to</label>
+      <input type="text" id="section-ref" name="section-ref" placeholder="e.g. QF-010 Department field, or clause 7.2">
+    </div>
+    <div class="field-row radio-set">
+      <label style="display:block;margin-bottom:6px;">Review status</label>
+      <label><input type="radio" name="status" value="approved"> Content approved as written</label>
+      <label><input type="radio" name="status" value="revise"> Needs revision</label>
+      <label><input type="radio" name="status" value="question"> Question for author</label>
+    </div>
+    <div class="field-row">
+      <label for="notes">Comments</label>
+      <textarea id="notes" name="notes" placeholder="Type your notes here before saving/printing this page..."></textarea>
+    </div>
+    <div class="save-instructions">
+      <strong>How to save these notes:</strong> Use your browser's <strong>Print &rarr; Save as PDF</strong> (recommended &mdash; captures exactly what you typed) or <strong>File &rarr; Save Page As &rarr; Webpage, Complete</strong>. The correlation reference above is included in the saved file so your notes can be matched back to this page and its source documents later. No data is transmitted anywhere &mdash; this page has no server and no script; your notes exist only in your browser until you save or print.
+    </div>
+  </fieldset>
+
+  <footer>
+    Jemba9 QMS Training Program &middot; Topic 10 of 13 &middot; Generated from Jemba9_QMS repository (branches <code>main</code> and <code>qms-review-notes</code>) &middot; Static reference material &mdash; not a controlled QMS document.
+  </footer>
+</main>
+</div>
+</body>
+</html>

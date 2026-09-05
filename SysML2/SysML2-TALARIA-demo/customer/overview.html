@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Overview — TALARIA Customer Portal</title>
+<link rel="stylesheet" href="../assets/talaria.css">
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="tag">DEMO</span>
+  <a href="../index.html">&larr; All screens</a>
+  <span style="color:#6b7280;">|</span>
+  <span>Customer Portal &mdash; Project Overview</span>
+  <span class="spacer"></span>
+  <span style="color:#9ca3af;">Signed in as James Wilson, ProtoPD Customer Corp</span>
+</div>
+
+<div class="app-shell" style="height:calc(100vh - 33px);">
+
+  <aside class="sidebar" style="height:auto;">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-top">
+        <div class="logo">T9</div>
+        <div><span class="brand-name">TALARIA</span><span class="brand-sub">Space Assurance Gateway</span></div>
+      </div>
+      <div class="sidebar-portal-band band-customer">Customer Portal</div>
+    </div>
+    <div class="sidebar-project-header">
+      <div class="project-name">J9Avionics</div>
+      <div class="project-meta">ProtoPD Customer Corp</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Project</div>
+      <a class="nav-item active" href="overview.html"><span class="icon">&#9632;</span> Overview</a>
+      <a class="nav-item" href="findings.html"><span class="icon">&#9888;</span> Findings <span class="nav-badge">2</span></a>
+      <a class="nav-item" href="deliverables.html"><span class="icon">&#9634;</span> Deliverables</a>
+      <span class="nav-item"><span class="icon">&#9745;</span> Tasks <span class="nav-badge">1</span></span>
+      <div class="sidebar-section-label">Model</div>
+      <a class="nav-item" href="model-exchange.html"><span class="icon">&#8644;</span> Model Exchange <span class="nav-badge-sysml">SysML</span></a>
+      <div class="sidebar-section-label">Account</div>
+      <span class="nav-item"><span class="icon">&#9787;</span> Team</span>
+      <span class="nav-item"><span class="icon">&#9998;</span> Feedback</span>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">JW</div>
+        <div><div>James Wilson</div><span class="role">Customer Admin</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-shell-main">
+    <header class="app-shell-header">
+      <h2 class="app-shell-header-title">J9Avionics</h2>
+      <div class="app-shell-header-right">
+        <span class="badge badge-sysml">baseline/phase5-entry &middot; 8f2c1ae</span>
+        <span>ProtoPD Customer Corp</span>
+      </div>
+    </header>
+
+    <main class="app-shell-content">
+
+      <div class="page-header">
+        <div>
+          <h1>TIA Power Board &mdash; Rev C</h1>
+          <div class="subtitle">
+            Phase 5 &mdash; Detailed Design &middot; assurance state shown as of baseline
+            <span class="mono">phase5-entry</span> <span class="sysml-pin" data-pin="1">1</span>
+          </div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" data-demo-action="Opening…">Contact team</button>
+          <a href="model-exchange.html" class="btn btn-sysml btn-sm">Model exchange &rarr;</a>
+        </div>
+      </div>
+
+      <div class="lifecycle-bar">
+        <div class="lifecycle-phase completed"><span class="ph-num">1</span><span class="ph-name">Initiate</span></div>
+        <div class="lifecycle-phase completed"><span class="ph-num">2</span><span class="ph-name">Requirements</span></div>
+        <div class="lifecycle-phase completed"><span class="ph-num">3</span><span class="ph-name">Architecture</span></div>
+        <div class="lifecycle-phase completed"><span class="ph-num">4</span><span class="ph-name">Prelim Design</span></div>
+        <div class="lifecycle-phase current"><span class="ph-num">5</span><span class="ph-name">Detailed Design</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">6</span><span class="ph-name">Prod &amp; Verif Infra</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">7</span><span class="ph-name">Realize</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">8</span><span class="ph-name">Verify &amp; Validate</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">9</span><span class="ph-name">Proto Feedback</span></div>
+        <div class="lifecycle-phase"><span class="ph-num">10</span><span class="ph-name">Deliver</span></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">142</div>
+          <div class="stat-label">Parts assured</div>
+          <div class="stat-sub">across 69 part types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value success">4 / 6</div>
+          <div class="stat-label">Requirements verified <span class="sysml-pin" data-pin="2">2</span></div>
+          <div class="stat-sub">computed, not reported</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value danger">2</div>
+          <div class="stat-label">Open findings</div>
+          <div class="stat-sub">1 further waived</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">62%</div>
+          <div class="stat-label">Phase readiness</div>
+          <div class="stat-sub">3 of 5 gate criteria</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+
+        <div>
+          <div class="card mb-16">
+            <div class="card-header">
+              <h3>Requirement verification</h3>
+              <span class="badge badge-sysml">evaluated at 8f2c1ae</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>ID</th><th>Requirement</th><th>Status</th><th>Basis</th></tr></thead>
+                <tbody>
+                  <tr><td class="mono">EEE-001</td><td>Derating standard compliance</td><td><span class="badge badge-fail">not verified</span></td><td class="text-muted">derived from EEE-003</td></tr>
+                  <tr><td class="mono">EEE-002</td><td>Prohibited materials</td><td><span class="badge badge-pass">verified</span></td><td class="text-muted">142 / 142 parts</td></tr>
+                  <tr><td class="mono">EEE-003</td><td>Capacitor voltage derating</td><td><span class="badge badge-fail">not verified</span></td><td class="text-muted">62 / 81 parts</td></tr>
+                  <tr><td class="mono">EEE-004</td><td>Resistor power derating</td><td><span class="badge badge-fail">not verified</span></td><td class="text-muted">32 / 34 parts</td></tr>
+                  <tr><td class="mono">EEE-005</td><td>TID tolerance, 2&times; RDM</td><td><span class="badge badge-waiver">awaiting test</span></td><td class="text-muted">radiation campaign</td></tr>
+                  <tr><td class="mono">EEE-006</td><td>SEE tolerance</td><td><span class="badge badge-pass">verified</span></td><td class="text-muted">14 / 14 parts</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>Mission profile</h3><span class="text-muted">agreed at requirements freeze</span></div>
+            <div class="card-body">
+              <div class="detail-grid">
+                <div class="detail-field"><div class="label">Orbit</div><div class="value">LEO &mdash; 550 km / 53&deg;</div></div>
+                <div class="detail-field"><div class="label">Duration</div><div class="value">5 years</div></div>
+                <div class="detail-field"><div class="label">Mission class</div><div class="value">Class B</div></div>
+                <div class="detail-field"><div class="label">TID</div><div class="value mono">30 [krad(Si)]</div></div>
+                <div class="detail-field"><div class="label">RDM</div><div class="value mono">2.0&times;</div></div>
+                <div class="detail-field"><div class="label">Thermal</div><div class="value mono">&minus;40 &hellip; 85 [&deg;C]</div></div>
+              </div>
+              <div class="sysml-note" style="margin-bottom:0;">
+                These values are parameters bound into every derating constraint, not text in a plan document. Change the orbit and every dependent verification result is marked stale. <span class="sysml-pin" data-pin="3">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb-16">
+            <div class="card-header">
+              <h3>What you are looking at <span class="sysml-pin" data-pin="1">1</span></h3>
+            </div>
+            <div class="card-body">
+              <div class="detail-field mb-16">
+                <div class="label">Baseline</div>
+                <div class="value mono">baseline/phase5-entry</div>
+              </div>
+              <div class="detail-field mb-16">
+                <div class="label">Commit</div>
+                <div class="value mono">8f2c1ae &middot; 2026-03-08 14:22Z</div>
+              </div>
+              <div class="detail-field mb-16">
+                <div class="label">Tagged by</div>
+                <div class="value">Sarah Chen, Lead Engineer</div>
+              </div>
+              <div class="sysml-note" style="margin-bottom:0;">
+                Every number on this page was computed against this one immutable snapshot. Open the page tomorrow and it still says the same thing &mdash; and so does the PDF you exported from it.
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-16">
+            <div class="card-header"><h3>Action required</h3><span class="badge badge-waiver">1 item</span></div>
+            <div class="card-body">
+              <p class="mb-16"><strong>Exception request awaiting your acknowledgement.</strong> Jemba9 has requested a transient-duration exception against EEE-003 covering 19 capacitor placements on the 5&nbsp;V bypass network.</p>
+              <a href="findings.html" class="btn btn-accent btn-sm">Review request</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>Recent activity</h3></div>
+            <div class="card-body">
+              <div style="font-size:13px;display:flex;flex-direction:column;gap:12px;">
+                <div><strong>Derating run-0042 completed</strong><div class="text-muted">2026-03-10 &middot; 3 findings &middot; against baseline/phase5-entry</div></div>
+                <div><strong>EEE Parts Plan v3 released</strong><div class="text-muted">2026-03-09 &middot; maturity L3 &middot; generated from 8f2c1ae</div></div>
+                <div><strong>Baseline phase5-entry tagged</strong><div class="text-muted">2026-03-08 &middot; Phase 4 gate passed</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation panel -->
+      <div class="sysml-panel">
+        <div class="sysml-panel-header">
+          <h3>SysML 2.0 ON THIS SCREEN</h3>
+          <span class="hint">Click any purple marker above to jump here</span>
+        </div>
+        <div class="sysml-panel-body">
+
+          <div class="sysml-entry" id="sysml-1">
+            <div class="sysml-entry-num">1</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title"><code>Tag</code> on a <code>Commit</code> &mdash; the customer view is pinned</div>
+              <div class="sysml-entry-text">Customer-facing state cites a named baseline rather than showing whatever the database contains right now. That matters most in the awkward case: a customer quotes a number from a screen three weeks ago and asks why it changed. With a tag, the old number is still retrievable and the difference is a diff.</div>
+              <div class="sysml-today"><strong>Today:</strong> the customer portal reads live rows. It is accurate at page load and unreproducible afterwards, because there is no snapshot to go back to.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-2">
+            <div class="sysml-entry-num">2</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Verification status the customer can trust</div>
+              <div class="sysml-entry-text">"4 of 6 verified" is the result of evaluating each requirement's constraint over the parts it binds to, at the pinned commit. It is not a status somebody remembered to update before the review call.</div>
+              <div class="sysml-today"><strong>Today:</strong> requirement status is a curated field. The customer is trusting the process rather than the computation.</div>
+            </div>
+          </div>
+
+          <div class="sysml-entry" id="sysml-3">
+            <div class="sysml-entry-num">3</div>
+            <div class="sysml-entry-body">
+              <div class="sysml-entry-title">Mission profile as bound parameters</div>
+              <div class="sysml-entry-text">TID, RDM and thermal range are inputs to the constraints. If the customer changes the orbit, the platform knows exactly which verifications are invalidated rather than requiring a full re-analysis to find out.</div>
+              <div class="sysml-today"><strong>Today:</strong> <code>mission_profile</code> is a real table and is passed into each run, but the dependency between a profile change and the affected results is not modelled.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <aside class="rapda-panel">
+    <div class="rapda-header">
+      <div class="rapda-avatar">R</div>
+      <div><div class="name">RAPDA</div><div class="status">&#9679; Ready</div></div>
+    </div>
+    <div class="rapda-body">
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Good morning. J9Avionics is in Phase&nbsp;5. Four of six EEE requirements verify against baseline <code>phase5-entry</code>; two do not, and one is waiting on radiation test data.
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">James Wilson</div>
+        What is holding up EEE-003?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Nineteen capacitor placements on the 5&nbsp;V bypass network see 48&nbsp;V during hot-swap inrush, against a 37.5&nbsp;V Class&nbsp;B limit. Jemba9 has requested a transient-duration exception; a 100&nbsp;V part in the same footprint is the alternative and is in work as Rev&nbsp;D.
+        <div class="rapda-actions">
+          <a href="findings.html" class="btn btn-accent btn-sm">See the finding</a>
+        </div>
+      </div>
+      <div class="rapda-msg user">
+        <div class="who">James Wilson</div>
+        Can I pull this into our own model?
+      </div>
+      <div class="rapda-msg agent">
+        <div class="who">RAPDA</div>
+        Yes &mdash; the board, its requirements and the verification results are available as a SysML&nbsp;v2 model at this baseline, either as a file or over the API.
+        <div class="rapda-actions">
+          <a href="model-exchange.html" class="btn btn-outline btn-sm">Model exchange</a>
+        </div>
+      </div>
+    </div>
+    <div class="rapda-footer">
+      <input type="text" placeholder="Ask RAPDA about your project…">
+    </div>
+  </aside>
+
+</div>
+<script>
+/* ================================================================
+   TALARIA — SysML 2.0 Demo
+   Plain vanilla JS, no dependencies. Runs from file:// by design.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---- SysML pins: jump to the matching entry in the bottom panel ---- */
+  function wirePins() {
+    document.addEventListener('click', function (e) {
+      var pin = e.target.closest('[data-pin]');
+      if (!pin) return;
+      e.preventDefault();
+      var target = document.getElementById('sysml-' + pin.getAttribute('data-pin'));
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.remove('flash');
+      void target.offsetWidth;
+      target.classList.add('flash');
+      setTimeout(function () { target.classList.remove('flash'); }, 1800);
+    });
+  }
+
+  /* ---- Tabs ---- */
+  function wireTabs() {
+    document.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-tab]');
+      if (!tab) return;
+      var group = tab.closest('[data-tab-group]');
+      if (!group) return;
+      var name = tab.getAttribute('data-tab');
+      group.querySelectorAll('[data-tab]').forEach(function (t) {
+        t.classList.toggle('active', t === tab);
+      });
+      var scope = group.parentElement;
+      scope.querySelectorAll('[data-tab-panel]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-tab-panel') === name);
+      });
+    });
+  }
+
+  /* ---- Modals ---- */
+  function wireModals() {
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-modal-open]');
+      if (opener) {
+        e.preventDefault();
+        var m = document.getElementById(opener.getAttribute('data-modal-open'));
+        if (m) m.classList.add('open');
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) {
+        e.preventDefault();
+        var ov = e.target.closest('.modal-overlay');
+        if (ov) ov.classList.remove('open');
+        return;
+      }
+      if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+      }
+    });
+  }
+
+  /* ---- Simulated agent run (analysis run screen) ---- */
+  function wireRunSim() {
+    var btn = document.querySelector('[data-run-start]');
+    if (!btn) return;
+    var steps = Array.prototype.slice.call(document.querySelectorAll('[data-step]'));
+    var statusEl = document.querySelector('[data-run-status]');
+    var barEl = document.querySelector('[data-run-progress]');
+    var resultEl = document.querySelector('[data-run-result]');
+    var running = false;
+
+    function reset() {
+      steps.forEach(function (s) { s.className = 'pipeline-step pending'; });
+      if (barEl) barEl.style.width = '0%';
+      if (resultEl) resultEl.style.display = 'none';
+      if (statusEl) { statusEl.textContent = 'Queued'; statusEl.className = 'badge badge-neutral'; }
+    }
+
+    btn.addEventListener('click', function () {
+      if (running) return;
+      running = true;
+      reset();
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      if (statusEl) { statusEl.textContent = 'Running'; statusEl.className = 'badge badge-running'; }
+
+      var i = 0;
+      (function next() {
+        if (i > 0) steps[i - 1].className = 'pipeline-step done';
+        if (i >= steps.length) {
+          if (barEl) barEl.style.width = '100%';
+          if (statusEl) { statusEl.textContent = 'Awaiting review'; statusEl.className = 'badge badge-waiver'; }
+          if (resultEl) resultEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Re-run analysis';
+          running = false;
+          return;
+        }
+        steps[i].className = 'pipeline-step active';
+        if (barEl) barEl.style.width = Math.round((i / steps.length) * 100) + '%';
+        i++;
+        setTimeout(next, 900);
+      })();
+    });
+  }
+
+  /* ---- Toggle blocks (show/hide generated SysML source) ---- */
+  function wireToggles() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-toggle]');
+      if (!t) return;
+      e.preventDefault();
+      var el = document.getElementById(t.getAttribute('data-toggle'));
+      if (!el) return;
+      var hidden = el.style.display === 'none' || !el.style.display;
+      el.style.display = hidden ? 'block' : 'none';
+      var showLabel = t.getAttribute('data-label-show');
+      var hideLabel = t.getAttribute('data-label-hide');
+      if (showLabel && hideLabel) t.textContent = hidden ? hideLabel : showLabel;
+    });
+  }
+
+  /* ---- Fake-action buttons: give feedback instead of dead clicks ---- */
+  function wireDemoActions() {
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-demo-action]');
+      if (!el) return;
+      e.preventDefault();
+      var msg = el.getAttribute('data-demo-action');
+      var original = el.textContent;
+      el.textContent = msg;
+      el.disabled = true;
+      setTimeout(function () { el.textContent = original; el.disabled = false; }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wirePins();
+    wireTabs();
+    wireModals();
+    wireRunSim();
+    wireToggles();
+    wireDemoActions();
+  });
+})();
+</script>
+</body>
+</html>
